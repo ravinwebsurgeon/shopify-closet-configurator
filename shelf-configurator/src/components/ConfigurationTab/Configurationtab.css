@@ -1,0 +1,281 @@
+.configuration-options {
+    padding: 20px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .config-tabs > button {
+    font-family: "Ubuntu", sans-serif;
+}
+
+  
+  .config-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .config-tab {
+    padding: 6px 12px;
+    border: 1px solid #2196f3;
+    border-radius: 4px;
+    background: white;
+    color: #2196f3;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: capitalize;
+    white-space: nowrap;
+    flex-grow: 1;
+    text-align: center;
+    min-width: fit-content;
+  }
+  
+  .config-tab:hover {
+    background: #e3f2fd;
+  }
+  
+  .config-tab.active {
+    background: #2196f3;
+    color: white;
+  }
+  
+  .config-content {
+    padding: 15px 0;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .dimensions-content {
+    padding: 10px 0;
+  }
+  
+  .dimension-row {
+    margin-bottom: 35px;
+    position: relative;
+  }
+  
+  .dimension-row label {
+    display: block;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .dimension-control {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .dimension-control span {
+    min-width: 70px;
+    color: #2196f3;
+    font-weight: 600;
+    font-size: 15px;
+    padding-top: 8px;
+  }
+  
+  .slider-container {
+    flex: 1;
+    position: relative;
+    padding-bottom: 25px;
+  }
+  
+  .dimension-slider {
+    width: 100%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    appearance: none;
+    outline: none;
+    margin: 10px 0;
+  }
+  
+  .dimension-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #2196f3;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: -7px;
+  }
+  
+  .dimension-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #2196f3;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .dimension-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: linear-gradient(to right, #2196f3 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
+    border-radius: 3px;
+  }
+  
+  .slider-ticks {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    bottom: 0;
+  }
+  
+  .tick {
+    position: absolute;
+    font-size: 11px;
+    color: #666;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  
+  .tick::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 5px;
+    background: #ccc;
+    left: 50%;
+    top: -8px;
+  }
+  
+  .dimension-note {
+    margin-top: 30px;
+    padding: 12px 16px;
+    background: #fff8e1;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #795548;
+    line-height: 1.5;
+    border: 1px solid #ffe0b2;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .configuration-options {
+      padding: 15px;
+    }
+  
+    .config-tabs {
+      gap: 6px;
+    }
+  
+    .config-tab {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  
+    .dimension-control {
+      gap: 15px;
+    }
+  
+    .dimension-control span {
+      min-width: 60px;
+      font-size: 14px;
+    }
+  
+    .tick {
+      font-size: 10px;
+    }
+  
+    .slider-container {
+      padding-bottom: 35px;
+    }
+  } 
+
+
+  .Section_height50__-d6oU {
+    height: 32em
+}
+
+.Section_height90__mj0VK {
+    height: 52em
+}
+
+.Section_height100__Nz9yH {
+    height: 57em
+}
+
+.Section_height120__T0zb2 {
+    height: 67em
+}
+
+.Section_height150__940NA {
+    height: 82em
+}
+
+.Section_height180__WldoI {
+    height: 97em
+}
+
+.Section_height200__c1rlu {
+    height: 107em
+}
+
+.Section_height210__ymu3h {
+    height: 112em
+}
+
+.Section_height220__t2Zj0 {
+    height: 117em
+}
+
+.Section_height240__zHGSq {
+    height: 127em
+}
+
+.Section_height250__1svXz {
+    height: 132em
+}
+
+.Section_height300__eD6Lr {
+    height: 157em
+}
+
+.Section_width55__1wt5B {
+    width: 27.5em
+}
+
+.Section_width60__PQLT5 {
+    width: 28.5em
+}
+
+.Section_width70__6MiF8 {
+    width: 35em
+}
+
+.Section_width75__Zmkol {
+    width: 36em
+}
+
+.Section_width85__HyRzH {
+    width: 42.5em
+}
+
+.Section_width100__fXm1a {
+    width: 50em
+}
+
+.Section_width115__G37Ci {
+    width: 57.5em
+}
+
+.Section_width120__qyNx5 {
+    width: 58.5em
+}
+
+.Section_width130__93vN6 {
+    width: 65em
+}
