@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import'./ConfigurationTab.css'
+import'./Configurationtab.css'
 import DimensionsComponent from '../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent';
 import ExecutionComponent from '../ConfigurationTabSubComponents/ExecutionComponent/ExecutionComponent';
 import ShelvesComponent from '../ConfigurationTabSubComponents/ShelvesComponent/ShelvesComponent';
