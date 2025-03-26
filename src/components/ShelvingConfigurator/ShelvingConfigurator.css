@@ -1,0 +1,74 @@
+.configurator-main-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.configurator-right-section {
+    width: 70%;
+}
+
+.configurator-left-section{
+    width: 30%;
+    height: 100%;
+}
+
+/* ========= Left section component div css ========= */
+.leftsec-comp-1{
+    width: 100%;
+    background-color: red;
+    height: 40%;
+}
+
+.leftsec-comp-3 {
+    padding: 24px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+.left-comp3-row-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-to-cart{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    color: #fff;
+    background-color: #f37900;
+    padding: 7px 16px;
+    border-radius: 2px;
+    font-family: "Ubuntu", sans-serif;
+    font-style: normal;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button.total-price-container {
+    padding: 0px 15px;
+    background: transparent;
+    border: none;
+    font-family: "Ubuntu", sans-serif;
+}
+
+.total-price-col-container {
+    text-align: right;
+}
+
+.total-price-row-conatiner {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+
+span.total-vat-text {
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: #333;
+}

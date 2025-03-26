@@ -1,0 +1,112 @@
+.dimensions-content {
+    padding: 10px 0;
+    font-family: "Ubuntu", sans-serif;
+  }
+  
+  .dimension-row {
+    /* margin-bottom: 35px; */
+    position: relative;
+  }
+  
+  .dimension-row label {
+    display: block;
+    color: #333;
+    /* margin-bottom: 15px; */
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .dimension-control {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .dimension-control span {
+    min-width: 45px;
+    color: #606060;
+    font-weight: 600;
+    font-size: 14px;
+    padding-top: 8px;
+}
+  
+  .slider-container {
+    flex: 1;
+    position: relative;
+    padding-bottom: 25px;
+  }
+  
+  .dimension-slider {
+    width: 100%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    appearance: none;
+    outline: none;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+  
+  .dimension-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #2196f3;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: -7px;
+  }
+  
+  .dimension-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #2196f3;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .dimension-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: linear-gradient(to right, #2196f3 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
+    border-radius: 3px;
+  }
+  
+  .slider-ticks {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    bottom: 0;
+  }
+  
+  .tick {
+    position: absolute;
+    font-size: 11px;
+    color: #666;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  
+  .tick::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 5px;
+    background: #ccc;
+    left: 50%;
+    top: -8px;
+  }
+  
+  .dimension-note {
+    margin-top: 30px;
+    padding: 12px 16px;
+    background: #fff8e1;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #795548;
+    line-height: 1.5;
+    border: 1px solid #ffe0b2;
+  }
