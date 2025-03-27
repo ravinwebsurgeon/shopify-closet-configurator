@@ -8,8 +8,19 @@ const initialState = {
         width: [55, 70, 85, 100, 115, 130, 155, 170, 200, 230, 255, 260, 270, 285, 300, 355, 390, 400, 500, 600, 700, 800],
         depth: [20, 30, 40, 50, 60, 70, 80],
         shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11]
-      }
+      },
+    racks : {}
 };
+
+const createInitialSection  = (width,height,shelves)=>({
+    width,
+    height,
+    shelves
+})
+
+
+
+
 
 const shelfDetailSlice = createSlice({
     name:"shelfDetails",
@@ -21,6 +32,27 @@ const shelfDetailSlice = createSlice({
         },
         setShowConfigurator:(state,action) =>{
             state.showConfigurator = action.payload
+        },
+        setSection:(state,action) =>{
+            const {racksCount, currShelfHeight,shelfDepth,positions} = action.payload;
+            const newSection = {}
+            const shelves = {}
+            positions.forEach((positions,index) =>{
+                shelves[`shelves_${index+1}`] = {
+                    position :positions
+                }
+            })
+            console.log("Shelves",shelves)
+
+            
+            console.log("RackWidths",racksCount)
+            racksCount.forEach((width,index)=> {
+                newSection[`section_${index+1}`] = 
+                createInitialSection(width,currShelfHeight,shelves)
+            });
+
+            state.racks = {sections:newSection,
+                depth:shelfDepth}
         }
     }
 })
@@ -30,6 +62,7 @@ const shelfDetailSlice = createSlice({
 export const {
     setConfiguration,
     setShowConfigurator,
+    setSection
 } = shelfDetailSlice.actions;
 
 // export default reducer

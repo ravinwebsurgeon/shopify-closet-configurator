@@ -1,15 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
+import { setSection } from "../../slices/shelfDetailSlice";
 
 const ImageConfigurator = () => {
+
+  const dispatch = useDispatch();
   const [positionArr , setPositionArr] = useState([]);
+  const [racks, setRacks] = useState([]);
+  const [selectedRack,setSelectedRack] = useState()
+
+
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
   );
 
+  const newInitialValue = useSelector((state)=> state.shelfDetail.racks)
+  console.log("new Values",newInitialValue)
+  console.log("type",typeof(newInitialValue))
+
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight =  initialShelfValue.height;
+  const shelfDepth = initialShelfValue.depth
+  const rackWidth = initialShelfValue.width || 55;
 
   const heightArr = [
     {"100":"57"},
@@ -24,6 +37,7 @@ const ImageConfigurator = () => {
     {"300":"157"},
   ]
 
+  // function used to set shelves at a specific height
   const GeneratePosArr = (currShelfHeight)=>{
     const Result = heightArr.find(obj => obj[currShelfHeight] !== undefined)
     const heightResult = parseInt(Object.values(Result)[0])
@@ -40,11 +54,42 @@ const ImageConfigurator = () => {
     return positions;
   }
 
+  // function used to calculate no. of racks
+  const findOptimizedRacks = (totalWidth) => {
+    let bestCombination = null;
+    const availableWidths = [100, 130, 115, 85, 70, 55];
+  
+    const findCombination = (remaining, combination = []) => {
+      if (remaining === 0) {
+        if (!bestCombination || combination.length < bestCombination.length) {
+          bestCombination = [...combination];
+        }
+        return;
+      }
+  
+      for (let width of availableWidths) {
+        if (remaining >= width) {
+          findCombination(remaining - width, [...combination, width]);
+        }
+      }
+    };
+  
+    findCombination(totalWidth);
+    
+    if (totalWidth === 230) return [115, 115]; 
+  
+    return bestCombination || [];
+  };
+
+
 // use effect would render initially
- useEffect(()=>{
- const positions =  GeneratePosArr(currShelfHeight);
- setPositionArr(positions)
- },[])
+//  useEffect(()=>{
+//  const positions =  GeneratePosArr(currShelfHeight);
+//  const racksCount = findOptimizedRacks(rackWidth);
+//  setPositionArr(positions);
+//  setRacks(racksCount);
+//  dispatch(setSection({racksCount,currShelfHeight,shelfDepth,positions}));
+//  },[])
 
  //
  useEffect(() => {
@@ -72,11 +117,6 @@ const ImageConfigurator = () => {
   setPositionArr(updatedPositions); 
 }, [currShelfHeight]); 
 
-
- 
-  
-
-
   return (
     <>
       <div className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U">
@@ -89,36 +129,43 @@ const ImageConfigurator = () => {
         </div>
         <div className="demo-config">
           <div className="Visual_container__tG7BQ Carousel_visual__FfW0p">
+            {/* Appending racks according to data we got */}
+            {newInitialValue && Object.entries(newInitialValue.sections).map(([sectionKey, section], index) => (
+            <React.Fragment key={sectionKey}>
             {/* first two poles section */}
-            <div
-              className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI  Staander_height${initialShelfValue?.height || 100}`}
-              style={{ zIndex: 0 }}
-           
-            >
-              <div className="Staander_achter__8cpuX">
-                <div className="Staander_achterTop__nQ0aW"></div>
-                <div className="Staander_achterMiddle__XrxPJ"></div>
-                <div className="Staander_achterBottom__YRp6n"></div>
+           {index === 0 &&(
+              <div
+                className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI  Staander_height${section?.height || 100} ${index > 0  ? "hidden" :""}`}
+                style={{ zIndex: index }}
+                key={index}
+            
+              >
+                <div className="Staander_achter__8cpuX">
+                  <div className="Staander_achterTop__nQ0aW"></div>
+                  <div className="Staander_achterMiddle__XrxPJ"></div>
+                  <div className="Staander_achterBottom__YRp6n"></div>
+                </div>
+                <div className="Staander_voor__AegR3">
+                  <div className="Staander_voorTop__1m0QA"></div>
+                  <div className="Staander_voorMiddle__O-Po9"></div>
+                  <div className="Staander_voorBottom__dVzsj"></div>
+                </div>
               </div>
-              <div className="Staander_voor__AegR3">
-                <div className="Staander_voorTop__1m0QA"></div>
-                <div className="Staander_voorMiddle__O-Po9"></div>
-                <div className="Staander_voorBottom__dVzsj"></div>
-              </div>
-            </div>
+           )}
 
             {/* shelf section */}
             <div>
               <div
                 data-indicator-index="1"
-                className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__cphN6 Section_height${initialShelfValue.height || 100} Section_width${initialShelfValue?.width || 55}`}
-                style={{ zIndex: 1 }}
+                className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__cphN6 Section_height${section.height || 100} Section_width${section.width|| 55}`}
+                style={{ zIndex: index }}
               >
                 <div className="Section_accessoires__+se2+">
-                  {positionArr.map((position,index)=>(
+                  {section.shelves  &&  Object.entries(section.shelves).map(([shelfkey,shelf],index)=>(
                       <button
                       className="Legbord_Legbord__k51II Section_legbord__n3SHS Legbord_metal__66pLU Legbord_clickable__uTn2b"
-                      style={{ zIndex: position.zIndex, top: position.top }}
+                      style={{ zIndex: shelf.position.zIndex, top: shelf.position.top }}
+                      key={shelfkey}
                     >
                       <div className="Legbord_inner__eOg0b">
                         <div className="Legbord_left__ERgV5"></div>
@@ -133,8 +180,8 @@ const ImageConfigurator = () => {
             </div>
             {/* next two poles */}
             <div
-              className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI Staander_height${initialShelfValue?.height || 100}`}
-              style={{zIndex: 2}}
+              className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI Staander_height${section?.height || 100}`}
+              style={{zIndex: index+1}}
             >
               <div className="Staander_achter__8cpuX">
                 <div className="Staander_achterTop__nQ0aW"></div>
@@ -147,6 +194,8 @@ const ImageConfigurator = () => {
                 <div className="Staander_voorBottom__dVzsj"></div>
               </div>
             </div>
+            </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

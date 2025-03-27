@@ -62,6 +62,11 @@ button.AddSection {
     z-index: 1;
 }
 
+
+.Staander_Staander__rAo9j.hidden{
+    display:none;
+}
+
 .Staander_Staander__rAo9j.Staander_height100{
     height: 57em
 }
