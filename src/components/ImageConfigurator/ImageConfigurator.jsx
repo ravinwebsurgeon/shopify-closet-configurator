@@ -80,8 +80,6 @@ const ImageConfigurator = () => {
   
     return bestCombination || [];
   };
-
-
 // use effect would render initially
 //  useEffect(()=>{
 //  const positions =  GeneratePosArr(currShelfHeight);
