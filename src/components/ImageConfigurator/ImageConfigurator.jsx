@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
-import { setSection } from "../../slices/shelfDetailSlice";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import DimensionsComponent from '../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent';
+import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
+
 
 const ImageConfigurator = () => {
 
@@ -9,15 +12,15 @@ const ImageConfigurator = () => {
   const [positionArr , setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack,setSelectedRack] = useState()
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
   );
 
-  const newInitialValue = useSelector((state)=> state.shelfDetail.racks)
-  console.log("new Values",newInitialValue)
-  console.log("type",typeof(newInitialValue))
+  const newInitialValue = useSelector((state)=> state.shelfDetail.racks);
+  const executionValues = useSelector((state)=>state.shelfDetail.racks.execution);
+  console.log("Execution Values",executionValues)
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight =  initialShelfValue.height;
@@ -80,16 +83,7 @@ const ImageConfigurator = () => {
   
     return bestCombination || [];
   };
-// use effect would render initially
-//  useEffect(()=>{
-//  const positions =  GeneratePosArr(currShelfHeight);
-//  const racksCount = findOptimizedRacks(rackWidth);
-//  setPositionArr(positions);
-//  setRacks(racksCount);
-//  dispatch(setSection({racksCount,currShelfHeight,shelfDepth,positions}));
-//  },[])
 
- //
  useEffect(() => {
   if (!currShelfHeight) return; 
 
@@ -115,13 +109,26 @@ const ImageConfigurator = () => {
   setPositionArr(updatedPositions); 
 }, [currShelfHeight]); 
 
+  const handleAddSection = (e) =>{
+    e.preventDefault()
+    alert("Add button clicked !!!")
+  }
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U">
         <div className="row-container visualFrame-top">
           <div className="spacer-div"></div>
           <div className="addsection-div">
-            <button className="AddSection"> + Add Section</button>
+            <button className="AddSection" onClick={()=> setIsModalOpen(true)}> + Add Section</button>
           </div>
           <div className="hidedoors-div">Hide doors</div>
         </div>
@@ -133,10 +140,13 @@ const ImageConfigurator = () => {
             {/* first two poles section */}
            {index === 0 &&(
               <div
-                className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI  Staander_height${section?.height || 100} ${index > 0  ? "hidden" :""}`}
+                className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal
+                ${executionValues.color === "black" ? "Staander_black" : "" } 
+                ${executionValues.topCaps === "topCaps" ? "Staander_hasTopdoppen" : "" } 
+                Staander_voetPlastic__WSqGI  
+                Staander_height${section?.height || 100} ${index > 0  ? "hidden" :""}`}
                 style={{ zIndex: index }}
                 key={index}
-            
               >
                 <div className="Staander_achter__8cpuX">
                   <div className="Staander_achterTop__nQ0aW"></div>
@@ -155,13 +165,14 @@ const ImageConfigurator = () => {
             <div>
               <div
                 data-indicator-index="1"
-                className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__cphN6 Section_height${section.height || 100} Section_width${section.width|| 55}`}
+                className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${section.height || 100} Section_width${section.width|| 55}`}
                 style={{ zIndex: index }}
               >
                 <div className="Section_accessoires__+se2+">
                   {section.shelves  &&  Object.entries(section.shelves).map(([shelfkey,shelf],index)=>(
                       <button
-                      className="Legbord_Legbord__k51II Section_legbord__n3SHS Legbord_metal__66pLU Legbord_clickable__uTn2b"
+                      className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                      ${executionValues.color === "black" ? "Legbord_black" : "Legbord_metal" } Legbord_clickable__uTn2b`}
                       style={{ zIndex: shelf.position.zIndex, top: shelf.position.top }}
                       key={shelfkey}
                     >
@@ -178,8 +189,12 @@ const ImageConfigurator = () => {
             </div>
             {/* next two poles */}
             <div
-              className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal__vQ0lt Staander_hasTopdoppen__ZdnQY Staander_voetPlastic__WSqGI Staander_height${section?.height || 100}`}
-              style={{zIndex: index+1}}
+              className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
+                ${executionValues.color === "black" ? "Staander_black" : "" } 
+                ${executionValues.topCaps === "topCaps" ? "Staander_hasTopdoppen" : "" }  
+                Staander_voetPlastic__WSqGI 
+                Staander_height${section?.height || 100}`}
+               style={{zIndex: index+1}}
             >
               <div className="Staander_achter__8cpuX">
                 <div className="Staander_achterTop__nQ0aW"></div>
@@ -197,6 +212,11 @@ const ImageConfigurator = () => {
           </div>
         </div>
       </div>
+      <ModalComponent isOpen={isModalOpen}>
+        <AddSection onClose={()=>setIsModalOpen(false)}>
+            <DimensionsComponent/>
+        </AddSection>
+      </ModalComponent>
     </>
   );
 };
