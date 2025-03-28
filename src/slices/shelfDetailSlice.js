@@ -12,6 +12,15 @@ const initialState = {
     racks : {}
 };
 
+const executionObject ={
+    "color":"black",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"",
+    "feet":"Plastic"
+}
+
+
 const createInitialSection  = (width,height,shelves)=>({
     width,
     height,
@@ -56,7 +65,9 @@ const shelfDetailSlice = createSlice({
                 ...state.racks.sections,  
                 ...newSection            
             },
-                depth:shelfDepth}
+                depth:shelfDepth,
+                execution:executionObject
+            }
         }
     }
 })

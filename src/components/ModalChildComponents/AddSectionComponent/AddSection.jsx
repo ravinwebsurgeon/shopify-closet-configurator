@@ -46,6 +46,7 @@ const AddSection = ({ children, onClose }) => {
     const racksCount = [configurations.width];
     const shelfDepth = configurations.shelfDepth;
     dispatch(setSection({racksCount,currShelfHeight:configurations.height,shelfDepth,positions}));
+    onClose();
   };
 
   // function used to set shelves at a specific height
@@ -64,13 +65,6 @@ const AddSection = ({ children, onClose }) => {
     }
     return positions;
   }
-
-
-
-
-
-
-
 
   return (
     <>
