@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./addSection.css";
+import "./AddSection.css";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
