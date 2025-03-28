@@ -46,12 +46,16 @@ const shelfDetailSlice = createSlice({
 
             
             console.log("RackWidths",racksCount)
+            const existingSectionCount = state.racks.sections ? Object.keys(state.racks.sections).length : 0;
             racksCount.forEach((width,index)=> {
-                newSection[`section_${index+1}`] = 
+                newSection[`section_${existingSectionCount+index+1}`] = 
                 createInitialSection(width,currShelfHeight,shelves)
             });
 
-            state.racks = {sections:newSection,
+            state.racks = { sections: {
+                ...state.racks.sections,  
+                ...newSection            
+            },
                 depth:shelfDepth}
         }
     }

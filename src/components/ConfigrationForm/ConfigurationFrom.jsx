@@ -33,7 +33,6 @@ const ConfigurationFrom = () => {
     {"240":"127"},
     {"250":"132"},
     {"300":"157"},
-    {"300":"157"},
   ]
 
   const [positionArr , setPositionArr] = useState([]);
@@ -48,7 +47,7 @@ const ConfigurationFrom = () => {
   };
 
   // function used to set shelves at a specific height
-  const GeneratePosArr = (currShelfHeight, shelfCount)=>{
+  const  GeneratePosArr = (currShelfHeight, shelfCount)=>{
     const Result = heightArr.find(obj => obj[currShelfHeight] !== undefined)
     const heightResult = parseInt(Object.values(Result)[0])
     
@@ -114,7 +113,7 @@ const ConfigurationFrom = () => {
       const racksCount = findOptimizedRacks(formData.width);
        setPositionArr(positions);
        setRacks(racksCount);
-       dispatch(setSection({racksCount,height,shelfDepth:depth,positions}));
+       dispatch(setSection({racksCount,currShelfHeight:height,shelfDepth:depth,positions}));
      
     }
   };

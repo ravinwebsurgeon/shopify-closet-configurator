@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
-import { setSection } from "../../slices/shelfDetailSlice";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import DimensionsComponent from '../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent';
+import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
+
 
 const ImageConfigurator = () => {
 
@@ -9,15 +12,13 @@ const ImageConfigurator = () => {
   const [positionArr , setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack,setSelectedRack] = useState()
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
   );
 
   const newInitialValue = useSelector((state)=> state.shelfDetail.racks)
-  console.log("new Values",newInitialValue)
-  console.log("type",typeof(newInitialValue))
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight =  initialShelfValue.height;
@@ -80,16 +81,7 @@ const ImageConfigurator = () => {
   
     return bestCombination || [];
   };
-// use effect would render initially
-//  useEffect(()=>{
-//  const positions =  GeneratePosArr(currShelfHeight);
-//  const racksCount = findOptimizedRacks(rackWidth);
-//  setPositionArr(positions);
-//  setRacks(racksCount);
-//  dispatch(setSection({racksCount,currShelfHeight,shelfDepth,positions}));
-//  },[])
 
- //
  useEffect(() => {
   if (!currShelfHeight) return; 
 
@@ -115,13 +107,26 @@ const ImageConfigurator = () => {
   setPositionArr(updatedPositions); 
 }, [currShelfHeight]); 
 
+  const handleAddSection = (e) =>{
+    e.preventDefault()
+    alert("Add button clicked !!!")
+  }
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U">
         <div className="row-container visualFrame-top">
           <div className="spacer-div"></div>
           <div className="addsection-div">
-            <button className="AddSection"> + Add Section</button>
+            <button className="AddSection" onClick={()=> setIsModalOpen(true)}> + Add Section</button>
           </div>
           <div className="hidedoors-div">Hide doors</div>
         </div>
@@ -197,6 +202,11 @@ const ImageConfigurator = () => {
           </div>
         </div>
       </div>
+      <ModalComponent isOpen={isModalOpen}>
+        <AddSection onClose={()=>setIsModalOpen(false)}>
+            <DimensionsComponent/>
+        </AddSection>
+      </ModalComponent>
     </>
   );
 };
