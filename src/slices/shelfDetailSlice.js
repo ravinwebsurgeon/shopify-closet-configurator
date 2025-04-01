@@ -24,7 +24,8 @@ const executionObject ={
 }
 const selectedSection = "section_1";
 
-const activeTab = "dimesions"
+const activeTab = "dimensions"
+const showCounter = true;
 
 const createInitialSection  = (width,height,shelves)=>({
     width,
@@ -94,6 +95,7 @@ const shelfDetailSlice = createSlice({
         },
         selectedSection,
         activeTab,
+        showCounter
       };
     },
     updateExecution: (state, action) => {
@@ -128,6 +130,37 @@ const shelfDetailSlice = createSlice({
         }
       }
     },
+    setShowCounter :(state,action) =>{
+        state.racks.showCounter = action.payload;
+    },
+    updateShelvesPosition : (state,action) =>{
+      const {sectionId,positionArray} = action.payload;
+
+      console.log("section-id",sectionId);
+      console.log("positionArray",positionArray);
+
+      const section = state.racks.sections[sectionId];
+      console.log("section",section);
+
+      if(section){
+        const updatedShelves = {};
+
+        positionArray.forEach((position, index) => {
+          updatedShelves[`shelves_${index + 1}`] = {
+            position  
+          };
+        });
+
+        console.log("Updated Shelves -->",updatedShelves);
+
+        state.racks.sections[sectionId] = {
+          ...section,
+          shelves: updatedShelves,
+        };
+
+      }
+    }
+
   },
 });
 
@@ -141,6 +174,8 @@ export const {
     deleteSection,
     updateSectionDimensions,
     setActiveTab,
+    setShowCounter,
+    updateShelvesPosition,
 } = shelfDetailSlice.actions;
 
 // export default reducer

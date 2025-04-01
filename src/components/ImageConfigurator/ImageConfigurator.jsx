@@ -7,12 +7,14 @@ import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   deleteSection,
   setCurrSelectedSection,
+  setShowCounter,
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab); 
+  const showCounter = useSelector((state) =>state.shelfDetail.racks.showCounter);
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack, setSelectedRack] = useState();
@@ -291,7 +293,7 @@ const ImageConfigurator = () => {
                               </button>
                             )}
                           </div>
-                          {(selectedSection == sectionKey) && activeTab == 'shelves' && <ShelfCounter />}
+                          {(selectedSection == sectionKey) && activeTab == 'shelves' && showCounter && <ShelfCounter onClick={()=>dispatch(setShowCounter(false))}/>}
                         </div>
                       </div>
                     </div>
