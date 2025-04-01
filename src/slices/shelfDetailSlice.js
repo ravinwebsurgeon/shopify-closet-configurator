@@ -13,13 +13,13 @@ const initialState = {
 };
 
 const executionObject ={
-    "color":"black",
+    "color":"metal",
     "material":"metal",
     "topCaps":"topCaps",
-    "braces":"",
+    "braces":"X-braces",
     "feet":"Plastic"
 }
-
+const selectedSection = "section_1"
 
 const createInitialSection  = (width,height,shelves)=>({
     width,
@@ -51,14 +51,27 @@ const shelfDetailSlice = createSlice({
                     position :positions
                 }
             })
-            console.log("Shelves",shelves)
 
-            
-            console.log("RackWidths",racksCount)
-            const existingSectionCount = state.racks.sections ? Object.keys(state.racks.sections).length : 0;
-            racksCount.forEach((width,index)=> {
-                newSection[`section_${existingSectionCount+index+1}`] = 
-                createInitialSection(width,currShelfHeight,shelves)
+            // const existingSectionCount = state.racks.sections ? Object.keys(state.racks.sections).length : 0;
+            // racksCount.forEach((width,index)=> {
+            //     newSection[`section_${existingSectionCount+index+1}`] = 
+            //     createInitialSection(width,currShelfHeight,shelves)
+            // });
+
+            // Get the highest section number
+                const sectionNumbers = Object.keys(state.racks.sections || {})
+                .map((key) => parseInt(key.replace("section_", ""), 10))
+                .filter((num) => !isNaN(num));
+
+            const highestSectionNumber = sectionNumbers.length > 0 ? Math.max(...sectionNumbers) : 0;
+
+            // Assign new sections starting from the highest section number + 1
+            racksCount.forEach((width, index) => {
+                newSection[`section_${highestSectionNumber + index + 1}`] = createInitialSection(
+                    width,
+                    currShelfHeight,
+                    shelves
+                );
             });
 
             state.racks = { sections: {
@@ -66,7 +79,43 @@ const shelfDetailSlice = createSlice({
                 ...newSection            
             },
                 depth:shelfDepth,
-                execution:executionObject
+                execution:{
+                    ...executionObject,
+                    ...(state.racks.execution || {})
+                },
+                selectedSection
+            }
+        },
+        updateExecution : (state,action) =>{
+            state.racks.execution = {
+                ...state.racks.execution,
+                ...action.payload
+            };
+        },
+        setCurrSelectedSection : (state,action)=>{
+            console.log("selected section payload",action.payload)
+            state.racks.selectedSection = action.payload
+        },
+        deleteSection : (state,action) =>{
+            const sectionKey = action.payload;
+            if(state.racks.sections[sectionKey]){
+                delete state.racks.sections[sectionKey]
+            }
+        },
+        updateSectionDimensions : (state,action) =>{
+            const {sectionId,dimension,value,positions} = action.payload
+            if (dimension === 'depth') {
+                state.racks.depth = value;
+            } else if (state.racks.sections && state.racks.sections[sectionId]) {
+                state.racks.sections[sectionId][dimension] = value;
+                if (dimension === 'height' && positions) {
+                    state.racks.sections[sectionId].shelves = {};
+                    positions.forEach((position, index) => {
+                        state.racks.sections[sectionId].shelves[`shelves_${index + 1}`] = {
+                            position: position
+                        };
+                    });
+                }
             }
         }
     }
@@ -77,7 +126,11 @@ const shelfDetailSlice = createSlice({
 export const {
     setConfiguration,
     setShowConfigurator,
-    setSection
+    setSection,
+    updateExecution,
+    setCurrSelectedSection,
+    deleteSection,
+    updateSectionDimensions,
 } = shelfDetailSlice.actions;
 
 // export default reducer

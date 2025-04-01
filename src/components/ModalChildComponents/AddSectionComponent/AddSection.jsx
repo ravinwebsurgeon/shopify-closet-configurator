@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { setSection } from "../../../slices/shelfDetailSlice";
+import AddSectionDimensions from "./AddSectionDimensions";
 
 const AddSection = ({ children, onClose }) => {
 
@@ -25,9 +26,11 @@ const AddSection = ({ children, onClose }) => {
     {"300":"157"},
   ]
 
-  const configurations = useSelector(
-    (state) => state.shelfDetail.configuration
-  );
+  const [dimensions, setDimensions] = useState({
+    width: 55,
+    height: 100,
+    depth: 20
+  });
 
   const handleAddShelfCount = (e) =>{
     e.preventDefault();
@@ -41,11 +44,11 @@ const AddSection = ({ children, onClose }) => {
 
   const handleAddSection = (e) => {
     e.preventDefault();
-    alert(`height: ${configurations.height}\n width: ${configurations.width}`);
-    const positions = GeneratePosArr(configurations.height,shelfCount);
-    const racksCount = [configurations.width];
-    const shelfDepth = configurations.shelfDepth;
-    dispatch(setSection({racksCount,currShelfHeight:configurations.height,shelfDepth,positions}));
+    // alert(`height: ${configurations.height}\n width: ${configurations.width}`);
+    const positions = GeneratePosArr(dimensions.height, shelfCount);
+    const racksCount = [dimensions.width];
+    const shelfDepth = dimensions.depth;
+    dispatch(setSection({racksCount,currShelfHeight:dimensions.height,shelfDepth,positions}));
     onClose();
   };
 
@@ -74,7 +77,10 @@ const AddSection = ({ children, onClose }) => {
           <FontAwesomeIcon icon={faXmark} />
         </button>
       </div>
-      {children}
+      <AddSectionDimensions dimensions={dimensions} setDimensions={setDimensions} />
+      <div className="dimension-note">
+        The depth indicated above applies to the entire cabinet. It is possible that parts may be removed as a result of the resizing.
+      </div>
       <div className="counter-button-div">
         <span className="add-shevles-label">Shelves</span>
         <div className="counter-container-div">

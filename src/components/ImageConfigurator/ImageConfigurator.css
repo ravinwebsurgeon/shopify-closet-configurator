@@ -8,7 +8,7 @@
 .addsection-div {
     flex: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     cursor: pointer;
 }
 
@@ -21,15 +21,23 @@
 }
 .spacer-div {
     flex: 1;
-    background: rgb(246, 180, 180);
+    /* background: rgb(246, 180, 180); */
 }
 
 button.AddSection {
     background: transparent;
-    border: 1px solid blue;
     border-radius: 5px;
     padding: 0px 15px;
+    border: 1px solid #2196f3;
     font-family: ubuntu;
+    color: #2196f3;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+button.AddSection:hover {
+    background: #2196f3;
+    color: #fff;
 }
 
 .hidedoors-div {
@@ -41,6 +49,8 @@ button.AddSection {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 15px;
 }
  
 .Visual_container__tG7BQ {
@@ -510,3 +520,130 @@ button.AddSection {
 .Staander_Staander__rAo9j.Staander_notFirst__FSKKl {
     margin-left: -7.5em;
 }
+
+/* Feets css */
+
+
+.Staander_Staander__rAo9j.Staander_metal .Staander_voor__AegR3 .Staander_voorBottom__dVzsj {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAUUlEQVR4AWL4+PHT/6GAt2zbiRUD2p8DEoABGAaClTD/AJVUS4uLEXYHL+ANGDBgwICBHw8YMLDNAzvROrATrQM70TpwE60Dl54BAAAAAIDPvQkYb35+aqMIAAAAAElFTkSuQmCC);
+    background-size: cover;
+}
+
+.Staander_Staander__rAo9j.Staander_metal.Staander_Adjustable_Feet .Staander_voor__AegR3 .Staander_voorBottom__dVzsj {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACjElEQVR4AWL4+PHT/6GADx89/n/Ltp1wvG7D5v+ZWTn/h6AHEI6PiIgamh4oLa0AtGNW141DQRjeElKCS0gJKUEluICl58UwJ2KWmcOcR5WgElyCS5j9NeHEzHeP5pwv6Dvzf7Y4Di+mwM+ffzi4kAKP4cUUUBTtQ3gW+PL1O4kAwrYjElkgAguCCjyGR4kn8Cq8eAKvwgso0Cb8o8DSJMjmS1GxXKP3OG6QG6Yfh59m4awZAmrD8kQHiy+QCCQCiUAiYDnuwtXNfdROALeDubkNblqOZNluznZc8vwsZfNFJpN7BD9bjg+8Jli2bTc189CyoqVUzVg2TLsJAYIAxQIICHzG5J+fYAEGAoQ1Idampx58c3tP2t07PD+UVYIAIQQNKcBrVVVvoZe8dyBP7lNZWdtMgWXQ3NjaJQjQGAW4187eAaF3iBnpcQZPgxDQExMWeJrTAjmwOOy7LT82IWb6Aq+J8Pfvsmqk+gketgs9YwFmbWOb1jd35G4CHH5OBV7zva0AFgshsHegLLcVMCw3xD/5o5pHgR3MdLwMBdlCZwFAMdhhYlPCMX9WAjz7QNZ4XaFUpVKlTvlipT+BJ56C6KZDmmFzw0NFZzTdJF23RhJw8Y46rg8C8jN5Jg5bPzqlo5NzahyfUa1xQpXa0WgCNgY4GOYFOQZNCDfvDJryUNy485DXP5erjXg4QhzHYfj5/sXV7RvOL2/476fnV8zJ2SUdn17MTICHVevH/C4iAIdBKA43aYFzQQSktgKPEsugNYhArlCelsA55vR3aYHwEpARPpyhQIT1OQik0W+0h1sQWISAhPDLMRAIET4mGkEgAiEEQvxdxv+XgYTXLn1KKqmkkkoqqf+9/gEX1Gynr5iyMgAAAABJRU5ErkJggg==);
+    height: 2em;
+}
+
+.Staander_Staander__rAo9j.Staander_metal.Staander_Adjustable_Feet .Staander_achter__8cpuX .Staander_achterBottom__YRp6n {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADGUlEQVR4AWK4eOkyoD27sG0disIA3BEyQkbICBkhwsfvlZlb0cMytw6TXWZmEnmEjJARPMJ5/7FuLXAV0rXrK9XSH849/xcGkpH7x2cq6Bs15fzyhu4enuvK1s6+a53+gSFSFjA8Mk4fP35WEyDKqwmYnJrl4moCRHk1AfFEmgu/PYBvxYHB4brT1tbxGqDkK2B2bpGHygJYg4MjEd8Aq2sJ+vr1uyyAhUSasHkMcJeXAHDK+wBwl5cAaObevgAyuSK1d3TxUDkAUd5jQOXynL7+QQ2lJupJT29/jPv6AKhYXtyKEjYvAfiUWLF8oAHig5Yrv379JZ4XZEDF8vg44A1gc2uHZGRqerZSee8A/BIlI909fa7yeOXg4moCuPzF1a1iAHd5JQFlUV5JgIVEUFY9AB42zqfECgAFNrUB74B3wDsgmy9GXyt/c/dIOC8SyNLpTC6Uyeabc7lCOZcvUL5g0MbWjp31Tc425YsGAzgmLtMciOKalggnkmktlclZABAAxABRFNER7ON05zDCl8kAC/hEMpUJ+14cP1DFlpbXzDUtQQAQANQAgACwr491NpdXtKinpSen50LIBFIGgBaXV0kigHCD0Oz8UhnrNyMhmcWjyCZCL/EQ8DLDEjMbe3jhiRcSt0TJKe4vwMn07AJ3aOZONZUXxS1Xcb8Bboi1tKI1VysfRogTNIBAUEWAlkhHp2bmAwuYW1iuDEhnC9FUJk8LS6uBAvAtn0hlydjYrg5AiMOQVS1pY2ZQ2G/AIo4n0znS17do//CEdvYOaWNrt3aACAbZRXjfXjCezBAeakgKt0qG0jitUYBubNofO4r6hl2UC27vHtDJ2aWd49MLOjw+kwPIYVC+uE4FDCtiMA/kzzm8KP+DyAM4ewfHLwPF4WM6ODqx/9jjL/uX13d0dXPvhI/z6Xw+5+ziOhAAlD6lo5Nzu8jp+VVdAFy+MYBAWAEGlGoBhJHNgAEsrD2BObV/RhKQZgAuAbDeAFACQAMg1iRjAyAEQBSAYQAmADABMAEoNQgoIyaOmzhdw/kTSAyASD29/gOGsign+SReGgAAAABJRU5ErkJggg==);
+    height: 2em;
+}
+
+.Staander_Staander__rAo9j.Staander_black.Staander_Adjustable_Feet .Staander_voor__AegR3 .Staander_voorBottom__dVzsj {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACNklEQVR4AWIoraj9PxRwUmoWoP2yMHIcBsNoOjhmWmZm3jCz4Zgb2BLcgUtICS7BJbiElJASvvu0o+PQhLWjf+aFI70XDj58/v6Ltx++YP/wBCoG/JJf29hWM0DKqxlwEY4LcTUDpLyaAalsQQj/H3B0cg4VaCZPApUDAnJb0QApz1Ex4Je8igG/5FULaC4vA8LDoGK+Dgz7Hf6lWDZrvawn5Uc3/Nb0CZrghBQYHTDG0QE6QAcUq9bt95++Bc0C3n78UptY8ULFKBerpscAlM3XqNpv/6No2II6b+PwtlNjl84WK1P5UtXJl406A0ApYlHSQomyRJwWyNMScRvelvfxCmWjPHLxZCZfTueKXrZQAQPAAPQYAAYgV6o2soWym86XhvesxJLZKeKQOgPAAAwwAAxAimtybZ97fBmkeJl4BD8ZZkCCa8t9GsQlU70+2i6pEwjGEPCLeCoXJNL5K+431Un8NvGbSY8joEkIGOK2C/AIJi2gCVdNA/jnwVchYG19y2ka8OD+A59X4jwcm8gAPsCYnp4BPVsHEAhevnglSsWdxhYQjqWwf3CM5ZU1PHv6HNKtc0AzRJCoF1Hrm9s4PQ/j/DKKRCrbV0A0nrp+xo9PL7CxtY2V1fXrfR4/evyvQw8BPfDk8RPMzs1jjsw2ofe1ew8YHz0E1BQJKIdajagjjQkV98hWqJsRlcQd88sqIDXyhdwO9TOinISJI/ElQZ+CvsSV65ZJOHTTR48ePXr06PkBH7gDWWAFYYsAAAAASUVORK5CYII=);
+    height: 2em;
+}
+
+.Staander_Staander__rAo9j.Staander_black.Staander_Adjustable_Feet .Staander_achter__8cpuX .Staander_achterBottom__YRp6n {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACsUlEQVR4AWLIyM7/Tw0cE5/83z84jCgcGQNoxyxsHAeiMHwdHDMtM3iZwswxHghdwpaQDlJCStgSUkJKSAku4d3/pNnIt+CQM/FIsfQtOvO+LziJy+ePhfnr76N1zi6uSdmAq1iS9g6O1AwQ8moGZPIlFlczQMirGVCp6yw8/wC+Fi+v42NzfHrxVEBPakCuWOGhYQV4uulo0gJKtSYdaCdhBXhAe4FDSoBPPoQAn7yMgGrD8MuHEeCyt5SAumHTydklDw0rQMjPOiBAnrm4irUh1RqH88sbnX2lBATJi2tx8kNGwMV1PFg+ygH+jZafRCpHPC/SAUHy+P9sAnRca2GQyRUD5WcWwE9RYYB3R4/k8TcWVzMAv/OuU80Av7yKAZ6QVzLAAxpk1QvAS/1glxgQoMaxCFgELAIUDmiYTuq5AOxWtUhK13XrVd2w3IZp9xBATfsXf5L2H7r9mwOoYTldnOdGQrzSMJaqTbNd0y0PAQQx4LDoAAgz/t/5PH7X1kd4q9a0lqSL50s1vVht3PHHfQggBNAEAYQAquHyWKdTqjVTM5XOFiqvwC3oI4AQQCEGUAnr5cu1PtZ3waswxTXQAXTPDAPuZ3hi5tI04i7o+sVlBfjJFas9zHMN+8+rUcV14AFi5hzgD/FK1aY7TH4JEBO1ABFBgQHLyyupVLYY2QBs24MD3r97n/r08RMdn5xHKoCv1L19jeA2PAAQwyevrm0Qx1zHU9IDeOahdsIO7DNgxICnwV2MNja3af9Ao8vrGMWSaUrnihMHJNNZSqSydH55TQfaMW1u7fCMR3NDCxiVb9++45pbpzWwKvj86fPoa8gPkIYICI7wIhzQGyVgCXQiJu6BFhh9j8QnAxfcgf48rm3QBnqQ57hBKXArro2uoDehYN+3RlusqQNtHK9/gb0EoXykOKYAAAAASUVORK5CYII=);
+    height: 2em;
+}
+
+/* section Number css */
+.Section_Section__3MCIu .Section_sectionInterface {
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+    padding-right: 27px;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+}
+
+
+.Section_Section__3MCIu .Section_sectionNumberContainer {
+    align-items: flex-start;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    height: 40px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    pointer-events: all;
+    position: relative;
+    white-space: nowrap;
+    width: 24px;
+}
+
+.Section_Section__3MCIu .Section_sectionNumberContainer .Section_sectionNumber{
+    align-items: center;
+    background-color: #939393;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font-weight: 600;
+    height: 24px;
+    justify-content: center;
+    width: 24px;
+    z-index: 999;
+}
+
+
+.Section_Section__3MCIu .Section_sectionNumberContainer .Section_sectionNumberActive {
+    background-color: #3c9cea;
+    cursor: default;
+}
+
+.Section_Section__3MCIu .Section_removeButton {
+    border-color: #c2c2c2;
+    height: 32px;
+    padding: 7px 8px;
+    width: 32px;
+}
+
+.Icon_container {
+    align-items: center;
+    display: inline-flex;
+    height: 1em;
+    justify-content: center;
+    width: 1em;
+}
+
+
+.Section_Section__3MCIu .Section_sectionNumberContainer.Section_removeButton {
+    left: 36px;
+    position: absolute;
+    top: -3px;
+}
+
+.AddRemove_button {
+    background-color: #fff;
+    border: 1px solid #5c5c5c;
+    border-radius: 2px;
+    height: 32px;
+    visibility: visible;
+    width: 32px;
+}
+
+.AddRemove_button .AddRemove_icon{
+    margin-top: 0;
+}
+
+
+/* Higlighting section for legboard*/
+
+.Legbord_Legbord__k51II.Legboard_isHighlighted {
+    -webkit-filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    opacity: .7;
+}
+
+
+
+
