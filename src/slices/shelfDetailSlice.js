@@ -15,13 +15,13 @@ const initialState = {
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
@@ -36,7 +36,7 @@ const shelfDetailSlice = createSlice({
   initialState,
   reducers: {
     setActiveTab: (state, action) => {
-      console.log(action.payload);
+      
       state.racks.activeTab = action.payload;
     },
     setConfiguration: (state, action) => {
