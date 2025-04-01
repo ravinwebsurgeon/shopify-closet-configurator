@@ -85,7 +85,7 @@ const ConfigurationFrom = () => {
   
     findCombination(totalWidth);
     
-    if (totalWidth === 230) return [115, 115]; 
+    if (Number(totalWidth) === 230) return [115, 115]; 
   
     return bestCombination || [];
   };

@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setConfiguration } from '../../../slices/shelfDetailSlice';
+import { setConfiguration, updateSectionDimensions } from '../../../slices/shelfDetailSlice';
 import './DimensionsComponent.css'
 
 
 const DimensionsComponent = () => {
 
-    const configuration = useSelector((state) => state.shelfDetail.configuration);
     const dispatch = useDispatch();
-
-    const [dimensions, setDimensions] = useState({
-        width: configuration?.width || dimensionOptions.width[0],
-        height: configuration?.height || dimensionOptions.height[0],
-        depth: configuration?.depth || dimensionOptions.depth[0]
-      });
+    const configuration = useSelector((state) => state.shelfDetail.configuration);
+    const sections = useSelector((state)=>state.shelfDetail.racks.sections);
+    const activeSectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);
+    const activeSection = sections[activeSectionId];
+    const depth = useSelector((state) => state.shelfDetail.racks.depth);
 
   // Predefined values for each dimension
   const dimensionOptions = {
@@ -22,23 +20,85 @@ const DimensionsComponent = () => {
     depth: [20, 30, 40, 50, 60, 70, 80]
   };
 
+
+
+
+  const [dimensions, setDimensions] = useState({
+    width: activeSection?.width || dimensionOptions.width[0],
+    height: activeSection?.height || dimensionOptions.height[0],
+    depth: depth || dimensionOptions.depth[0]
+  });
+
+  useEffect(()=>{
+    if(activeSection){
+      setDimensions({
+        width: activeSection.width || dimensionOptions.width[0],
+        height: activeSection.height || dimensionOptions.height[0],
+        depth: depth || dimensionOptions.depth[0],
+      });
+    }
+  },[activeSectionId,activeSection])
+  
+
+  const heightArr = [
+    {"100":"57"},
+    {"120":"67"},
+    {"150":"82"},
+    {"180":"97"},
+    {"200":"107"},
+    {"210":"112"},
+    {"220":"117"},
+    {"240":"127"},
+    {"250":"132"},
+    {"300":"157"},
+  ];
+
+  const GeneratePosArr = (currShelfHeight, shelfCount) => {
+    const Result = heightArr.find(obj => obj[currShelfHeight] !== undefined);
+    const heightResult = parseInt(Object.values(Result)[0]);
+    
+    const positions = [];
+    
+    for (let i = 0; i < shelfCount; i++) {
+      const topPosition = ((heightResult - 9.5)/(shelfCount-1))*i;
+      positions.push({
+        zIndex: shelfCount-i,
+        top: `${topPosition}em`
+      });
+    }
+    return positions;
+  };
+
+  
+
   const handleDimensionChange = (dimension, value) => {
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
     setDimensions(newDimensions);
-    
-    // Update Redux store with new configuration
-    dispatch(setConfiguration({
-      ...configuration,
-      ...newDimensions
-    }));
+
+    if (activeSectionId && sections) {
+      const updatedSection = sections[activeSectionId];
+      let positions = null;
+      
+      if (dimension === 'height' && updatedSection.shelves) {
+        const shelfCount = Object.keys(updatedSection.shelves).length;
+        positions = GeneratePosArr(newValue, shelfCount);
+      }
+
+      dispatch(updateSectionDimensions({
+        sectionId: activeSectionId,
+        dimension,
+        value: newValue,
+        positions
+      }));
+    }
   };
 
 
 
 
   const calculateSliderStyle = (value, options) => {
-    const index = options.indexOf(value);
+    const index = options.indexOf(Number(value));
     const percentage = (index / (options.length - 1)) * 100;
     return { '--value-percent': `${percentage}%` };
   };
@@ -74,7 +134,7 @@ const DimensionsComponent = () => {
               type="range" 
               min="0"
               max={dimensionOptions.height.length - 1}
-              value={dimensionOptions.height.indexOf(dimensions.height)}
+              value={dimensionOptions.height.indexOf(Number(dimensions.height))}
               className="dimension-slider"
               style={calculateSliderStyle(dimensions.height, dimensionOptions.height)}
               onChange={(e) => handleDimensionChange('height', dimensionOptions.height[e.target.value])}
@@ -92,7 +152,7 @@ const DimensionsComponent = () => {
               type="range" 
               min="0"
               max={dimensionOptions.depth.length - 1}
-              value={dimensionOptions.depth.indexOf(dimensions.depth)}
+              value={dimensionOptions.depth.indexOf(Number(dimensions.depth))}
               className="dimension-slider"
               style={calculateSliderStyle(dimensions.depth, dimensionOptions.depth)}
               onChange={(e) => handleDimensionChange('depth', dimensionOptions.depth[e.target.value])}
