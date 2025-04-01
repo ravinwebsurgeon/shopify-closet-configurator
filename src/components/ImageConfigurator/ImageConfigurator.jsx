@@ -4,27 +4,32 @@ import "./ImageConfigurator.css";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import DimensionsComponent from "../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent";
 import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
-import { deleteSection, setCurrSelectedSection} from "../../slices/shelfDetailSlice";
+import {
+  deleteSection,
+  setCurrSelectedSection,
+} from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
-
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
+  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab); 
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack, setSelectedRack] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
-  
-
 
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
   );
 
-  const currentSelectedSection  = useSelector((state)=> state.shelfDetail.racks.selectedSection);
-  const[selectedSection,setSelectedSection] = useState(currentSelectedSection);
-  const[selectedShelf,setSelectedShelf] = useState(null)
+  const currentSelectedSection = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const [selectedSection, setSelectedSection] = useState(
+    currentSelectedSection
+  );
+  const [selectedShelf, setSelectedShelf] = useState(null);
 
   const newInitialValue = useSelector((state) => state.shelfDetail.racks);
   const executionValues = useSelector(
@@ -118,45 +123,44 @@ const ImageConfigurator = () => {
     setPositionArr(updatedPositions);
   }, [currShelfHeight]);
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (containerRef.current && !event.target.closest('.Legbord_Legbord__k51II')) {
+      if (
+        containerRef.current &&
+        !event.target.closest(".Legbord_Legbord__k51II")
+      ) {
         setSelectedShelf(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  const handleSectionClick = (e,sectionKey) =>{
+  const handleSectionClick = (e, sectionKey) => {
     e.preventDefault();
     setSelectedSection(sectionKey);
     dispatch(setCurrSelectedSection(sectionKey));
-  }
+  };
 
-  const handleSectionDelete = (e,sectionKey) =>{
+  const handleSectionDelete = (e, sectionKey) => {
     dispatch(deleteSection(sectionKey));
-  }
+  };
 
-  const handleSelectedShelfClick = (e,value,key) =>{
+  const handleSelectedShelfClick = (e, value, key) => {
     e.preventDefault();
     setSelectedShelf(value);
-    handleSectionClick(e,key);
-  }
-
-
-
-
-
-
+    handleSectionClick(e, key);
+  };
 
   return (
     <>
-      <div ref={containerRef} className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U">
+      <div
+        ref={containerRef}
+        className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U"
+      >
         <div className="row-container visualFrame-top">
           <div className="spacer-div"></div>
           <div className="addsection-div">
@@ -222,13 +226,24 @@ const ImageConfigurator = () => {
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
-                      } Legbord_clickable__uTn2b ${selectedShelf === `${sectionKey}-${shelfkey}` ? 'Legboard_isHighlighted' : ''}`}
+                      } Legbord_clickable__uTn2b ${
+                                    selectedShelf ===
+                                    `${sectionKey}-${shelfkey}`
+                                      ? "Legboard_isHighlighted"
+                                      : ""
+                                  }`}
                                   style={{
                                     zIndex: shelf.position.zIndex,
                                     top: shelf.position.top,
                                   }}
                                   key={shelfkey}
-                                  onClick={(e)=>handleSelectedShelfClick(e,`${sectionKey}-${shelfkey}`,`${sectionKey}`)}
+                                  onClick={(e) =>
+                                    handleSelectedShelfClick(
+                                      e,
+                                      `${sectionKey}-${shelfkey}`,
+                                      `${sectionKey}`
+                                    )
+                                  }
                                 >
                                   <div className="Legbord_inner__eOg0b">
                                     <div className="Legbord_left__ERgV5"></div>
@@ -243,36 +258,40 @@ const ImageConfigurator = () => {
                         <div className="Section_sectionInterface">
                           <div className="Section_sectionNumberContainer sk_hide_on_print">
                             <button
-                              className={`Section_sectionNumber ${selectedSection === sectionKey ?"Section_sectionNumberActive":""}`}
-                              onClick={(e) => handleSectionClick(e,sectionKey)}
+                              className={`Section_sectionNumber ${
+                                selectedSection === sectionKey
+                                  ? "Section_sectionNumberActive"
+                                  : ""
+                              }`}
+                              onClick={(e) => handleSectionClick(e, sectionKey)}
                             >
-                              {index+1}
+                              {index + 1}
                             </button>
-                            {selectedSection === sectionKey &&
+                            {selectedSection === sectionKey && (
                               <button
-                              type="button"
-                              className="AddRemove_button Section_removeButton"
-                              key={sectionKey}
-                              onClick={(e)=>handleSectionDelete(e,sectionKey)}
-                            >
-                              <i
-                                className="Icon_container AddRemove_icon"
-                                style={{width: "14px", height: "16px"}}
+                                type="button"
+                                className="AddRemove_button Section_removeButton"
+                                key={sectionKey}
+                                onClick={(e) =>
+                                  handleSectionDelete(e, sectionKey)
+                                }
                               >
-                                <svg viewBox="0 0 14 16">
-                                  <path
-                                    fill="currentColor"
-                                    fillRule="evenodd"
-                                    d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
-                                  ></path>
-                                </svg>
-                              </i>
-                            </button>
-                            }
-                            
-                          
+                                <i
+                                  className="Icon_container AddRemove_icon"
+                                  style={{ width: "14px", height: "16px" }}
+                                >
+                                  <svg viewBox="0 0 14 16">
+                                    <path
+                                      fill="currentColor"
+                                      fillRule="evenodd"
+                                      d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
+                                    ></path>
+                                  </svg>
+                                </i>
+                              </button>
+                            )}
                           </div>
-                          {/* <ShelfCounter/> */}
+                          {(selectedSection == sectionKey) && activeTab == 'shelves' && <ShelfCounter />}
                         </div>
                       </div>
                     </div>
@@ -304,7 +323,6 @@ const ImageConfigurator = () => {
                 )
               )}
           </div>
-          <ShelfCounter/>
         </div>
       </div>
       <ModalComponent isOpen={isModalOpen}>

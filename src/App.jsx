@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import ConfigurationFrom from "./components/ConfigrationForm/ConfigurationFrom"
 import ShelvingConfigurator from "./components/ShelvingConfigurator/ShelvingConfigurator";
-
+import './App.css'
 
 function App() {
 

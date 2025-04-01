@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import './ShelfCounter.css'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const ShelfCounter = () => {
-
+    const dispatch = useDispatch();
     const racksData = useSelector((state)=>state.shelfDetail.racks);
     const currentSection = racksData.selectedSection;
     const [shelfCount,setShelfCount] = useState(3);
