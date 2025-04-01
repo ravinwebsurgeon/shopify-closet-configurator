@@ -15,27 +15,33 @@ const initialState = {
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
 const selectedSection = "section_1";
-const activeTab = "dimensions";
-const createInitialSection = (width, height, shelves) => ({
-  width,
-  height,
-  shelves,
-});
+
+const activeTab = "dimesions"
+
+const createInitialSection  = (width,height,shelves)=>({
+    width,
+    height,
+    shelves
+})
+
+
+
+
 
 const shelfDetailSlice = createSlice({
   name: "shelfDetails",
   initialState,
   reducers: {
     setActiveTab: (state, action) => {
-      console.log(action.payload);
+      
       state.racks.activeTab = action.payload;
     },
     setConfiguration: (state, action) => {
@@ -127,14 +133,14 @@ const shelfDetailSlice = createSlice({
 
 // Export actions
 export const {
-  setConfiguration,
-  setShowConfigurator,
-  setSection,
-  updateExecution,
-  setCurrSelectedSection,
-  deleteSection,
-  updateSectionDimensions,
-  setActiveTab,
+    setConfiguration,
+    setShowConfigurator,
+    setSection,
+    updateExecution,
+    setCurrSelectedSection,
+    deleteSection,
+    updateSectionDimensions,
+    setActiveTab,
 } = shelfDetailSlice.actions;
 
 // export default reducer

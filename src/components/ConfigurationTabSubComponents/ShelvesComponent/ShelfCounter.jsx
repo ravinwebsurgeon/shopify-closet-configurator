@@ -22,7 +22,7 @@ const ShelfCounter = () => {
 
 
   return (
-    <>
+    <>  
       <div class="CounterWithAddRemove_container">
       <div class="CounterWithAddRemove_counter">
         <button className="shelf-decreament-btn" disabled={shelfCount === 3} onClick={handleRemoveShelf}> <FontAwesomeIcon icon={faMinus} /> </button>
