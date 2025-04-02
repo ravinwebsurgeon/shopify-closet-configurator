@@ -123,6 +123,24 @@ const shelfDetailSlice = createSlice({
         }
       }
     },
+    updateLastShelvePostion: (state, action) => {
+      const { sectionId, positions } = action.payload;
+
+      if (positions?.length > 0) {
+        const shelves = state.racks.sections[sectionId].shelves;
+        const shelfKeys = Object.keys(shelves).sort((a, b) => {
+          return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+        });
+
+        if (shelfKeys.length > 0) {
+          const lastShelfKey = shelfKeys[shelfKeys.length - 1];
+          shelves[lastShelfKey] = {
+            ...shelves[lastShelfKey],
+            position: positions[positions.length - 1],
+          };
+        }
+      }
+    },
   },
 });
 
@@ -135,6 +153,7 @@ export const {
   setCurrSelectedSection,
   deleteSection,
   updateSectionDimensions,
+  updateLastShelvePostion,
   setActiveTab,
 } = shelfDetailSlice.actions;
 

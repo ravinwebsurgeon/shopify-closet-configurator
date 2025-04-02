@@ -9,6 +9,7 @@ import {
   setCurrSelectedSection,
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
+import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -154,13 +155,13 @@ const ImageConfigurator = () => {
       activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
     const nextSection = sections[nextSectionId];
     const prevSection = sections[previousSection];
-    if(prevSection && nextSection){
+    if (prevSection && nextSection) {
       console.log(prevSection.height, nextSection.height);
       console.log("prevSection---->", prevSection);
       console.log("nextSection---->", nextSection);
-      console.log(prevSection.standHeight, prevSection.height)
+      console.log(prevSection.standHeight, prevSection.height);
     }
-    console.log(prevSection, nextSection);
+
     dispatch(deleteSection(sectionKey));
   };
 
@@ -169,7 +170,11 @@ const ImageConfigurator = () => {
     setSelectedShelf(value);
     handleSectionClick(e, key);
   };
-
+  const sectionItems = Object.keys(sections);
+  const maxHeight = sectionItems
+    .map((item) => parseInt(sections[item].height, 10))
+    .sort((a, b) => b - a)[0];
+  const depth = useSelector((state) => state.shelfDetail.racks.depth);
   return (
     <>
       <div
@@ -178,8 +183,26 @@ const ImageConfigurator = () => {
       >
         <div className="row-container visualFrame-top">
           <div className="spacer-div"></div>
-          <div className="addsection-div">
-            <button className="AddSection" onClick={() => setIsModalOpen(true)}>
+          <div className="addsection-div flex gap-[5px]">
+            {sectionKeys.map((item, index) => (
+              <button
+              onClick={(e) =>
+                handleSectionClick(e, item)
+              }
+                key={item}
+                className={`${
+                  item == selectedSection
+                    ? "_selected border-[#0665C5]"
+                    : "border-[rgba(0,0,0,0)]"
+                } bg-[rgba(0,0,0,0.1)] border font-inter cursor-pointer font-medium text-[12px] leading-none text-black rounded-[5px] w-[30px] h-[30px] flex justify-center items-center`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              className="w-[100px] h-[30px] cursor-pointer border border-[#0665C5] font-medium font-inter rounded-[5px] text-[#0665C5] text-[12px]"
+              onClick={() => setIsModalOpen(true)}
+            >
               {" "}
               + Add Section
             </button>
@@ -187,16 +210,29 @@ const ImageConfigurator = () => {
           <div className="hidedoors-div">Hide doors</div>
         </div>
         <div className="demo-config">
-          <div className="Visual_container__tG7BQ Carousel_visual__FfW0p">
-            {/* Appending racks according to data we got */}
-            {newInitialValue &&
-              Object.entries(newInitialValue.sections).map(
-                ([sectionKey, section], index) => (
-                  <React.Fragment key={sectionKey}>
-                    {/* first two poles section */}
+          <div className="main-wrapper__ relative">
+            <SectionDimensionsIndicator />
+            <div className="Visual_container__tG7BQ Carousel_visual__FfW0p">
+              <div
+                className={`arrows-dimensionsIndicator-left relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
+          bg-[#d4d7db] w-[2px]
+          `}
+              >
+                <span
+                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#d4d7db] font-roboto`}
+                >
+                  {maxHeight + 2.7} cm
+                </span>
+              </div>
+              {/* Appending racks according to data we got */}
+              {newInitialValue &&
+                Object.entries(newInitialValue.sections).map(
+                  ([sectionKey, section], index) => (
+                    <React.Fragment key={sectionKey}>
+                      {/* first two poles section */}
 
-                    <div
-                      className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal
+                      <div
+                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal
                 ${executionValues.color === "black" ? "Staander_black" : ""} 
                 ${
                   executionValues.topCaps === "topCaps"
@@ -205,116 +241,131 @@ const ImageConfigurator = () => {
                 } 
                 Staander_${executionValues.feet}_Feet  
                 Staander_height${section?.height || 100} ${
-                        index > 0 ? "hidden" : ""
-                      }`}
-                      style={{ zIndex: index }}
-                      key={index}
-                    >
-                      <div className="Staander_achter__8cpuX">
-                        <div className="Staander_achterTop__nQ0aW"></div>
-                        <div className="Staander_achterMiddle__XrxPJ"></div>
-                        <div className="Staander_achterBottom__YRp6n"></div>
-                      </div>
-                      <div className="Staander_voor__AegR3">
-                        <div className="Staander_voorTop__1m0QA"></div>
-                        <div className="Staander_voorMiddle__O-Po9"></div>
-                        <div className="Staander_voorBottom__dVzsj"></div>
-                      </div>
-                    </div>
-
-                    {/* shelf section */}
-                    <div>
-                      <div
-                        data-indicator-index="1"
-                        className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${
-                          section.height || 100
-                        } Section_width${section.width || 55}`}
+                          index > 0 ? "hidden" : ""
+                        }`}
                         style={{ zIndex: index }}
+                        key={index}
                       >
-                        <div className="Section_accessoires__+se2+">
-                          {section.shelves &&
-                            Object.entries(section.shelves).map(
-                              ([shelfkey, shelf], index) => (
-                                <button
-                                  className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                        <div className="Staander_achter__8cpuX">
+                          <div className="Staander_achterTop__nQ0aW"></div>
+                          <div className="Staander_achterMiddle__XrxPJ"></div>
+                          <div className="Staander_achterBottom__YRp6n"></div>
+                        </div>
+                        <div className="Staander_voor__AegR3">
+                          <div className="Staander_voorTop__1m0QA"></div>
+                          <div className="Staander_voorMiddle__O-Po9"></div>
+                          <div className="Staander_voorBottom__dVzsj"></div>
+                        </div>
+                      </div>
+
+                      {/* shelf section */}
+                      <div>
+                        <div
+                          data-indicator-index="1"
+                          className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${
+                            section.height || 100
+                          } Section_width${section.width || 55}`}
+                          style={{ zIndex: index }}
+                        >
+                          {selectedSection === sectionKey && (
+                            <div
+                              className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
+          bg-[#3c9cea] w-[2px]
+          `}
+                            >
+                              <span
+                                className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
+                              >
+                                {section.height + 2.7} cm
+                              </span>
+                            </div>
+                          )}
+                          <div className="Section_accessoires__+se2+">
+                            {section.shelves &&
+                              Object.entries(section.shelves).map(
+                                ([shelfkey, shelf], index) => (
+                                  <button
+                                    className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
                       } Legbord_clickable__uTn2b ${
-                                    selectedShelf ===
-                                    `${sectionKey}-${shelfkey}`
-                                      ? "Legboard_isHighlighted"
-                                      : ""
-                                  }`}
-                                  style={{
-                                    zIndex: shelf.position.zIndex,
-                                    top: shelf.position.top,
-                                  }}
-                                  key={shelfkey}
-                                  onClick={(e) =>
-                                    handleSelectedShelfClick(
-                                      e,
-                                      `${sectionKey}-${shelfkey}`,
-                                      `${sectionKey}`
-                                    )
-                                  }
-                                >
-                                  <div className="Legbord_inner__eOg0b">
-                                    <div className="Legbord_left__ERgV5"></div>
-                                    <div className="Legbord_middle__D8U0x"></div>
-                                    <div className="Legbord_right__HB8+U"></div>
-                                  </div>
-                                </button>
-                              )
-                            )}
-                        </div>
-                        {/* Here section header dimensions div will come */}
-                        <div className="Section_sectionInterface">
-                          <div className="Section_sectionNumberContainer sk_hide_on_print">
-                            <button
-                              className={`Section_sectionNumber ${
-                                selectedSection === sectionKey
-                                  ? "Section_sectionNumberActive"
-                                  : ""
-                              }`}
-                              onClick={(e) => handleSectionClick(e, sectionKey)}
-                            >
-                              {index + 1}
-                            </button>
-                            {selectedSection === sectionKey &&
-                              sectionKeys.length > 1 && (
-                                <button
-                                  type="button"
-                                  className="AddRemove_button Section_removeButton"
-                                  key={sectionKey}
-                                  onClick={(e) =>
-                                    handleSectionDelete(e, sectionKey)
-                                  }
-                                >
-                                  <i
-                                    className="Icon_container AddRemove_icon"
-                                    style={{ width: "14px", height: "16px" }}
+                                      selectedShelf ===
+                                      `${sectionKey}-${shelfkey}`
+                                        ? "Legboard_isHighlighted"
+                                        : ""
+                                    }`}
+                                    style={{
+                                      zIndex: shelf.position.zIndex,
+                                      top: shelf.position.top,
+                                    }}
+                                    key={shelfkey}
+                                    onClick={(e) =>
+                                      handleSelectedShelfClick(
+                                        e,
+                                        `${sectionKey}-${shelfkey}`,
+                                        `${sectionKey}`
+                                      )
+                                    }
                                   >
-                                    <svg viewBox="0 0 14 16">
-                                      <path
-                                        fill="currentColor"
-                                        fillRule="evenodd"
-                                        d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
-                                      ></path>
-                                    </svg>
-                                  </i>
-                                </button>
+                                    <div className="Legbord_inner__eOg0b">
+                                      <div className="Legbord_left__ERgV5"></div>
+                                      <div className="Legbord_middle__D8U0x"></div>
+                                      <div className="Legbord_right__HB8+U"></div>
+                                    </div>
+                                  </button>
+                                )
                               )}
                           </div>
-                          {selectedSection == sectionKey &&
-                            activeTab == "shelves" && <ShelfCounter />}
+                          {/* Here section header dimensions div will come */}
+                          <div className="Section_sectionInterface">
+                            <div className="Section_sectionNumberContainer sk_hide_on_print">
+                              <button
+                                className={`Section_sectionNumber ${
+                                  selectedSection === sectionKey
+                                    ? "Section_sectionNumberActive"
+                                    : ""
+                                }`}
+                                onClick={(e) =>
+                                  handleSectionClick(e, sectionKey)
+                                }
+                              >
+                                {index + 1}
+                              </button>
+                              {selectedSection === sectionKey &&
+                                sectionKeys.length > 1 && (
+                                  <button
+                                    type="button"
+                                    className="AddRemove_button Section_removeButton z-[1] cursor-pointer"
+                                    key={sectionKey}
+                                    onClick={(e) =>
+                                      handleSectionDelete(e, sectionKey)
+                                    }
+                                  >
+                                    <i
+                                      className="Icon_container AddRemove_icon"
+                                      style={{ width: "14px", height: "16px" }}
+                                    >
+                                      <svg viewBox="0 0 14 16">
+                                        <path
+                                          fill="currentColor"
+                                          fillRule="evenodd"
+                                          d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
+                                        ></path>
+                                      </svg>
+                                    </i>
+                                  </button>
+                                )}
+                            </div>
+                            {selectedSection == sectionKey &&
+                              activeTab == "shelves" && <ShelfCounter />}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    {/* next two poles */}
-                    <div
-                      className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
+                      {/* next two poles */}
+                      <div
+                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
                 ${executionValues.color === "black" ? "Staander_black" : ""} 
                 ${
                   executionValues.topCaps === "topCaps"
@@ -323,22 +374,34 @@ const ImageConfigurator = () => {
                 }  
                 Staander_${executionValues.feet}_Feet 
                 Staander_height${section?.standHeight || 100}`}
-                      style={{ zIndex: index + 1 }}
-                    >
-                      <div className="Staander_achter__8cpuX">
-                        <div className="Staander_achterTop__nQ0aW"></div>
-                        <div className="Staander_achterMiddle__XrxPJ"></div>
-                        <div className="Staander_achterBottom__YRp6n"></div>
+                        style={{ zIndex: index + 1 }}
+                      >
+                        <div className="Staander_achter__8cpuX">
+                          <div className="Staander_achterTop__nQ0aW"></div>
+                          <div className="Staander_achterMiddle__XrxPJ"></div>
+                          <div className="Staander_achterBottom__YRp6n"></div>
+                        </div>
+                        <div className="Staander_voor__AegR3">
+                          <div className="Staander_voorTop__1m0QA"></div>
+                          <div className="Staander_voorMiddle__O-Po9"></div>
+                          <div className="Staander_voorBottom__dVzsj"></div>
+                        </div>
                       </div>
-                      <div className="Staander_voor__AegR3">
-                        <div className="Staander_voorTop__1m0QA"></div>
-                        <div className="Staander_voorMiddle__O-Po9"></div>
-                        <div className="Staander_voorBottom__dVzsj"></div>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )
-              )}
+                    </React.Fragment>
+                  )
+                )}
+              <div
+                className={`arrows-dimensionsIndicator-left arrows-dimensionsIndicator-depth _selected  relative flex items-center justify-center translate-x-[0px]  !p-0 !m-0  Section_width
+          bg-[#3c9cea] w-[2px]
+          `}
+              >
+                <span
+                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
+                >
+                  {depth + 2.5} cm
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

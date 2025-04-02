@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setConfiguration,
+  updateLastShelvePostion,
   updateSectionDimensions,
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
@@ -76,7 +77,7 @@ const DimensionsComponent = () => {
     if (activeSectionId && sections) {
       const updatedSection = sections[activeSectionId];
       let positions = null;
-
+ 
       if (dimension === "height" && updatedSection.shelves) {
         const sectionKeys = Object.keys(sections).sort((a, b) => {
           return parseInt(a.split("_")[1]) - parseInt(b.split("_")[1]);
@@ -93,16 +94,8 @@ const DimensionsComponent = () => {
         const prevSection = sections[previousSection];
         const shelfCount = Object.keys(updatedSection.shelves).length;
         positions = GeneratePosArr(newValue, shelfCount);
-        dispatch(
-          updateSectionDimensions({
-            sectionId: activeSectionId,
-            dimension,
-            value: newValue,
-            positions,
-          })
-        );
-     
-        if (prevSection) {          
+
+        if (prevSection) {
           if (prevSection.height <= newValue) {
             dispatch(
               updateSectionDimensions({
@@ -124,7 +117,7 @@ const DimensionsComponent = () => {
                 positions,
               })
             );
-          } 
+          }
           if (!nextSection) {
             dispatch(
               updateSectionDimensions({
@@ -134,9 +127,22 @@ const DimensionsComponent = () => {
                 positions,
               })
             );
-          }         
-        }       
+          }
+        }
       }
+      dispatch(
+        updateLastShelvePostion({
+          sectionId: activeSectionId,
+          positions,
+        })
+      );
+      dispatch(
+        updateSectionDimensions({
+          sectionId: activeSectionId,
+          dimension,
+          value: newValue,
+        })
+      );
     }
   };
 
