@@ -60,7 +60,12 @@ const DimensionsComponent = () => {
     const positions = [];
 
     for (let i = 0; i < shelfCount; i++) {
+<<<<<<< HEAD
       const topPosition = ((heightResult - 9.5) / (shelfCount - 1)) * i;
+=======
+      // const topPosition = ((heightResult - 9.5)/(shelfCount-1))*i;
+      const topPosition = (i / (shelfCount - 1)) * (heightResult - 9.5);
+>>>>>>> e857315d31fbb259f33aa3e0f5c08ecf369618c0
       positions.push({
         zIndex: shelfCount - i,
         top: `${topPosition}em`,
