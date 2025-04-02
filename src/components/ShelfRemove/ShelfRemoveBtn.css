@@ -1,12 +1,7 @@
 button{
     cursor:pointer;
 }
-.Section_sectionOverflow {
-    bottom: 0;
-    height: 0;
-    position: absolute;
-    z-index: 1000;
-}
+
 .Section_sectionOverflow.Section_height100{
     bottom: 57em;
 }

@@ -25,7 +25,10 @@ const ImageConfigurator = () => {
   const [selectedRack, setSelectedRack] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
-  const [isShelfSelected, setIsShelfSelected] = useState("");
+  const [isShelfSelected, setIsShelfSelected] = useState({
+    key: "",
+    top: "0",
+  });
   const [topPosition, setTopPosition] = useState(null);
 
   const initialShelfValue = useSelector(
@@ -145,7 +148,10 @@ const ImageConfigurator = () => {
         !event.target.closest(".Section_removeConfirmAccessoireButton")
       ) {
         setSelectedShelf(null);
-        setIsShelfSelected("");
+        setIsShelfSelected({
+          key: "",
+          top: "0",
+        });
       }
     };
 
@@ -178,7 +184,12 @@ const ImageConfigurator = () => {
 
     dispatch(deleteSection(sectionKey));
   };
-
+const closeShelfDeleteModal = ()=>{
+  setIsShelfSelected({
+    key: "",
+    top: "0",
+  })
+}
   const handleSelectedShelfClick = (
     e,
     value,
@@ -187,18 +198,25 @@ const ImageConfigurator = () => {
     position
   ) => {
     e.preventDefault();
+    setIsShelfSelected((prev)=>({
+      ...prev,
+      key: shelfkey
+    }));
     setSelectedShelf(value);
     handleSectionClick(e, sectionkey);
     setTopPosition(position);
-    console.log("top position -->", topPosition);
-    console.log("shelfkey", shelfkey);
-    setIsShelfSelected(shelfkey);
   };
   const sectionItems = Object.keys(sections);
   const maxHeight = sectionItems
     .map((item) => parseInt(sections[item].height, 10))
     .sort((a, b) => b - a)[0];
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
+  useEffect(()=>{
+    setIsShelfSelected((prev)=>({
+      ...prev,
+      top: topPosition
+    }));
+  },[topPosition])
   return (
     <>
       <div
@@ -285,7 +303,24 @@ const ImageConfigurator = () => {
                           <div className="Staander_voorBottom__dVzsj"></div>
                         </div>
                       </div>
-
+                      <div>
+                        {isShelfSelected?.key != "" &&
+                        sectionKey == selectedSection ? (
+                          <div
+                            className={`shelfRemoveBtnOver 
+shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
+                          >
+                            <ShelfRemoveBtn
+                              top={isShelfSelected?.top}
+                              shelfId={isShelfSelected?.key}
+                              onClick={() => setSelectedShelf(null)}
+                              onClose={closeShelfDeleteModal}
+                            />
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                       {/* shelf section */}
                       <div>
                         <div
@@ -319,18 +354,6 @@ const ImageConfigurator = () => {
                                       top: shelf.position.top,
                                     }}
                                   >
-                                    {isShelfSelected == shelfkey &&
-                                    currentSelectedSection == sectionKey &&
-                                    selectedShelf != null ? (
-                                      <ShelfRemoveBtn
-                                        top={0}
-                                        shelfId={shelfkey}
-                                        onClick={() => setSelectedShelf(null)}
-                                      />
-                                    ) : (
-                                      ""
-                                    )}
-
                                     <button
                                       className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
@@ -368,7 +391,7 @@ const ImageConfigurator = () => {
                           <div className="Section_sectionInterface">
                             <div className="Section_sectionNumberContainer sk_hide_on_print">
                               <button
-                                className={`Section_sectionNumber ${
+                                className={`Section_sectionNumber font-roboto ${
                                   selectedSection === sectionKey
                                     ? "Section_sectionNumberActive"
                                     : ""
