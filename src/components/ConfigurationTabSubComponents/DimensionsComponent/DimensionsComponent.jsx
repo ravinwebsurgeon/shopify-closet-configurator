@@ -1,75 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setConfiguration, updateSectionDimensions } from '../../../slices/shelfDetailSlice';
-import './DimensionsComponent.css'
-
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setConfiguration,
+  updateLastShelvePostion,
+  updateSectionDimensions,
+} from "../../../slices/shelfDetailSlice";
+import "./DimensionsComponent.css";
 
 const DimensionsComponent = () => {
-
-    const dispatch = useDispatch();
-    const configuration = useSelector((state) => state.shelfDetail.configuration);
-    const sections = useSelector((state)=>state.shelfDetail.racks.sections);
-    const activeSectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);
-    const activeSection = sections[activeSectionId];
-    const depth = useSelector((state) => state.shelfDetail.racks.depth);
+  const dispatch = useDispatch();
+  const configuration = useSelector((state) => state.shelfDetail.configuration);
+  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const activeSectionId = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const activeSection = sections[activeSectionId];
+  const depth = useSelector((state) => state.shelfDetail.racks.depth);
 
   // Predefined values for each dimension
   const dimensionOptions = {
     width: [55, 70, 85, 100, 115, 130],
     height: [100, 120, 150, 200, 220, 250, 300],
-    depth: [20, 30, 40, 50, 60, 70, 80]
+    depth: [20, 30, 40, 50, 60, 70, 80],
   };
-
-
-
 
   const [dimensions, setDimensions] = useState({
     width: activeSection?.width || dimensionOptions.width[0],
     height: activeSection?.height || dimensionOptions.height[0],
-    depth: depth || dimensionOptions.depth[0]
+    depth: depth || dimensionOptions.depth[0],
   });
 
-  useEffect(()=>{
-    if(activeSection){
+  useEffect(() => {
+    if (activeSection) {
       setDimensions({
         width: activeSection.width || dimensionOptions.width[0],
         height: activeSection.height || dimensionOptions.height[0],
         depth: depth || dimensionOptions.depth[0],
       });
     }
-  },[activeSectionId,activeSection])
-  
+  }, [activeSectionId, activeSection]);
 
   const heightArr = [
-    {"100":"57"},
-    {"120":"67"},
-    {"150":"82"},
-    {"180":"97"},
-    {"200":"107"},
-    {"210":"112"},
-    {"220":"117"},
-    {"240":"127"},
-    {"250":"132"},
-    {"300":"157"},
+    { 100: "57" },
+    { 120: "67" },
+    { 150: "82" },
+    { 180: "97" },
+    { 200: "107" },
+    { 210: "112" },
+    { 220: "117" },
+    { 240: "127" },
+    { 250: "132" },
+    { 300: "157" },
   ];
 
   const GeneratePosArr = (currShelfHeight, shelfCount) => {
-    const Result = heightArr.find(obj => obj[currShelfHeight] !== undefined);
+    const Result = heightArr.find((obj) => obj[currShelfHeight] !== undefined);
     const heightResult = parseInt(Object.values(Result)[0]);
-    
+
     const positions = [];
-    
+
     for (let i = 0; i < shelfCount; i++) {
-      const topPosition = ((heightResult - 9.5)/(shelfCount-1))*i;
+      const topPosition = ((heightResult - 9.5) / (shelfCount - 1)) * i;
       positions.push({
-        zIndex: shelfCount-i,
-        top: `${topPosition}em`
+        zIndex: shelfCount - i,
+        top: `${topPosition}em`,
       });
     }
     return positions;
   };
-
-  
 
   const handleDimensionChange = (dimension, value) => {
     const newValue = parseInt(value);
@@ -79,94 +77,171 @@ const DimensionsComponent = () => {
     if (activeSectionId && sections) {
       const updatedSection = sections[activeSectionId];
       let positions = null;
-      
-      if (dimension === 'height' && updatedSection.shelves) {
+ 
+      if (dimension === "height" && updatedSection.shelves) {
+        const sectionKeys = Object.keys(sections).sort((a, b) => {
+          return parseInt(a.split("_")[1]) - parseInt(b.split("_")[1]);
+        });
+        const activeIndex = sectionKeys.indexOf(activeSectionId);
+
+        const previousSection =
+          activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+        const nextSectionId =
+          activeIndex < sectionKeys.length
+            ? sectionKeys[activeIndex + 1]
+            : null;
+        const nextSection = sections[nextSectionId];
+        const prevSection = sections[previousSection];
         const shelfCount = Object.keys(updatedSection.shelves).length;
         positions = GeneratePosArr(newValue, shelfCount);
-      }
 
-      dispatch(updateSectionDimensions({
-        sectionId: activeSectionId,
-        dimension,
-        value: newValue,
-        positions
-      }));
+        if (prevSection) {
+          if (prevSection.height <= newValue) {
+            dispatch(
+              updateSectionDimensions({
+                sectionId: previousSection,
+                dimension: "standHeight",
+                value: newValue,
+                positions,
+              })
+            );
+          }
+        }
+        if (updatedSection) {
+          if (nextSection && nextSection.height <= newValue) {
+            dispatch(
+              updateSectionDimensions({
+                sectionId: activeSectionId,
+                dimension: "standHeight",
+                value: newValue,
+                positions,
+              })
+            );
+          }
+          if (!nextSection) {
+            dispatch(
+              updateSectionDimensions({
+                sectionId: activeSectionId,
+                dimension: "standHeight",
+                value: newValue,
+                positions,
+              })
+            );
+          }
+        }
+      }
+      dispatch(
+        updateLastShelvePostion({
+          sectionId: activeSectionId,
+          positions,
+        })
+      );
+      dispatch(
+        updateSectionDimensions({
+          sectionId: activeSectionId,
+          dimension,
+          value: newValue,
+        })
+      );
     }
   };
-
-
-
 
   const calculateSliderStyle = (value, options) => {
     const index = options.indexOf(Number(value));
     const percentage = (index / (options.length - 1)) * 100;
-    return { '--value-percent': `${percentage}%` };
+    return { "--value-percent": `${percentage}%` };
   };
-
 
   return (
     <>
       <div className="dimensions-content">
-      <div className="dimension-row">
-        <label>Width</label>
-        <div className="dimension-control">
-          <span>{dimensions.width} cm</span>
-          <div className="slider-container">
-            <input 
-              type="range" 
-              min="0"
-              max={dimensionOptions.width.length - 1}
-              value={dimensionOptions.width.indexOf(dimensions.width)}
-              className="dimension-slider"
-              style={calculateSliderStyle(dimensions.width, dimensionOptions.width)}
-              onChange={(e) => handleDimensionChange('width', dimensionOptions.width[e.target.value])}
-            />
+        <div className="dimension-row">
+          <label>Width</label>
+          <div className="dimension-control">
+            <span>{dimensions.width} cm</span>
+            <div className="slider-container">
+              <input
+                type="range"
+                min="0"
+                max={dimensionOptions.width.length - 1}
+                value={dimensionOptions.width.indexOf(dimensions.width)}
+                className="dimension-slider"
+                style={calculateSliderStyle(
+                  dimensions.width,
+                  dimensionOptions.width
+                )}
+                onChange={(e) =>
+                  handleDimensionChange(
+                    "width",
+                    dimensionOptions.width[e.target.value]
+                  )
+                }
+              />
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="dimension-row">
-        <label>Height</label>
-        <div className="dimension-control">
-          <span>{dimensions.height} cm</span>
-          <div className="slider-container">
-            <input 
-              type="range" 
-              min="0"
-              max={dimensionOptions.height.length - 1}
-              value={dimensionOptions.height.indexOf(Number(dimensions.height))}
-              className="dimension-slider"
-              style={calculateSliderStyle(dimensions.height, dimensionOptions.height)}
-              onChange={(e) => handleDimensionChange('height', dimensionOptions.height[e.target.value])}
-            />
-          </div>
-        </div>
-      </div>
-      
-      <div className="dimension-row">
-        <label>Depth</label>
-        <div className="dimension-control">
-          <span>{dimensions.depth} cm</span>
-          <div className="slider-container">
-            <input 
-              type="range" 
-              min="0"
-              max={dimensionOptions.depth.length - 1}
-              value={dimensionOptions.depth.indexOf(Number(dimensions.depth))}
-              className="dimension-slider"
-              style={calculateSliderStyle(dimensions.depth, dimensionOptions.depth)}
-              onChange={(e) => handleDimensionChange('depth', dimensionOptions.depth[e.target.value])}
-            />
-          </div>
-        </div>
-      </div>
 
-      <div className="dimension-note">
-        The depth indicated above applies to the entire cabinet. It is possible that parts may be removed as a result of the resizing.
+        <div className="dimension-row">
+          <label>Height</label>
+          <div className="dimension-control">
+            <span>{dimensions.height} cm</span>
+            <div className="slider-container">
+              <input
+                type="range"
+                min="0"
+                max={dimensionOptions.height.length - 1}
+                value={dimensionOptions.height.indexOf(
+                  Number(dimensions.height)
+                )}
+                className="dimension-slider"
+                style={calculateSliderStyle(
+                  dimensions.height,
+                  dimensionOptions.height
+                )}
+                onChange={(e) =>
+                  handleDimensionChange(
+                    "height",
+                    dimensionOptions.height[e.target.value]
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="dimension-row">
+          <label>Depth</label>
+          <div className="dimension-control">
+            <span>{dimensions.depth} cm</span>
+            <div className="slider-container">
+              <input
+                type="range"
+                min="0"
+                max={dimensionOptions.depth.length - 1}
+                value={dimensionOptions.depth.indexOf(Number(dimensions.depth))}
+                className="dimension-slider"
+                style={calculateSliderStyle(
+                  dimensions.depth,
+                  dimensionOptions.depth
+                )}
+                onChange={(e) =>
+                  handleDimensionChange(
+                    "depth",
+                    dimensionOptions.depth[e.target.value]
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="dimension-note">
+          The depth indicated above applies to the entire cabinet. It is
+          possible that parts may be removed as a result of the resizing.
+        </div>
       </div>
-    </div>
     </>
-  )
-}
+  );
+};
 
-export default DimensionsComponent
+export default DimensionsComponent;

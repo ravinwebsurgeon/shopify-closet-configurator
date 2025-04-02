@@ -15,27 +15,31 @@ const initialState = {
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
   width,
   height,
+  standHeight: parseInt(height),
   shelves,
 });
+
+
+const showCounter = true;
+const isEditingSides = false;
 
 const shelfDetailSlice = createSlice({
   name: "shelfDetails",
   initialState,
   reducers: {
     setActiveTab: (state, action) => {
-      console.log(action.payload);
       state.racks.activeTab = action.payload;
     },
     setConfiguration: (state, action) => {
@@ -88,6 +92,8 @@ const shelfDetailSlice = createSlice({
         },
         selectedSection,
         activeTab,
+        showCounter,
+        isEditingSides,
       };
     },
     updateExecution: (state, action) => {
@@ -122,6 +128,55 @@ const shelfDetailSlice = createSlice({
         }
       }
     },
+    updateLastShelvePostion: (state, action) => {
+      const { sectionId, positions } = action.payload;
+
+      if (positions?.length > 0) {
+        const shelves = state.racks.sections[sectionId].shelves;
+        const shelfKeys = Object.keys(shelves).sort((a, b) => {
+          return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+        });
+
+        if (shelfKeys.length > 0) {
+          const lastShelfKey = shelfKeys[shelfKeys.length - 1];
+          shelves[lastShelfKey] = {
+            ...shelves[lastShelfKey],
+            position: positions[positions.length - 1],
+          };
+        }
+      }
+    },
+    setShowCounter: (state, action) => {
+      state.racks.showCounter = action.payload;
+    },
+    updateShelvesPosition: (state, action) => {
+      const { sectionId, positionArray } = action.payload;
+      const section = state.racks.sections[sectionId];
+      if (section) {
+        const updatedShelves = {};
+
+        positionArray.forEach((position, index) => {
+          updatedShelves[`shelves_${index + 1}`] = {
+            position,
+          };
+        });
+
+        state.racks.sections[sectionId] = {
+          ...section,
+          shelves: updatedShelves,
+        };
+      }
+    },
+    deleteShelf: (state, action) => {
+      const { sectionId, shelfId } = action.payload;
+      const section = state.racks.sections[sectionId];
+      if (section) {
+        delete section.shelves[shelfId];
+      }
+    },
+    setEditingSides: (state, action) => {
+      state.racks.isEditingSides = action.payload;
+    },
   },
 });
 
@@ -134,7 +189,12 @@ export const {
   setCurrSelectedSection,
   deleteSection,
   updateSectionDimensions,
+  updateLastShelvePostion,
   setActiveTab,
+  setShowCounter,
+  updateShelvesPosition,
+  deleteShelf,
+  setEditingSides
 } = shelfDetailSlice.actions;
 
 // export default reducer
