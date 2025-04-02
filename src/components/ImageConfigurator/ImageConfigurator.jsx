@@ -13,6 +13,8 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
+import BackWall from "../BackComponent/BackWall";
+import EditingBack from "../BackComponent/EditingBack";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -48,9 +50,8 @@ const ImageConfigurator = () => {
     (state) => state.shelfDetail.racks.execution
   );
 
-  const editingSides = useSelector(
-    (state) => state.shelfDetail.racks.isEditingSides
-  );
+  const editingSides = useSelector((state) => state.shelfDetail.racks.isEditingSides);
+  const isEdtingWall = useSelector((state) => state.shelfDetail.racks.isEditingBackwall);
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -437,6 +438,7 @@ const closeShelfDeleteModal = ()=>{
                               )}
                           </div>
                         </div>
+                        {((selectedSection == sectionKey) && isEdtingWall) && <EditingBack/>}
                       </div>
                       {/* next two poles */}
                       <div

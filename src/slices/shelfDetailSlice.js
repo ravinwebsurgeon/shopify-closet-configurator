@@ -34,6 +34,7 @@ const createInitialSection = (width, height, shelves) => ({
 
 const showCounter = true;
 const isEditingSides = false;
+const isEditingBackwall = false;
 
 const shelfDetailSlice = createSlice({
   name: "shelfDetails",
@@ -94,6 +95,7 @@ const shelfDetailSlice = createSlice({
         activeTab,
         showCounter,
         isEditingSides,
+        isEditingBackwall
       };
     },
     updateExecution: (state, action) => {
@@ -177,6 +179,10 @@ const shelfDetailSlice = createSlice({
     setEditingSides: (state, action) => {
       state.racks.isEditingSides = action.payload;
     },
+    setEditingBackwall : (state,action) =>{
+      state.racks.isEditingBackwall = action.payload;
+    }
+
   },
 });
 
@@ -194,7 +200,8 @@ export const {
   setShowCounter,
   updateShelvesPosition,
   deleteShelf,
-  setEditingSides
+  setEditingSides,  
+    setEditingBackwall,
 } = shelfDetailSlice.actions;
 
 // export default reducer
