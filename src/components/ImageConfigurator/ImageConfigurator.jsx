@@ -10,6 +10,8 @@ import {
   setShowCounter,
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
+import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
+import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,9 @@ const ImageConfigurator = () => {
   const [selectedRack, setSelectedRack] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
+  const [isShelfSelected,setIsShelfSelected] = useState('');
+  const [topPosition,setTopPosition] = useState(null);
+  
 
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
@@ -37,6 +42,8 @@ const ImageConfigurator = () => {
   const executionValues = useSelector(
     (state) => state.shelfDetail.racks.execution
   );
+
+  const editingSides = useSelector((state) => state.shelfDetail.racks.isEditingSides)
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -129,9 +136,11 @@ const ImageConfigurator = () => {
     const handleClickOutside = (event) => {
       if (
         containerRef.current &&
-        !event.target.closest(".Legbord_Legbord__k51II")
+        !event.target.closest(".Legbord_Legbord__k51II")&&
+        !event.target.closest(".Section_removeConfirmAccessoireButton")
       ) {
         setSelectedShelf(null);
+        setIsShelfSelected('');
       }
     };
 
@@ -151,10 +160,14 @@ const ImageConfigurator = () => {
     dispatch(deleteSection(sectionKey));
   };
 
-  const handleSelectedShelfClick = (e, value, key) => {
+  const handleSelectedShelfClick = (e, value, sectionkey,shelfkey ,position) => {
     e.preventDefault();
     setSelectedShelf(value);
-    handleSectionClick(e, key);
+    handleSectionClick(e, sectionkey);
+    setTopPosition(position);
+    console.log("top position -->",topPosition);
+    console.log("shelfkey",shelfkey);
+    setIsShelfSelected(shelfkey);
   };
 
   return (
@@ -180,8 +193,8 @@ const ImageConfigurator = () => {
               Object.entries(newInitialValue.sections).map(
                 ([sectionKey, section], index) => (
                   <React.Fragment key={sectionKey}>
-                    {/* first two poles section */}
 
+                    {/* first two poles section */}
                     <div
                       className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal
                 ${executionValues.color === "black" ? "Staander_black" : ""} 
@@ -202,13 +215,14 @@ const ImageConfigurator = () => {
                         <div className="Staander_achterMiddle__XrxPJ"></div>
                         <div className="Staander_achterBottom__YRp6n"></div>
                       </div>
+                      {(selectedSection == sectionKey && editingSides) && <EditingSides sec={selectedSection} seckey={sectionKey}/>}
                       <div className="Staander_voor__AegR3">
                         <div className="Staander_voorTop__1m0QA"></div>
                         <div className="Staander_voorMiddle__O-Po9"></div>
                         <div className="Staander_voorBottom__dVzsj"></div>
                       </div>
                     </div>
-
+                  
                     {/* shelf section */}
                     <div>
                       <div
@@ -222,6 +236,11 @@ const ImageConfigurator = () => {
                           {section.shelves &&
                             Object.entries(section.shelves).map(
                               ([shelfkey, shelf], index) => (
+                                <div className={`Legbord_Legbord__Outer`}  style={{
+                                  zIndex: shelf.position.zIndex,
+                                  top: shelf.position.top,
+                                }}>
+                                  {((isShelfSelected == shelfkey) && ( currentSelectedSection == sectionKey) && selectedShelf != null ) ? <ShelfRemoveBtn  top={0} shelfId={shelfkey} onClick = {()=>setSelectedShelf(null)}/> : ""}
                                 <button
                                   className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
@@ -234,16 +253,15 @@ const ImageConfigurator = () => {
                                       ? "Legboard_isHighlighted"
                                       : ""
                                   }`}
-                                  style={{
-                                    zIndex: shelf.position.zIndex,
-                                    top: shelf.position.top,
-                                  }}
+                                 
                                   key={shelfkey}
                                   onClick={(e) =>
                                     handleSelectedShelfClick(
                                       e,
                                       `${sectionKey}-${shelfkey}`,
-                                      `${sectionKey}`
+                                      `${sectionKey}`,
+                                      `${shelfkey}`,
+                                      `${shelf.position.top}`
                                     )
                                   }
                                 >
@@ -253,6 +271,7 @@ const ImageConfigurator = () => {
                                     <div className="Legbord_right__HB8+U"></div>
                                   </div>
                                 </button>
+                                </div>
                               )
                             )}
                         </div>
@@ -315,6 +334,7 @@ const ImageConfigurator = () => {
                         <div className="Staander_achterMiddle__XrxPJ"></div>
                         <div className="Staander_achterBottom__YRp6n"></div>
                       </div>
+                      {editingSides && <EditingSides/>}
                       <div className="Staander_voor__AegR3">
                         <div className="Staander_voorTop__1m0QA"></div>
                         <div className="Staander_voorMiddle__O-Po9"></div>

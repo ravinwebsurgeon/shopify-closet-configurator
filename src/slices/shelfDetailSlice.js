@@ -26,6 +26,7 @@ const selectedSection = "section_1";
 
 const activeTab = "dimensions"
 const showCounter = true;
+const isEditingSides = false;
 
 const createInitialSection  = (width,height,shelves)=>({
     width,
@@ -95,7 +96,8 @@ const shelfDetailSlice = createSlice({
         },
         selectedSection,
         activeTab,
-        showCounter
+        showCounter,
+        isEditingSides
       };
     },
     updateExecution: (state, action) => {
@@ -135,13 +137,7 @@ const shelfDetailSlice = createSlice({
     },
     updateShelvesPosition : (state,action) =>{
       const {sectionId,positionArray} = action.payload;
-
-      console.log("section-id",sectionId);
-      console.log("positionArray",positionArray);
-
       const section = state.racks.sections[sectionId];
-      console.log("section",section);
-
       if(section){
         const updatedShelves = {};
 
@@ -151,14 +147,22 @@ const shelfDetailSlice = createSlice({
           };
         });
 
-        console.log("Updated Shelves -->",updatedShelves);
-
         state.racks.sections[sectionId] = {
           ...section,
           shelves: updatedShelves,
         };
 
       }
+    },
+    deleteShelf : (state,action) =>{
+      const {sectionId,shelfId} = action.payload;
+      const section = state.racks.sections[sectionId];
+      if(section){
+        delete section.shelves[shelfId];
+      }
+    },
+    setEditingSides : (state,action) =>{
+      state.racks.isEditingSides = action.payload;
     }
 
   },
@@ -176,6 +180,8 @@ export const {
     setActiveTab,
     setShowCounter,
     updateShelvesPosition,
+    deleteShelf,
+    setEditingSides,
 } = shelfDetailSlice.actions;
 
 // export default reducer
