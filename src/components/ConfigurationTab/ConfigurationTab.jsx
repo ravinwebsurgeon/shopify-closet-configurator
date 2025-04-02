@@ -5,6 +5,7 @@ import ExecutionComponent from "../ConfigurationTabSubComponents/ExecutionCompon
 import ShelvesComponent from "../ConfigurationTabSubComponents/ShelvesComponent/ShelvesComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
+import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 
 
 const ConfigurationTab = () => {
@@ -20,7 +21,7 @@ const ConfigurationTab = () => {
     { id: "dimensions",label: "Dimensions",component: <DimensionsComponent />},
     { id: "execution", label: "Execution", component: <ExecutionComponent /> },
     { id: "shelves", label: "Shelves", component: <ShelvesComponent /> },
-    { id: "sides", label: "Sides" },
+    { id: "sides", label: "Sides",component:<SidesComponent/> },
     { id: "backwalls", label: "Back walls" },
     { id: "compartments", label: "Compartments" },
     { id: "revolvingdoors", label: "Revolving doors" },

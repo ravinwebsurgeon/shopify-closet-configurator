@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import './ShelfCounter.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { updateShelvesPosition } from '../../../slices/shelfDetailSlice';
+import { setShowCounter, updateShelvesPosition } from '../../../slices/shelfDetailSlice';
+
+
 const ShelfCounter = ({onClick}) => {
+    const counterRef =  useRef(null);
     const dispatch = useDispatch();
     let positionArray = [];
 
@@ -12,9 +15,8 @@ const ShelfCounter = ({onClick}) => {
     const sectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);
     const currentSection = sectionData[sectionId];
     console.log("current_section",currentSection);
-    const shelf_count = currentSection ?Object.keys(currentSection.shelves).length :25;
+    const shelf_count = currentSection ?Object.keys(currentSection.shelves).length :3;
     const shelfHeight = currentSection["height"]
-    console.log("shelf-count",shelf_count)
     const [shelfCount,setShelfCount] = useState(shelf_count);
 
     const heightArr = [
@@ -48,11 +50,27 @@ const ShelfCounter = ({onClick}) => {
   }
 
   useEffect(() => {
-    console.log("Updated shelf count:", shelfCount);
-    console.log("Position array", GeneratePosArr(shelfHeight, shelfCount));
     positionArray = GeneratePosArr(shelfHeight, shelfCount);
     dispatch(updateShelvesPosition({sectionId,positionArray}));
-}, [shelfCount]);
+    }, [shelfCount]);
+
+    useEffect (()=>{
+        const handleClickOutside = (event) =>{
+            if(
+                counterRef.current &&
+                !event.target.closest(".CounterWithAddRemove_container")
+            ){
+                dispatch(setShowCounter(false));
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        };
+
+    },[])
+        
+    
 
     const handleAddShelf = (e) =>{
         e.preventDefault();
@@ -69,7 +87,7 @@ const ShelfCounter = ({onClick}) => {
 
   return (
     <>  
-      <div class="CounterWithAddRemove_container">
+      <div ref={counterRef} class="CounterWithAddRemove_container">
       <div class="CounterWithAddRemove_counter">
         <button className="shelf-decreament-btn" disabled={shelfCount === 3} onClick={handleRemoveShelf}> <FontAwesomeIcon icon={faMinus} /> </button>
         <span className='shelf-counter'>{shelfCount}</span>

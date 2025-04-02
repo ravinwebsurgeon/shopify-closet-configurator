@@ -11,6 +11,8 @@ import {
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
+import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
+import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,9 @@ const ImageConfigurator = () => {
   const [selectedRack, setSelectedRack] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
+  const [isShelfSelected,setIsShelfSelected] = useState('');
+  const [topPosition,setTopPosition] = useState(null);
+  
 
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
@@ -38,6 +43,8 @@ const ImageConfigurator = () => {
   const executionValues = useSelector(
     (state) => state.shelfDetail.racks.execution
   );
+
+  const editingSides = useSelector((state) => state.shelfDetail.racks.isEditingSides)
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -131,9 +138,11 @@ const ImageConfigurator = () => {
     const handleClickOutside = (event) => {
       if (
         containerRef.current &&
-        !event.target.closest(".Legbord_Legbord__k51II")
+        !event.target.closest(".Legbord_Legbord__k51II")&&
+        !event.target.closest(".Section_removeConfirmAccessoireButton")
       ) {
         setSelectedShelf(null);
+        setIsShelfSelected('');
       }
     };
 
@@ -167,10 +176,14 @@ const ImageConfigurator = () => {
     dispatch(deleteSection(sectionKey));
   };
 
-  const handleSelectedShelfClick = (e, value, key) => {
+  const handleSelectedShelfClick = (e, value, sectionkey,shelfkey ,position) => {
     e.preventDefault();
     setSelectedShelf(value);
-    handleSectionClick(e, key);
+    handleSectionClick(e, sectionkey);
+    setTopPosition(position);
+    console.log("top position -->",topPosition);
+    console.log("shelfkey",shelfkey);
+    setIsShelfSelected(shelfkey);
   };
   const sectionItems = Object.keys(sections);
   const maxHeight = sectionItems
@@ -243,8 +256,31 @@ const ImageConfigurator = () => {
                 } 
                 Staander_${executionValues.feet}_Feet  
                 Staander_height${section?.height || 100} ${
-                          index > 0 ? "hidden" : ""
-                        }`}
+                        index > 0 ? "hidden" : ""
+                      }`}
+                      style={{ zIndex: index }}
+                      key={index}
+                    >
+                      <div className="Staander_achter__8cpuX">
+                        <div className="Staander_achterTop__nQ0aW"></div>
+                        <div className="Staander_achterMiddle__XrxPJ"></div>
+                        <div className="Staander_achterBottom__YRp6n"></div>
+                      </div>
+                      {(selectedSection == sectionKey && editingSides) && <EditingSides sec={selectedSection} seckey={sectionKey}/>}
+                      <div className="Staander_voor__AegR3">
+                        <div className="Staander_voorTop__1m0QA"></div>
+                        <div className="Staander_voorMiddle__O-Po9"></div>
+                        <div className="Staander_voorBottom__dVzsj"></div>
+                      </div>
+                    </div>
+                  
+                    {/* shelf section */}
+                    <div>
+                      <div
+                        data-indicator-index="1"
+                        className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${
+                          section.height || 100
+                        } Section_width${section.width || 55}`}
                         style={{ zIndex: index }}
                         key={index}
                       >
@@ -284,45 +320,59 @@ const ImageConfigurator = () => {
                           )}
                           <div className="Section_accessoires__+se2+">
                             {section.shelves &&
-                              Object.entries(section.shelves).map(
+                              Object.entries(section.shelves).map(                      
                                 ([shelfkey, shelf], index) => (
-                                  <button
+                                  <div className={`Legbord_Legbord__Outer`}  style={{
+                                    zIndex: shelf.position.zIndex,
+                                    top: shelf.position.top,
+                                  }}> <button
                                     className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
                       } Legbord_clickable__uTn2b ${
-                                      selectedShelf ===
-                                      `${sectionKey}-${shelfkey}`
-                                        ? "Legboard_isHighlighted"
-                                        : ""
-                                    }`}
-                                    style={{
-                                      zIndex: shelf.position.zIndex,
-                                      top: shelf.position.top,
-                                    }}
-                                    key={shelfkey}
-                                    onClick={(e) =>
-                                      handleSelectedShelfClick(
-                                        e,
-                                        `${sectionKey}-${shelfkey}`,
-                                        `${sectionKey}`
-                                      )
-                                    }
-                                  >
-                                    <div className="Legbord_inner__eOg0b">
-                                      <div className="Legbord_left__ERgV5"></div>
-                                      <div className="Legbord_middle__D8U0x"></div>
-                                      <div className="Legbord_right__HB8+U"></div>
-                                    </div>
-                                  </button>
-                                )
-                              )}
-                          </div>
-                          {/* Here section header dimensions div will come */}
-                          <div className="Section_sectionInterface">
-                            <div className="Section_sectionNumberContainer sk_hide_on_print">
+                                    selectedShelf ===
+                                    `${sectionKey}-${shelfkey}`
+                                      ? "Legboard_isHighlighted"
+                                      : ""
+                                  }`}
+                                 
+                                  key={shelfkey}
+                                  onClick={(e) =>
+                                    handleSelectedShelfClick(
+                                      e,
+                                      `${sectionKey}-${shelfkey}`,
+                                      `${sectionKey}`,
+                                      `${shelfkey}`,
+                                      `${shelf.position.top}`
+                                    )
+                                  }
+                                >
+                                  <div className="Legbord_inner__eOg0b">
+                                    <div className="Legbord_left__ERgV5"></div>
+                                    <div className="Legbord_middle__D8U0x"></div>
+                                    <div className="Legbord_right__HB8+U"></div>
+                                  </div>
+                                </button>
+                                </div>
+                              )
+                            )}
+                        </div>
+                        {/* Here section header dimensions div will come */}
+                        <div className="Section_sectionInterface">
+                          <div className="Section_sectionNumberContainer sk_hide_on_print">
+                            <button
+                              className={`Section_sectionNumber ${
+                                selectedSection === sectionKey
+                                  ? "Section_sectionNumberActive"
+                                  : ""
+                              }`}
+                              onClick={(e) => handleSectionClick(e, sectionKey)}
+                            >
+                              {index + 1}
+                            </button>
+                            {selectedSection === sectionKey && (
                               <button
                                 className={`Section_sectionNumber ${
                                   selectedSection === sectionKey
@@ -334,7 +384,7 @@ const ImageConfigurator = () => {
                                 }
                               >
                                 {index + 1}
-                              </button>
+                              </button>)}
                               {selectedSection === sectionKey &&
                                 sectionKeys.length > 1 && (
                                   <button
@@ -384,11 +434,13 @@ const ImageConfigurator = () => {
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
+                        {editingSides && <EditingSides/>}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
                           <div className="Staander_voorBottom__dVzsj"></div>
                         </div>
+                      </div>
                       </div>
                     </React.Fragment>
                   )

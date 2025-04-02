@@ -641,7 +641,25 @@ button.AddSection:hover {
     filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
     opacity: .7;
 }
+.Legbord_Legbord__Outer{
+    position: relative;
+}
 
 
+/* Editing Sides */
+.Staander_Staander__rAo9j .Stander_EditingSides {
+    background-image: url(../../assets/EditSides.svg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    bottom: -7em;
+    display: flex;
+    flex-direction: column;
+    height: 108%;
+    position: absolute;
+    right: -1em;
+    top: -4em;
+    width: 11em;
+    z-index: 10;
+}
 
 

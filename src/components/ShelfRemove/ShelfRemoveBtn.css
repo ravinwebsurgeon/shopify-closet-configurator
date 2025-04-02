@@ -1,0 +1,101 @@
+button{
+    cursor:pointer;
+}
+.Section_sectionOverflow {
+    bottom: 0;
+    height: 0;
+    position: absolute;
+    z-index: 1000;
+}
+.Section_sectionOverflow.Section_height100{
+    bottom: 57em;
+}
+.Section_sectionOverflow.Section_width100 {
+    width: 50em;
+}
+.Section_sectionOverflow.Section_width55 {
+    width: 27.5em;
+}
+
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton {
+    pointer-events: all;
+    position: absolute;
+    right: -40px;
+}
+
+.AddRemove_doubleButton {
+    background-color: #fff;
+    border: 1px solid #5c5c5c;
+    border-radius: 2px;
+    display: flex;
+    height: 32px;
+    justify-content: space-between;
+    visibility: visible;
+    width: 64px;
+}
+
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton:before {
+    border-color: transparent #fff transparent transparent;
+    border-width: 6px;
+    right: 97%;
+    top: 8px;
+    z-index: 2;
+}
+
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton:after, .Section_sectionOverflow .Section_removeConfirmAccessoireButton:before {
+    border-style: solid;
+    content: "";
+    display: block;
+    height: 0;
+    position: absolute;
+    right: 100%;
+    width: 0;
+}
+
+.AddRemove_doubleButton .AddRemove_buttonHalf{
+    background-color: #fff;
+    border: 0;
+    width: 100%;
+}
+
+.Icon_container {
+    align-items: center;
+    display: inline-flex;
+    height: 1em;
+    justify-content: center;
+    width: 1em;
+}
+
+.AddRemove_trashIcon {
+    color: #d60000;
+}
+
+.Icon_container svg {
+    color: inherit;
+    font-size: inherit;
+    height: 100%;
+    pointer-events: none;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    width: 100%;
+}
+
+.AddRemove_checkIcon {
+    color: #3c9cea;
+}
+
+.Icon_container svg {
+    color: inherit;
+    font-size: inherit;
+    height: 100%;
+    pointer-events: none;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    width: 100%;
+}
+
+.AddRemove_buttonHalf.button-disabled  .AddRemove_trashIcon{
+    color: #ffb3b3;
+    cursor:not-allowed;
+}
+

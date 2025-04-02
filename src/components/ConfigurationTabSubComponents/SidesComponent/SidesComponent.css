@@ -1,4 +1,8 @@
-.shelf-data-card {
+.side-data-conatiner{
+    display: flex;
+}
+
+.side-data-card {
     border: 1px solid #c2c2c2;
     width: fit-content;
     cursor: pointer;
@@ -6,23 +10,23 @@
     margin-left: 10px;
 }
 
-.shelf-img {
+.side-img {
     padding: 16px;
 }
 
-.shelf-image{
+.side-image{
     height: 90px;
     margin: auto;
 }
 
-.shelf-detail-div {
+.side-detail-div {
     display: flex;
     flex-direction: column;
     font-family: "Ubuntu";
     padding: 5px 15px;
 }
 
-span.shelf-label {
+span.side-label {
     margin-bottom: 5px;
     font-weight: 500;
     color: #5c5c5c;
@@ -30,10 +34,10 @@ span.shelf-label {
     width:140px;
 }
 
-span.shelf-dimensions {
+span.side-dimensions {
     color: #c2c2c2;
 }
 
-.shelf-data-card:hover{
+.side-data-card:hover{
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
