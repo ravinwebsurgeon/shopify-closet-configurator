@@ -307,8 +307,7 @@ const closeShelfDeleteModal = ()=>{
                         {isShelfSelected?.key != "" &&
                         sectionKey == selectedSection ? (
                           <div
-                            className={`shelfRemoveBtnOver 
-shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
+                            className={`shelfRemoveBtnOver shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
                           >
                             <ShelfRemoveBtn
                               top={isShelfSelected?.top}
