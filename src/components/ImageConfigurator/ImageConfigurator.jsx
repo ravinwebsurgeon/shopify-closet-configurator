@@ -12,7 +12,7 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab); 
+  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack, setSelectedRack] = useState();
@@ -40,7 +40,8 @@ const ImageConfigurator = () => {
   const currShelfHeight = initialShelfValue.height;
   const shelfDepth = initialShelfValue.depth;
   const rackWidth = initialShelfValue.width || 55;
-
+  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const sectionKeys = Object.keys(sections);
   const heightArr = [
     { 100: "57" },
     { 120: "67" },
@@ -146,6 +147,20 @@ const ImageConfigurator = () => {
   };
 
   const handleSectionDelete = (e, sectionKey) => {
+    const activeIndex = sectionKeys.indexOf(sectionKey);
+    const previousSection =
+      activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+    const nextSectionId =
+      activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
+    const nextSection = sections[nextSectionId];
+    const prevSection = sections[previousSection];
+    if(prevSection && nextSection){
+      console.log(prevSection.height, nextSection.height);
+      console.log("prevSection---->", prevSection);
+      console.log("nextSection---->", nextSection);
+      console.log(prevSection.standHeight, prevSection.height)
+    }
+    console.log(prevSection, nextSection);
     dispatch(deleteSection(sectionKey));
   };
 
@@ -267,31 +282,33 @@ const ImageConfigurator = () => {
                             >
                               {index + 1}
                             </button>
-                            {selectedSection === sectionKey && (
-                              <button
-                                type="button"
-                                className="AddRemove_button Section_removeButton"
-                                key={sectionKey}
-                                onClick={(e) =>
-                                  handleSectionDelete(e, sectionKey)
-                                }
-                              >
-                                <i
-                                  className="Icon_container AddRemove_icon"
-                                  style={{ width: "14px", height: "16px" }}
+                            {selectedSection === sectionKey &&
+                              sectionKeys.length > 1 && (
+                                <button
+                                  type="button"
+                                  className="AddRemove_button Section_removeButton"
+                                  key={sectionKey}
+                                  onClick={(e) =>
+                                    handleSectionDelete(e, sectionKey)
+                                  }
                                 >
-                                  <svg viewBox="0 0 14 16">
-                                    <path
-                                      fill="currentColor"
-                                      fillRule="evenodd"
-                                      d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
-                                    ></path>
-                                  </svg>
-                                </i>
-                              </button>
-                            )}
+                                  <i
+                                    className="Icon_container AddRemove_icon"
+                                    style={{ width: "14px", height: "16px" }}
+                                  >
+                                    <svg viewBox="0 0 14 16">
+                                      <path
+                                        fill="currentColor"
+                                        fillRule="evenodd"
+                                        d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
+                                      ></path>
+                                    </svg>
+                                  </i>
+                                </button>
+                              )}
                           </div>
-                          {(selectedSection == sectionKey) && activeTab == 'shelves' && <ShelfCounter />}
+                          {selectedSection == sectionKey &&
+                            activeTab == "shelves" && <ShelfCounter />}
                         </div>
                       </div>
                     </div>
@@ -305,7 +322,7 @@ const ImageConfigurator = () => {
                     : ""
                 }  
                 Staander_${executionValues.feet}_Feet 
-                Staander_height${section?.height || 100}`}
+                Staander_height${section?.standHeight || 100}`}
                       style={{ zIndex: index + 1 }}
                     >
                       <div className="Staander_achter__8cpuX">

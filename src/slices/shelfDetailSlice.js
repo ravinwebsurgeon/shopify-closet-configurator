@@ -27,6 +27,7 @@ const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
   width,
   height,
+  standHeight: parseInt(height),
   shelves,
 });
 
