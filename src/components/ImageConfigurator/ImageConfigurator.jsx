@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+//
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
 import ModalComponent from "../ModalComponent/ModalComponent";
@@ -13,6 +14,10 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
+import BackWall from "../BackComponent/BackWall";
+import EditingBack from "../BackComponent/EditingBack";
+import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
+import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator/ShelveChangeIndicator";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -23,6 +28,9 @@ const ImageConfigurator = () => {
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack, setSelectedRack] = useState();
+  const [prevSection, setPrevSection] = useState({
+    key: "",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
   const [isShelfSelected, setIsShelfSelected] = useState({
@@ -50,6 +58,9 @@ const ImageConfigurator = () => {
 
   const editingSides = useSelector(
     (state) => state.shelfDetail.racks.isEditingSides
+  );
+  const isEdtingWall = useSelector(
+    (state) => state.shelfDetail.racks.isEditingBackwall
   );
 
   const shelfCount = initialShelfValue.shelfCount;
@@ -145,7 +156,8 @@ const ImageConfigurator = () => {
       if (
         containerRef.current &&
         !event.target.closest(".Legbord_Legbord__k51II") &&
-        !event.target.closest(".Section_removeConfirmAccessoireButton")
+        !event.target.closest(".Section_removeConfirmAccessoireButton") &&
+        !event.target.closest(".mv_btns")
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
@@ -184,12 +196,12 @@ const ImageConfigurator = () => {
 
     dispatch(deleteSection(sectionKey));
   };
-const closeShelfDeleteModal = ()=>{
-  setIsShelfSelected({
-    key: "",
-    top: "0",
-  })
-}
+  const closeShelfDeleteModal = () => {
+    setIsShelfSelected({
+      key: "",
+      top: "0",
+    });
+  };
   const handleSelectedShelfClick = (
     e,
     value,
@@ -198,9 +210,9 @@ const closeShelfDeleteModal = ()=>{
     position
   ) => {
     e.preventDefault();
-    setIsShelfSelected((prev)=>({
+    setIsShelfSelected((prev) => ({
       ...prev,
-      key: shelfkey
+      key: shelfkey,
     }));
     setSelectedShelf(value);
     handleSectionClick(e, sectionkey);
@@ -211,12 +223,19 @@ const closeShelfDeleteModal = ()=>{
     .map((item) => parseInt(sections[item].height, 10))
     .sort((a, b) => b - a)[0];
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
-  useEffect(()=>{
-    setIsShelfSelected((prev)=>({
+  useEffect(() => {
+    setIsShelfSelected((prev) => ({
       ...prev,
-      top: topPosition
+      top: topPosition,
     }));
-  },[topPosition])
+  }, [topPosition]);
+
+  useEffect(() => {
+    const activeIndex = sectionKeys.indexOf(selectedSection);
+    const previousSection =
+      activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+    setPrevSection((prev) => ({ ...prev, key: previousSection }));
+  }, [selectedSection]);
   return (
     <>
       <div
@@ -319,6 +338,13 @@ const closeShelfDeleteModal = ()=>{
                         ) : (
                           ""
                         )}
+                        {isShelfSelected?.key != "" &&
+                          sectionKey == selectedSection && (
+                            <ShelveChangeIndicator
+                              selectedShelfKey={isShelfSelected?.key}
+                              selectedSectionKey={selectedSection}
+                            />
+                          )}
                       </div>
                       {/* shelf section */}
                       <div>
@@ -329,24 +355,26 @@ const closeShelfDeleteModal = ()=>{
                           } Section_width${section.width || 55}`}
                           style={{ zIndex: index }}
                         >
-                          {selectedSection === sectionKey && (
-                            <div
-                              className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
+                          {selectedSection === sectionKey &&
+                            isShelfSelected?.key == "" && (
+                              <div
+                                className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
           bg-[#3c9cea] w-[2px]
           `}
-                            >
-                              <span
-                                className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
                               >
-                                {section.height + 2.7} cm
-                              </span>
-                            </div>
-                          )}
+                                <span
+                                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
+                                >
+                                  {section.height + 2.7} cm
+                                </span>
+                              </div>
+                            )}
                           <div className="Section_accessoires__+se2+">
                             {section.shelves &&
                               Object.entries(section.shelves).map(
                                 ([shelfkey, shelf]) => (
                                   <div
+                                    key={shelfkey}
                                     className={`Legbord_Legbord__Outer`}
                                     style={{
                                       zIndex: shelf.position.zIndex,
@@ -426,6 +454,12 @@ const closeShelfDeleteModal = ()=>{
                                   </button>
                                 )}
                             </div>
+                            {selectedSection == sectionKey && selectedShelf && (
+                              <ShelveChangePosition
+                                sectionId={selectedSection}
+                                shelfKey={isShelfSelected?.key}
+                              />
+                            )}
                             {selectedSection == sectionKey &&
                               activeTab == "shelves" &&
                               showCounter && (
@@ -437,6 +471,9 @@ const closeShelfDeleteModal = ()=>{
                               )}
                           </div>
                         </div>
+                        {selectedSection == sectionKey && isEdtingWall && (
+                          <EditingBack />
+                        )}
                       </div>
                       {/* next two poles */}
                       <div
@@ -456,7 +493,9 @@ const closeShelfDeleteModal = ()=>{
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {editingSides && <EditingSides />}
+                        {(selectedSection == sectionKey ||
+                          prevSection.key == sectionKey) &&
+                          editingSides && <EditingSides />}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>

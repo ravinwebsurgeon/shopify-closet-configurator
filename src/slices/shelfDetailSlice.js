@@ -15,13 +15,13 @@ const initialState = {
   racks: {},
 };
 
-const executionObject ={
-    "color":"metal",
-    "material":"metal",
-    "topCaps":"topCaps",
-    "braces":"X-braces",
-    "feet":"Plastic"
-}
+const executionObject = {
+  color: "metal",
+  material: "metal",
+  topCaps: "topCaps",
+  braces: "X-braces",
+  feet: "Plastic",
+};
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
@@ -31,9 +31,9 @@ const createInitialSection = (width, height, shelves) => ({
   shelves,
 });
 
-
 const showCounter = true;
 const isEditingSides = false;
+const isEditingBackwall = false;
 
 const shelfDetailSlice = createSlice({
   name: "shelfDetails",
@@ -94,6 +94,7 @@ const shelfDetailSlice = createSlice({
         activeTab,
         showCounter,
         isEditingSides,
+        isEditingBackwall,
       };
     },
     updateExecution: (state, action) => {
@@ -177,6 +178,26 @@ const shelfDetailSlice = createSlice({
     setEditingSides: (state, action) => {
       state.racks.isEditingSides = action.payload;
     },
+    setEditingBackwall: (state, action) => {
+      state.racks.isEditingBackwall = action.payload;
+    },
+    updateShelvePostion: (state, action) => {
+      const { sectionId, position, shelfKey } = action.payload;
+
+      if (position > 0) {
+        const shelves = state.racks.sections[sectionId].shelves;
+        const shelfKeys = Object.keys(shelves).sort((a, b) => {
+          return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+        });
+
+        if (shelfKeys.length > 0) {
+          shelves[shelfKey] = {
+            ...shelves[shelfKey],
+            position: {...shelves[shelfKey].position, top:position + 'em', },
+          };
+        }
+      }
+    },
   },
 });
 
@@ -194,7 +215,9 @@ export const {
   setShowCounter,
   updateShelvesPosition,
   deleteShelf,
-  setEditingSides
+  setEditingSides,
+  setEditingBackwall,
+  updateShelvePostion
 } = shelfDetailSlice.actions;
 
 // export default reducer
