@@ -26,6 +26,9 @@ const ImageConfigurator = () => {
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
   const [selectedRack, setSelectedRack] = useState();
+  const [prevSection, setPrevSection] = useState({
+    key:''
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
   const [isShelfSelected, setIsShelfSelected] = useState({
@@ -219,6 +222,13 @@ const closeShelfDeleteModal = ()=>{
       top: topPosition
     }));
   },[topPosition])
+
+  useEffect(()=>{
+    const activeIndex = sectionKeys.indexOf(selectedSection);
+    const previousSection =
+      activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+      setPrevSection((prev)=>({...prev, key:previousSection}));
+  },[selectedSection])
   return (
     <>
       <div
@@ -293,7 +303,7 @@ const closeShelfDeleteModal = ()=>{
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {selectedSection == sectionKey && editingSides && (
+                        {(selectedSection == sectionKey) && editingSides && (
                           <EditingSides
                             sec={selectedSection}
                             seckey={sectionKey}
@@ -459,7 +469,7 @@ const closeShelfDeleteModal = ()=>{
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {editingSides && <EditingSides />}
+                        {(selectedSection == sectionKey || prevSection.key == sectionKey) && editingSides  && <EditingSides />}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
