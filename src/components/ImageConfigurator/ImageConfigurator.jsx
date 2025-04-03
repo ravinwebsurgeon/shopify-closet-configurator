@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+// 
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
 import ModalComponent from "../ModalComponent/ModalComponent";
