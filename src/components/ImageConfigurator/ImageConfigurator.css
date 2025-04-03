@@ -740,15 +740,3 @@ button.AddSection:hover {
     top: 100%;
     transform:translateY(-100%);
 }
-
-
-
-span.ssdf {
-    position: absolute;
-    font-size: 12px;
-    top: -7px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 999;
-}

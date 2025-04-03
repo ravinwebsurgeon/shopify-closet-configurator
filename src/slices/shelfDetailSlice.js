@@ -12,30 +12,30 @@ const initialState = {
     depth: [20, 30, 40, 50, 60, 70, 80],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
-  selectedSideWall: "",
+   selectedSideWall:'',
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
 
 const sideWallObject = {
-  left: {
-    isLeft: false,
-    type: "",
-    height: "",
+  left:{
+    isLeft:false,
+    type:"",
+    height:""
   },
-  right: {
-    isRight: false,
-    type: "",
-    height: "",
-  },
-};
+  right:{
+    isRight:false,
+    type:"",
+    height:""
+  }
+}
 
 const selectedSection = "section_1";
 const activeTab = "dimensions";
@@ -44,7 +44,7 @@ const createInitialSection = (width, height, shelves) => ({
   height,
   standHeight: parseInt(height),
   shelves,
-  sideWall: sideWallObject,
+  sideWall:sideWallObject
 });
 
 const showCounter = true;
@@ -258,12 +258,12 @@ export const {
   setShowCounter,
   updateShelvesPosition,
   deleteShelf,
-  setEditingSides,
-  setEditingBackwall,
   updateShelvePostion,
+  updateShelveIndexAndPostion,
+  setEditingSides,  
+  setEditingBackwall,
   updateSideWall,
   setCurrSideWall,
-  updateShelveIndexAndPostion,
 } = shelfDetailSlice.actions;
 
 // export default reducer
