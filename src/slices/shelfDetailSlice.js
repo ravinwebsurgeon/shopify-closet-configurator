@@ -12,16 +12,31 @@ const initialState = {
     depth: [20, 30, 40, 50, 60, 70, 80],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
+   selectedSideWall:'',
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
+
+const sideWallObject = {
+  left:{
+    isLeft:false,
+    type:"",
+    height:""
+  },
+  right:{
+    isRight:false,
+    type:"",
+    height:""
+  }
+}
+
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
@@ -29,6 +44,7 @@ const createInitialSection = (width, height, shelves) => ({
   height,
   standHeight: parseInt(height),
   shelves,
+  sideWall:sideWallObject
 });
 
 const showCounter = true;
@@ -183,7 +199,6 @@ const shelfDetailSlice = createSlice({
     },
     updateShelvePostion: (state, action) => {
       const { sectionId, position, shelfKey } = action.payload;
-
       if (position > 0) {
         const shelves = state.racks.sections[sectionId].shelves;
         const shelfKeys = Object.keys(shelves).sort((a, b) => {
@@ -198,6 +213,23 @@ const shelfDetailSlice = createSlice({
         }
       }
     },
+    setCurrSideWall : (state,action) =>{
+      state.selectedSideWall = action.payload;
+    },
+    updateSideWall: (state, action) => {
+      const { sectionId, side, type, height } = action.payload;
+      if (state.racks.sections[sectionId]) {
+        state.racks.sections[sectionId].sideWall[side] = {
+          ...(state.racks.sections[sectionId].sideWall[side] || {}),
+          isLeft: side === "left",
+          isRight: side === "right",
+          type,
+          height,
+        };
+      }
+    },
+
+
   },
 });
 
@@ -217,7 +249,9 @@ export const {
   deleteShelf,
   setEditingSides,
   setEditingBackwall,
-  updateShelvePostion
+  updateShelvePostion,
+  updateSideWall,
+  setCurrSideWall,
 } = shelfDetailSlice.actions;
 
 // export default reducer

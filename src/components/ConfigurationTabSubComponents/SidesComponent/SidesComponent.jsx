@@ -1,21 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import sidewallClosed from '../../../assets/sidewall.png';
 import sidewallPerfo from '../../../assets/sidewall-perfo.png';
 import './SidesComponent.css';
-import { useDispatch } from 'react-redux';
-import { setEditingSides } from '../../../slices/shelfDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrSideWall, setEditingSides } from '../../../slices/shelfDetailSlice';
 const SidesComponent = () => {
 
     const dispatch = useDispatch();
+    const[sideWall, setSideWall] = useState('');
+    const editing = useSelector((state)=>state.shelfDetail.racks.isEditingSides);
     const cardData = [
-        {id:"closed" , imgSrc:sidewallPerfo,label:"Sidewall Perfo"},
+        {id:"perfo" , imgSrc:sidewallPerfo,label:"Sidewall Perfo"},
         {id:"closed" , imgSrc:sidewallClosed,label:"Sidewall Closed "}
     ]
 
 
-    const handleCardClick = (e) =>{
+    const handleCardClick = (e,wall) =>{
+      console.log("wall",wall);
         e.preventDefault();
-        dispatch(setEditingSides(true))
+        setSideWall(wall);
+        if(!editing){
+          dispatch(setEditingSides(true))
+        }
+        if(wall != sideWall){
+          dispatch(setCurrSideWall(wall));
+        }
     }
 
 
@@ -23,7 +32,9 @@ const SidesComponent = () => {
   return (
     <div className='side-data-conatiner'>
         {cardData.map((data,index)=>(
-            <div key={index} className="side-data-card" onClick={(e)=>handleCardClick(e)}>
+            <div key={data.id} className={`side-data-card
+              ${data.id ===  sideWall ? "selected" : ""}
+            `} onClick={(e)=>handleCardClick(e,data.id)}>
             <div className="side-img">
               <img  className="side-image" src={data.imgSrc} alt="shelf_image" />
             </div>

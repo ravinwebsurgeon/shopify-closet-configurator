@@ -18,6 +18,8 @@ import BackWall from "../BackComponent/BackWall";
 import EditingBack from "../BackComponent/EditingBack";
 import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
 import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator/ShelveChangeIndicator";
+import SideAddBtn from "../SidesComp/SideAddBtn";
+import SideWall from "../SideWallComponent/SideWall";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -310,12 +312,13 @@ const ImageConfigurator = () => {
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {selectedSection == sectionKey && editingSides && (
+                        {(selectedSection == sectionKey) && editingSides && !sections[selectedSection].sideWall.left.isLeft  && (
                           <EditingSides
                             sec={selectedSection}
                             seckey={sectionKey}
                           />
                         )}
+                       {sections[sectionKey].sideWall.left.isLeft && <SideWall type={sections[sectionKey].sideWall.left.type} height={sections[sectionKey].sideWall.left.height}/>}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
@@ -345,6 +348,10 @@ const ImageConfigurator = () => {
                               selectedSectionKey={selectedSection}
                             />
                           )}
+                      </div>
+                      {/* div for edit sides or back */}
+                      <div className="test">
+                      {(selectedSection == sectionKey) && editingSides  && <SideAddBtn height={section?.height} width={section?.width}/> }
                       </div>
                       {/* shelf section */}
                       <div>
@@ -475,6 +482,9 @@ const ImageConfigurator = () => {
                           <EditingBack />
                         )}
                       </div>
+
+
+
                       {/* next two poles */}
                       <div
                         className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
@@ -493,9 +503,8 @@ const ImageConfigurator = () => {
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {(selectedSection == sectionKey ||
-                          prevSection.key == sectionKey) &&
-                          editingSides && <EditingSides />}
+                        {(selectedSection == sectionKey || prevSection.key == sectionKey) && editingSides && !sections[selectedSection].sideWall.right.isRight  && <EditingSides />}
+                        {sections[sectionKey].sideWall.right.isRight && <SideWall type={sections[sectionKey].sideWall.right.type} height={sections[sectionKey].sideWall.right.height}/>}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
