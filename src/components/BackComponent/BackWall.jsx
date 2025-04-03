@@ -1,7 +1,7 @@
 import React from 'react'
 import './BackWall.css'
 import { useDispatch } from 'react-redux';
-import rearwallSolid from '../../assets/re'
+
 const BackWall = () => {
 
     const dispatch = useDispatch();
