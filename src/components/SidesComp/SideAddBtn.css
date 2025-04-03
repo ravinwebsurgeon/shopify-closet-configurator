@@ -1,0 +1,79 @@
+/* Shelf section height */
+.Section_sectionOverflow.Section_height100{
+    bottom: 57em
+}
+
+
+.Section_sectionOverflow.Section_height120 {
+    bottom: 67em
+}
+
+.Section_sectionOverflow.Section_height150 {
+    bottom: 82em
+}
+
+.Section_sectionOverflow.Section_height180 {
+    bottom: 97em
+}
+
+.Section_sectionOverflow.Section_height200{
+    bottom: 107em
+}
+
+.Section_sectionOverflow.Section_height210 {
+    bottom: 112em
+}
+
+.Section_sectionOverflow.Section_height220 {
+    bottom: 117em
+}
+
+.Section_sectionOverflow.Section_height240 {
+    bottom: 127em
+}
+
+.Section_sectionOverflow.Section_height250{
+    bottom: 132em
+}
+
+.Section_sectionOverflow.Section_height300 {
+    bottom: 157em
+}
+
+/* Shelf section width */
+
+.Section_sectionOverflow.Section_width55 {
+    width: 27.5em
+}
+
+.Section_sectionOverflow.Section_width60 {
+    width: 28.5em
+}
+
+.Section_sectionOverflow.Section_width70 {
+    width: 35em
+}
+
+.Section_sectionOverflow.Section_width75 {
+    width: 36em
+}
+
+.Section_sectionOverflow.Section_width85{
+    width: 42.5em
+}
+
+.Section_sectionOverflow.Section_width100 {
+    width: 50em
+}
+
+.Section_sectionOverflow.Section_width115 {
+    width: 57.5em
+}
+
+.Section_sectionOverflow.Section_width120{
+    width: 58.5em
+}
+
+.Section_sectionOverflow.Section_width130{
+    width: 65em
+}
