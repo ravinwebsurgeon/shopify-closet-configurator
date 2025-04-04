@@ -740,3 +740,38 @@ button.AddSection:hover {
     top: 100%;
     transform:translateY(-100%);
 }
+
+
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton.left-enabled {
+    left: -108px;
+    right: auto;
+}
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton.left-enabled::before {
+    content: "";
+    border-color: transparent transparent transparent #fff;
+    right: -10px;
+    top: 9px;
+}
+
+.Section_sectionOverflow .Section_removeConfirmAccessoireButton.left-enabled::after {
+    border-color: transparent transparent transparent #5c5c5c;
+    border-width: 7px;
+    top: 8px;
+    z-index: 1;
+    right: -13px;
+}
+
+button.stander-side-wall-btn {
+    height: 67em;
+    width: 9em;
+    position: static !important;
+    margin-right: -8.5em;
+    z-index: 999;
+    transform: translateX(-7.5em);
+}
+
+.Staander_Staander__rAo9j .Staander_side.Staander_isHighlighted {
+    -webkit-filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    opacity: .7;
+}

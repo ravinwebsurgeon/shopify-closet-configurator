@@ -1,10 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 const SideWall = ({type,height}) => {
 
   return (
-    <button className="stander-side-wall" onClick={()=>alert("button clicked")}>
+    <div className="stander-side-wall"   style={{position:"absolute"}}>
         <div
         className={`Staander_Staander__rAo9j Staander_height${height}`}
         // style={{top: "100%", transform: "translateY(-100%)"}}
@@ -15,7 +14,7 @@ const SideWall = ({type,height}) => {
             <div className="Staander_sideBottom"></div>
         </div>
         </div>
-    </button>
+    </div>
   );
 };
 
