@@ -40,8 +40,8 @@ const sideWallObject = {
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
-  width,
-  height,
+  width:Number(width),
+  height:Number(height),
   standHeight: parseInt(height),
   shelves,
   sideWall:sideWallObject
@@ -102,7 +102,7 @@ const shelfDetailSlice = createSlice({
           ...state.racks.sections,
           ...newSection,
         },
-        depth: shelfDepth,
+        depth: Number(shelfDepth),
         execution: {
           ...executionObject,
           ...(state.racks.execution || {}),
@@ -213,6 +213,17 @@ const shelfDetailSlice = createSlice({
         };
       }
     },
+    deleteSideWall: (state,action) =>{
+      const {sectionId,side} = action.payload;
+      if (state.racks.sections[sectionId]) {
+        state.racks.sections[sectionId].sideWall[side] = {
+          isLeft: side == "left" ? false : state.racks.sections[sectionId].sideWall.left.isLeft,
+          isRight: side == "right" ? false : state.racks.sections[sectionId].sideWall.right.isRight,
+          type: "",
+          height: ""
+        };
+      }
+    },
 
   },
 });
@@ -235,6 +246,7 @@ export const {
   setEditingBackwall,
   updateSideWall,
   setCurrSideWall,
+  deleteSideWall,
 } = shelfDetailSlice.actions;
 
 // export default reducer

@@ -8,6 +8,8 @@ import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   deleteSection,
   setCurrSelectedSection,
+  setCurrSideWall,
+  setEditingSides,
   setShowCounter,
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
@@ -31,6 +33,8 @@ const ImageConfigurator = () => {
   const [prevSection, setPrevSection] = useState({
     key:''
   });
+  console.log("PrevSection Key",prevSection)
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
   const [isShelfSelected, setIsShelfSelected] = useState({
@@ -77,6 +81,17 @@ const ImageConfigurator = () => {
     { 250: "132" },
     { 300: "157" },
   ];
+
+
+  const handleSidewallLeftBtnClick = (e,sectionkey) => {
+    e.preventDefault();
+    alert(`button clicked of section left ${sectionkey}`)
+  }
+
+  const handleSidewallRightBtnClick = (e,sectionkey) => {
+    e.preventDefault();
+    alert(`button clicked of section right ${sectionkey}`)
+  }
 
   // function used to set shelves at a specific height
   const GeneratePosArr = (currShelfHeight) => {
@@ -152,13 +167,17 @@ const ImageConfigurator = () => {
       if (
         containerRef.current &&
         !event.target.closest(".Legbord_Legbord__k51II") &&
-        !event.target.closest(".Section_removeConfirmAccessoireButton")
+        !event.target.closest(".Section_removeConfirmAccessoireButton") &&
+        !event.target.closest(".AddRemove_button") && 
+        !event.target.closest(".modal-content")  
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
           key: "",
           top: "0",
         });
+        dispatch(setEditingSides(false));
+        // dispatch(setCurrSideWall(""));
       }
     };
 
@@ -334,11 +353,9 @@ const closeShelfDeleteModal = ()=>{
                         ) : (
                           ""
                         )}
+                         {(selectedSection == sectionKey) && editingSides  && <SideAddBtn prevKey={prevSection?.key} height={section?.height} width={section?.width}/> }
                       </div>
-                      {/* div for edit sides or back */}
-                      <div className="test">
-                      {(selectedSection == sectionKey) && editingSides  && <SideAddBtn height={section?.height} width={section?.width}/> }
-                      </div>
+                      {sections[sectionKey].sideWall.left.isLeft &&   <button className="stander-side-wall-btn"  onClick={(e)=>handleSidewallLeftBtnClick(e,sectionKey)}></button> }
                       {/* shelf section */}
                       <div>
                         <div
@@ -460,7 +477,7 @@ const closeShelfDeleteModal = ()=>{
                       </div>
 
 
-
+                   {sections[sectionKey].sideWall.right.isRight &&   <button className="stander-side-wall-btn"  onClick={(e)=>handleSidewallRightBtnClick(e,sectionKey)}></button> }
                       {/* next two poles */}
                       <div
                         className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
@@ -471,16 +488,20 @@ const closeShelfDeleteModal = ()=>{
                     : ""
                 }  
                 Staander_${executionValues.feet}_Feet 
-                Staander_height${section?.standHeight || 100}`}
+                Staander_height${section?.standHeight || 100}
+                
+                `}
                         style={{ zIndex: index + 1 }}
                       >
+                         {sections[sectionKey].sideWall.right.isRight && <SideWall type={sections[sectionKey].sideWall.right.type} height={sections[sectionKey].sideWall.right.height}/>}
                         <div className="Staander_achter__8cpuX">
                           <div className="Staander_achterTop__nQ0aW"></div>
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {(selectedSection == sectionKey || prevSection.key == sectionKey) && editingSides && !sections[selectedSection].sideWall.right.isRight  && <EditingSides />}
-                        {sections[sectionKey].sideWall.right.isRight && <SideWall type={sections[sectionKey].sideWall.right.type} height={sections[sectionKey].sideWall.right.height}/>}
+                        {(prevSection.key == sectionKey) && editingSides && (!sections[selectedSection].sideWall.right.isRight && !(prevSection?.key && sections[prevSection.key]?.sideWall.right.isRight))  && <EditingSides />}
+                        {(selectedSection == sectionKey) && editingSides && (!sections[selectedSection].sideWall.right.isRight)  && <EditingSides />}
+                       
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>

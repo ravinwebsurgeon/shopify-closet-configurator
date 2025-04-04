@@ -11,7 +11,8 @@ const AddSide = ({onClose,side}) => {
     const height = useSelector((state)=>state.shelfDetail.options.height);
     const currSection = useSelector((state) => state.shelfDetail.racks.selectedSection);
     const currHeight = useSelector((state)=>state.shelfDetail.racks.sections[currSection].height);
-    const currType = useSelector((state)=>state.shelfDetail.selectedSideWall)
+    const currType = useSelector((state)=>state.shelfDetail.selectedSideWall);
+    const sections = useSelector((state)=>state.shelfDetail.racks.sections)
     const heightOptions = [50,...height]
     const [selectedHeight,setSelectedHeight] = useState(null);
 
@@ -22,9 +23,19 @@ const AddSide = ({onClose,side}) => {
 
     const handleAddSideClick = (e) =>{
         e.preventDefault();
-        console.log("side-->",side);
-        console.log("selected height-->",selectedHeight);
-        dispatch(updateSideWall({ sectionId:currSection, side, type:currType, height:selectedHeight }));
+
+        if(currSection != 'section_1' && side == 'left'){
+          const sectionArr = Object.keys(sections)
+          const index = sectionArr.indexOf(currSection);
+          if (index > 0){
+            const prevSection = sectionArr[index - 1];
+            dispatch(updateSideWall({ sectionId:prevSection, side:"right", type:currType, height:selectedHeight }));
+          }
+        }
+        else{
+          dispatch(updateSideWall({ sectionId:currSection, side, type:currType, height:selectedHeight }));
+        }
+        onClose();
     }
 
 
