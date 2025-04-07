@@ -8,6 +8,7 @@ import {
 import "./DimensionsComponent.css";
 
 const DimensionsComponent = () => {
+
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
@@ -70,6 +71,13 @@ const DimensionsComponent = () => {
   };
 
   const handleDimensionChange = (dimension, value) => {
+
+    const isSidewall = Object.keys(sections[activeSectionId].sideWall).length;
+    const isBackwall = sections[activeSectionId].backWall;
+
+    console.log('sideWall-->',isSidewall);
+    console.log('backwall-->',isBackwall)
+
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
     setDimensions(newDimensions);

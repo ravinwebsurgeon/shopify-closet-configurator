@@ -16,7 +16,6 @@ const SidesComponent = () => {
 
 
     const handleCardClick = (e,wall) =>{
-      console.log("wall",wall);
         e.preventDefault();
         setSideWall(wall);
         if(!editing){

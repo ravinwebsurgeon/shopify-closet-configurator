@@ -775,3 +775,16 @@ button.stander-side-wall-btn {
     filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
     opacity: .7;
 }
+
+.Section_Section__3MCIu .Section_isEditingWall {
+    background-image: url(/configurator-app/static/media/achterwand.35a6a096e376bb149420.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 7em;
+    flex-direction: row;
+    left: 6.5em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}

@@ -1,0 +1,121 @@
+.Section_removeButtonStyles{
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    outline: inherit;
+    padding: 0;
+}
+
+.Section_Section__3MCIu .Section_wall{
+    bottom: 7em;
+    display: flex;
+    flex-direction: row;
+    left: 6.5em;
+    position: absolute;
+    right: 0;
+    top: 2em;
+    z-index: 0;
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height50 {
+    height: 24.5em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height100 {
+    height: 47em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height120 {
+    height: 57em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height150 {
+    height: 72em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height180 {
+    height: 77em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height200 {
+    height: 97em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height220 {
+    height: 107em
+}
+
+.Section_Section__3MCIu .Section_wal__rV10B.Section_achterwand.Section_height250 {
+    height: 122em
+}
+
+.Section_Section__3MCIu .Section_wall.Section_achterwand.Section_height300 {
+    height: 147em
+}
+
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall.Section_wallperfo .Section_wallLeft {
+    background-image: url(../../assets/backwall-perfo-left.png);
+    background-position: 0 0;
+    background-size: 5.6667em;
+}
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall.Section_wallperfo .Section_wallMiddle {
+    background-image: url(../../assets/backwall-perfo-middle.png);
+    background-position: 0 0;
+    background-size: 1.872em;
+}
+
+.Section_Section__3MCIu .Section_wall .Section_wallMiddle {
+    background-position: 0 0;
+    background-size: 1.875em;
+    height: 100%;
+    width: calc(100% - 11.25em);
+}
+
+.Section_Section__3MCIu .Section_wall .Section_wallRight {
+    background-position: 0 0;
+    background-size: 5.625em;
+    height: 100%;
+    width: 5.625em;
+}
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall.Section_wallperfo .Section_wallRight {
+    background-image: url(../../assets/backwall-perfo-right.png);
+    background-position: 0 0;
+    background-size: 5.6667em;
+}
+
+.Section_Section__3MCIu .Section_wall .Section_wallLeft {
+    background-position: 0 0;
+    background-size: 5.625em;
+    height: 100%;
+    width: 5.625em;
+}
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall .Section_wallLeft {
+    background-image: url(../../assets//backwall-closed-left.png);
+}
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall .Section_wallMiddle {
+    background-image: url(../../assets/backwall-closed-middle.png);
+}
+
+.Section_Section__3MCIu.Section_metal__c .Section_wall .Section_wallRight {
+    background-image: url(../../assets/backwall-closed-right.png);
+}
+
+
+.Section_isHighlighted.Section_isHighlighted {
+    -webkit-filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    opacity: .7;
+}
+
+.Section_wallperfo.Section_isHighlighted {
+    -webkit-filter: sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    filter: sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+}
+
