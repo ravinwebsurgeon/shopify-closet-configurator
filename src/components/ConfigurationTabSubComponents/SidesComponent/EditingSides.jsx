@@ -6,7 +6,6 @@ const EditingSides = ({sec,seckey}) => {
     <>
       <div className={`Stander_EditingSides ${sec} ${seckey}`}>
       </div>
-      {/* <SideAddBtn/> */}
     </>
   )
 }

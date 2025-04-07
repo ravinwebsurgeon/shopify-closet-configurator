@@ -12,8 +12,8 @@ const AddSide = ({onClose,side}) => {
     const currSection = useSelector((state) => state.shelfDetail.racks.selectedSection);
     const currHeight = useSelector((state)=>state.shelfDetail.racks.sections[currSection].height);
     const currType = useSelector((state)=>state.shelfDetail.selectedSideWall);
-    const sections = useSelector((state)=>state.shelfDetail.racks.sections)
-    const heightOptions = [50,...height]
+    const sections = useSelector((state)=>state.shelfDetail.racks.sections);
+    const heightOptions = [50,...height];
     const [selectedHeight,setSelectedHeight] = useState(null);
 
     const handleSelectedHeight = (e,height) =>{
@@ -23,6 +23,11 @@ const AddSide = ({onClose,side}) => {
 
     const handleAddSideClick = (e) =>{
         e.preventDefault();
+
+        if(!selectedHeight){
+          alert(`please select the height first !!`);
+          return;
+        }
 
         if(currSection != 'section_1' && side == 'left'){
           const sectionArr = Object.keys(sections)
@@ -67,7 +72,7 @@ const AddSide = ({onClose,side}) => {
                 <button className="close-button" onClick={onClose}>
                 Cancel
                 </button>
-                <button className="add-button" onClick={(e)=>handleAddSideClick(e)}>
+                <button className="add-button"  onClick={(e)=>handleAddSideClick(e)}>
                 Apply
                 </button>
             </div>

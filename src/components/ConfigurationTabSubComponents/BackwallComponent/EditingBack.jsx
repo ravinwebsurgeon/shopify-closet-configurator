@@ -1,8 +1,8 @@
 import React from 'react'
-import './BackWall.css'
+import './EditingBack.css'
 const EditingBack = () => {
   return (
-    <div className="Section_isEditingWall"></div>
+    <div className={`Section_isEditingWall`}></div>
   )
 }
 
