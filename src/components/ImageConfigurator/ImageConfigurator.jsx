@@ -24,9 +24,10 @@ import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator
 import SideAddBtn from "../SidesComp/SideAddBtn";
 import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
-import Backwall from "../BackComponent/Backwall";
+
 import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
+import Backwall from "../BackComponent/Backwall";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
