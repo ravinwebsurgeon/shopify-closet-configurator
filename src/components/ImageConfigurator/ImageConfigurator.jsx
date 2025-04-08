@@ -372,7 +372,7 @@ const ImageConfigurator = () => {
                                 <span
                                   className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
                                 >
-                                  {section.height + 2.7} cm
+                                  {parseFloat(section.height) + 2.7} cm
                                 </span>
                               </div>
                             )}
@@ -411,6 +411,7 @@ const ImageConfigurator = () => {
                                         )
                                       }
                                     >
+                                    <span className="ssdf"> {shelfkey}</span> 
                                       <div className="Legbord_inner__eOg0b">
                                         <div className="Legbord_left__ERgV5"></div>
                                         <div className="Legbord_middle__D8U0x"></div>

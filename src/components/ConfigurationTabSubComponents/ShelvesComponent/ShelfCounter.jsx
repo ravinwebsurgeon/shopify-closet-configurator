@@ -96,9 +96,9 @@ const ShelfCounter = ({ onClick }) => {
     <>
       <div
         ref={counterRef}
-        class="CounterWithAddRemove_container justify-center"
+        className="CounterWithAddRemove_container justify-center"
       >
-        <div class="CounterWithAddRemove_counter">
+        <div className="CounterWithAddRemove_counter">
           <button
             className="shelf-decreament-btn py-2 pl-3 pr-6"
             disabled={shelfCount === 3}
