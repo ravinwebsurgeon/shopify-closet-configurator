@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Backwall.css";
+import "./BackWall.css";
 import { useDispatch } from "react-redux";
 import { setCurrSelectedSection, setEditingBackwall } from "../../slices/shelfDetailSlice";
 const BackWall = ({type,height,id,selectedSectionBackWall , selectedSection, setSelectedSection, setBackWallSelectedSection}) => {
