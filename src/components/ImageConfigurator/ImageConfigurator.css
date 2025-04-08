@@ -788,3 +788,52 @@ button.stander-side-wall-btn {
     top: 0;
     z-index: 10;
 }
+
+.sideType__right .AddRemove_button {
+    left: 0;
+}
+.arrow_cstm::before,.arrow_cstm::after {
+    border-style: solid;
+    content: "";
+    display: block;
+    height: 0;
+    position: absolute;
+    right: 100%;
+    width: 0;
+}
+.leftArrow::before{
+    border-color: transparent transparent transparent #fff;
+    border-width: 6px;
+    left: 97%;
+    top: 8px;
+    z-index: 2;
+}
+.leftArrow::after{
+    border-color: transparent transparent transparent #5c5c5c;
+    border-width: 7px;
+    top: 7px;
+    z-index: 1;
+    right: -14px;
+}
+
+.rightArrow::before{
+border-color: transparent #fff transparent transparent;
+    border-width: 6px;
+    right: 97%;
+    top: 8px;
+    z-index: 2;
+}
+
+.rightArrow::after{
+    border-color: transparent #5c5c5c transparent transparent;
+    border-width: 7px;
+    top: 7px;
+  
+    z-index: 1;
+}
+.Section_sectionOverflow.sideType__right .Section_removeConfirmAccessoireButton.left-enabled {
+    left: 0;
+}
+.sideType__right .sideRemoveBtn {
+    left: 0;
+}

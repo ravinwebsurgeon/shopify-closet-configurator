@@ -33,16 +33,16 @@ const ImageConfigurator = () => {
   );
   const [positionArr, setPositionArr] = useState([]);
   const [racks, setRacks] = useState([]);
-  const [backWallSelectedSection, setBackWallSelectedSection] = useState('');
+  const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
   const [selectedRack, setSelectedRack] = useState();
 
   const [prevSection, setPrevSection] = useState({
     key: "",
   });
 
-  const [isHighlighted,setisHighlighted] = useState({
-    left:'',
-    right:''
+  const [isHighlighted, setisHighlighted] = useState({
+    left: "",
+    right: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,30 +96,27 @@ const ImageConfigurator = () => {
     { 300: "157" },
   ];
 
-
-  const handleSidewallLeftBtnClick = (e,sectionkey) => {
+  const handleSidewallLeftBtnClick = (e, sectionkey) => {
     e.preventDefault();
-    setisHighlighted(prev => ({
+    setisHighlighted((prev) => ({
       ...prev,
       left: sectionkey,
-      right: ''
+      right: "",
     }));
     dispatch(setEditingSides(true));
     dispatch(setCurrSelectedSection(sectionkey));
     setSelectedSection(sectionkey);
-  }
+  };
 
-  const handleSidewallRightBtnClick = (e,sectionkey) => {
+  const handleSidewallRightBtnClick = (e, sectionkey) => {
     e.preventDefault();
-    setisHighlighted(prev => ({
+    setisHighlighted((prev) => ({
       ...prev,
       right: sectionkey,
-      left: ''
+      left: "",
     }));
     dispatch(setEditingSides(true));
-    dispatch(setCurrSelectedSection(sectionkey));
-    setSelectedSection(sectionkey);
-  }
+  };
 
   // function used to set shelves at a specific height
   const GeneratePosArr = (currShelfHeight) => {
@@ -197,8 +194,8 @@ const ImageConfigurator = () => {
         !event.target.closest(".Legbord_Legbord__k51II") &&
         !event.target.closest(".Section_removeConfirmAccessoireButton") &&
         !event.target.closest(".mv_btns") &&
-        !event.target.closest(".AddRemove_button") && 
-        !event.target.closest(".modal-content")  
+        !event.target.closest(".AddRemove_button") &&
+        !event.target.closest(".modal-content")
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
@@ -207,11 +204,11 @@ const ImageConfigurator = () => {
         });
         dispatch(setEditingSides(false));
         setisHighlighted({
-          left:"",
-          right:""
-        })
+          left: "",
+          right: "",
+        });
         dispatch(setEditingBackwall(false));
-        setBackWallSelectedSection('')
+        setBackWallSelectedSection("");
       }
     };
 
@@ -358,13 +355,21 @@ const ImageConfigurator = () => {
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {(selectedSection == sectionKey) && editingSides && !sections[selectedSection].sideWall.left.isLeft  && (
-                          <EditingSides
-                            sec={selectedSection}
-                            seckey={sectionKey}
+                        {selectedSection == sectionKey &&
+                          editingSides &&
+                          !sections[selectedSection].sideWall.left.isLeft && (
+                            <EditingSides
+                              sec={selectedSection}
+                              seckey={sectionKey}
+                            />
+                          )}
+                        {sections[sectionKey].sideWall.left.isLeft && (
+                          <SideWall
+                            type={sections[sectionKey].sideWall.left.type}
+                            height={sections[sectionKey].sideWall.left.height}
+                            highlighted={isHighlighted.left === sectionKey}
                           />
                         )}
-                       {sections[sectionKey].sideWall.left.isLeft && <SideWall type={sections[sectionKey].sideWall.left.type} height={sections[sectionKey].sideWall.left.height}  highlighted={isHighlighted.left === sectionKey}/>}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
@@ -387,14 +392,46 @@ const ImageConfigurator = () => {
                         ) : (
                           ""
                         )}
-                         {(selectedSection == sectionKey) && editingSides  && <SideAddBtn prevKey={prevSection?.key} height={section?.height} width={section?.width}/> }
-                         {(selectedSection == sectionKey) && isEdtingWall  && <BackAddBtn height={section?.height} width={section?.width} type={sections[sectionKey].backWall.type} id={sectionKey}/> }
+                        {isShelfSelected?.key != "" &&
+                          sectionKey == selectedSection && (
+                            <ShelveChangeIndicator
+                              selectedShelfKey={isShelfSelected?.key}
+                              selectedSectionKey={selectedSection}
+                            />
+                          )}
                       </div>
-                      {sections[sectionKey].sideWall.left.isLeft &&   <button className="stander-side-wall-btn"  onClick={(e)=>handleSidewallLeftBtnClick(e,sectionKey)}></button> }
+                      {/* div for edit sides or back */}
+                      <div className="test">
+                        {selectedSection == sectionKey && editingSides && (
+                          <SideAddBtn
+                            setisHighlighted={setisHighlighted}
+                            height={section?.height}
+                            width={section?.width}
+                            sideType="left"
+                          />
+                        )}
+
+                        {selectedSection == sectionKey && isEdtingWall && (
+                          <BackAddBtn
+                            height={section?.height}
+                            width={section?.width}
+                            type={sections[sectionKey].backWall.type}
+                            id={sectionKey}
+                          />
+                        )}
+                      </div>
+                      {sections[sectionKey].sideWall.left.isLeft && (
+                        <button
+                          className="stander-side-wall-btn"
+                          onClick={(e) =>
+                            handleSidewallLeftBtnClick(e, sectionKey)
+                          }
+                        ></button>
+                      )}
                       {/* shelf section */}
                       <div>
                         <div
-                          data-indicator-index={index+1}
+                          data-indicator-index={index + 1}
                           className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${
                             section.height || 100
                           } Section_width${section.width || 55}`}
@@ -516,15 +553,50 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack/>}
-              
-                        <Backwall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
-                        
+                          {selectedSection === sectionKey &&
+                            isEdtingWall &&
+                            !sections[sectionKey].backWall.type && (
+                              <EditingBack />
+                            )}
+
+                          <Backwall
+                            type={sections[sectionKey].backWall.type}
+                            height={sections[sectionKey].backWall.height}
+                            id={sectionKey}
+                            selectedSectionBackWall={backWallSelectedSection}
+                            selectedSection={selectedSection}
+                            setBackWallSelectedSection={
+                              setBackWallSelectedSection
+                            }
+                            setSelectedSection={setSelectedSection}
+                          />
                         </div>
-                      </div> 
+                      </div>
+                      <div className="">
+                        {selectedSection == sectionKey && editingSides && (
+                          <SideAddBtn
+                            setisHighlighted={setisHighlighted}
+                            prevKey={prevSection?.key}
+                            height={section?.height}
+                            width={section?.width}
+                            sideType="right"
+                          />
+                        )}
+                      </div>
 
-
-                   {sections[sectionKey].sideWall.right.isRight &&   <button className="stander-side-wall-btn"  onClick={(e)=>handleSidewallRightBtnClick(e,sectionKey)}></button> }
+                      {sections[sectionKey].sideWall.right.isRight && (
+                        <button
+                          className="stander-side-wall-btn"
+                          onClick={(e) =>
+                            handleSidewallRightBtnClick(
+                              e,
+                              sectionKey != selectedSection
+                                ? prevSection?.key
+                                : sectionKey
+                            )
+                          }
+                        ></button>
+                      )}
                       {/* next two poles */}
                       <div
                         className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
@@ -540,15 +612,31 @@ const ImageConfigurator = () => {
                 `}
                         style={{ zIndex: index + 1 }}
                       >
-                         {sections[sectionKey].sideWall.right.isRight && <SideWall type={sections[sectionKey].sideWall.right.type} height={sections[sectionKey].sideWall.right.height} highlighted={isHighlighted.right === sectionKey}/>}
+                        {sections[sectionKey].sideWall.right.isRight && (
+                          <SideWall
+                            type={sections[sectionKey].sideWall.right.type}
+                            height={sections[sectionKey].sideWall.right.height}
+                            highlighted={isHighlighted.right === sectionKey}
+                          />
+                        )}
                         <div className="Staander_achter__8cpuX">
                           <div className="Staander_achterTop__nQ0aW"></div>
                           <div className="Staander_achterMiddle__XrxPJ"></div>
                           <div className="Staander_achterBottom__YRp6n"></div>
                         </div>
-                        {(prevSection.key == sectionKey) && editingSides && (!sections[selectedSection].sideWall.right.isRight && !(prevSection?.key && sections[prevSection.key]?.sideWall.right.isRight))  && <EditingSides />}
-                        {(selectedSection == sectionKey) && editingSides && (!sections[selectedSection].sideWall.right.isRight)  && <EditingSides />}
-                       
+                        {prevSection.key == sectionKey &&
+                          editingSides &&
+                          !sections[selectedSection].sideWall.right.isRight &&
+                          !(
+                            prevSection?.key &&
+                            sections[prevSection.key]?.sideWall.right.isRight
+                          ) && <EditingSides />}
+                        {selectedSection == sectionKey &&
+                          editingSides &&
+                          !sections[selectedSection].sideWall.right.isRight && (
+                            <EditingSides />
+                          )}
+
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>

@@ -3,30 +3,31 @@ import './SideRemoveBtn.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteSideWall, setEditingSides } from '../../slices/shelfDetailSlice';
 
-const SideRemoveBtn = ({ll,cc,leftSide, sectionKey, leftPrevSide}) => {
+const SideRemoveBtn = ({ll,cc,leftSide, sectionKey, leftPrevSide, setisHighlighted}) => {
 
     const dispatch = useDispatch();
     const sectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);
     const side = (leftSide ? "left" : leftPrevSide ? "right" : "right");
-    console.log("prevKey",ll);
-    console.log("currSection",cc);
 
     const handleDelete = (e) =>{
-        e.preventDefault();
-    
+        e.preventDefault();    
         dispatch(deleteSideWall({sectionId:sectionKey,side}));
+        setisHighlighted({    left:'',
+          right:''})
     }
 
     const handleConfirm = (e) =>{
         e.preventDefault();
         dispatch(setEditingSides(false));
+        setisHighlighted({    left:'',
+          right:''})
         
     }
 
 
   return (
     <div
-      className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${leftSide || leftPrevSide ? 'left-enabled' : ''}`}
+      className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${leftSide || leftPrevSide ? 'left-enabled' : 'rightArrow'}`}
       style={{ top: String(top) }}
     >
       <button

@@ -279,7 +279,23 @@ const shelfDetailSlice = createSlice({
           height:""
         }
       }
-    }
+    },
+    updateShelvePostion: (state, action) => {
+      const { sectionId, position, shelfKey } = action.payload;
+      if (position > 0) {
+        const shelves = state.racks.sections[sectionId].shelves;
+        const shelfKeys = Object.keys(shelves).sort((a, b) => {
+          return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+        });
+
+        if (shelfKeys.length > 0) {
+          shelves[shelfKey] = {
+            ...shelves[shelfKey],
+            position: {...shelves[shelfKey].position, top:position + 'em', },
+          };
+        }
+      }
+    },
   },
 });
 
@@ -306,7 +322,7 @@ export const {
   deleteSideWall,
   setCurrBackwall,
   updateBackwall,
-  deleteBackwall,
+  deleteBackwall
 } = shelfDetailSlice.actions;
 
 // export default reducer

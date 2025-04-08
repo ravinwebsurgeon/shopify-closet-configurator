@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import SideRemoveBtn from "../SideRemoveBtn/SideRemoveBtn";
 
 
-const SideAddBtn = ({ height, width, prevKey }) => {
+const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [side, setSide] = useState("");
   const currSection = useSelector(
@@ -40,12 +40,12 @@ const SideAddBtn = ({ height, width, prevKey }) => {
   return (
     <>
       <div
-        className={`Section_sectionOverflow Section_width${width} Section_height${height}`}
+        className={`Section_sectionOverflow Section_width${width} Section_height${height} sideType__${sideType}`}
       >
-        {!leftSide && !leftPrevSide ? (
+        {!leftSide && !leftPrevSide && sideType == 'left' ? (
           <button
             type="button"
-            className="AddRemove_button Section_removeAccessoireButtonLeft"
+            className="AddRemove_button arrow_cstm leftArrow Section_removeAccessoireButtonLeft"
             style={{ top: "25em", left: "-62px" }}
             onClick={(e) => handleLeftSideClick(e)}
           >
@@ -62,13 +62,13 @@ const SideAddBtn = ({ height, width, prevKey }) => {
             </i>
           </button>
         ) : (
-          <SideRemoveBtn ll={prevKey} cc={currSection} leftPrevSide={leftPrevSide} leftSide={leftSide} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
+          sideType == 'left' &&   <SideRemoveBtn ll={prevKey} setisHighlighted={setisHighlighted} cc={currSection} leftPrevSide={leftPrevSide} leftSide={leftSide} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
         )}
 
-        {!rightSide ? (
+        {!rightSide && sideType  == 'right' ? (
           <button
             type="button"
-            className="AddRemove_button Section_removeAccessoireButton"
+            className="AddRemove_button arrow_cstm rightArrow Section_removeAccessoireButton"
             style={{ top: "25em", right: "-14px" }}
             onClick={(e) => handleRightSideClick(e)}
           >
@@ -85,7 +85,7 @@ const SideAddBtn = ({ height, width, prevKey }) => {
             </i>
           </button>
         ) : (
-          <SideRemoveBtn leftPrevSide={leftPrevSide} leftSide={leftSide} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
+        sideType  == 'right' &&  <SideRemoveBtn  leftPrevSide={leftPrevSide} setisHighlighted={setisHighlighted} leftSide={false} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
         )}
       </div>
       <ModalComponent isOpen={isModalOpen}>
