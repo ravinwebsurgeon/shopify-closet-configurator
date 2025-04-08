@@ -36,6 +36,9 @@ const AddSide = ({onClose,side}) => {
             const prevSection = sectionArr[index - 1];
             dispatch(updateSideWall({ sectionId:prevSection, side:"right", type:currType, height:selectedHeight }));
           }
+          else{
+            dispatch(updateSideWall({ sectionId:currSection, side, type:currType, height:selectedHeight }));
+          }
         }
         else{
           dispatch(updateSideWall({ sectionId:currSection, side, type:currType, height:selectedHeight }));
