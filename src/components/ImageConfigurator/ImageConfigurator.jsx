@@ -18,7 +18,7 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
-import EditingBack from "../BackComponent/EditingBack";
+
 import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
 import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator/ShelveChangeIndicator";
 import SideAddBtn from "../SidesComp/SideAddBtn";
@@ -26,6 +26,7 @@ import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
 import Backwall from "../BackComponent/Backwall";
 import XBrace from "../XBraceComponent/XBrace";
+import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -607,7 +608,7 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack/>}
+                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack  />}
                         {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
                         <Backwall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
                         
