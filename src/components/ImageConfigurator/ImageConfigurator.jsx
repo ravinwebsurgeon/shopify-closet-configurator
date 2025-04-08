@@ -27,7 +27,7 @@ import BackAddBtn from "../BackAddBtn/BackAddBtn";
 
 import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
-import Backwall from "../BackComponent/Backwall";
+import BackWall from "../BackComponent/Backwall";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -612,7 +612,7 @@ const ImageConfigurator = () => {
                           </div>
                         {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack  />}
                         {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
-                        <Backwall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
+                        <BackWall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
                         
                         </div>
                       </div>
