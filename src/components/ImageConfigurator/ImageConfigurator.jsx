@@ -27,7 +27,7 @@ import BackAddBtn from "../BackAddBtn/BackAddBtn";
 
 import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
-import BackWall from "../BackComponent/Backwall";
+import BackWall from "../BackComponent/BackWall";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
