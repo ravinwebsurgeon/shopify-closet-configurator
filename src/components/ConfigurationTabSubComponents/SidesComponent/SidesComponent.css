@@ -10,6 +10,10 @@
     margin-left: 10px;
 }
 
+.side-data-card.selected{
+    border: 1px solid #3c9cea;
+}
+
 .side-img {
     padding: 16px;
 }

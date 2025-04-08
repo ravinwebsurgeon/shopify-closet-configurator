@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +10,7 @@ import {
 } from "../../../slices/shelfDetailSlice";
 import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 
-const ShelfCounter = ({ onClick }) => {
+const ShelfCounter = ({ onClick, showCounter }) => {
   const counterRef = useRef(null);
   const dispatch = useDispatch();
   let positionArray = [];
@@ -77,7 +78,7 @@ const ShelfCounter = ({ onClick }) => {
 
   const handleAddShelf = (e) => {
     e.preventDefault();
-    const maxShelfCount = shelfCountsAccHeight[shelfHeight]["max"];    
+    const maxShelfCount = shelfCountsAccHeight[shelfHeight]["max"];
     if (shelfCount >= maxShelfCount) {
       setShelfCount(maxShelfCount);
       return;
@@ -93,12 +94,12 @@ const ShelfCounter = ({ onClick }) => {
   };
 
   return (
-    <>
+    showCounter && (
       <div
         ref={counterRef}
-        class="CounterWithAddRemove_container justify-center"
+        className="CounterWithAddRemove_container justify-center"
       >
-        <div class="CounterWithAddRemove_counter">
+        <div className="CounterWithAddRemove_counter">
           <button
             className="shelf-decreament-btn py-2 pl-3 pr-6"
             disabled={shelfCount === 3}
@@ -112,7 +113,6 @@ const ShelfCounter = ({ onClick }) => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-
                 d="M8.25 5.25C8.66421 5.25 9 5.58579 9 6C9 6.41421 8.66421 6.75 8.25 6.75H3.75C3.33579 6.75 3 6.41421 3 6C3 5.58579 3.33579 5.25 3.75 5.25H8.25Z"
                 fill="white"
               ></path>
@@ -134,7 +134,6 @@ const ShelfCounter = ({ onClick }) => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-
                 d="M6 10.5C6.31066 10.5 6.5625 10.2482 6.5625 9.9375V6.5625H9.9375C10.2482 6.5625 10.5 6.31066 10.5 6C10.5 5.68934 10.2482 5.4375 9.9375 5.4375H6.5625V2.0625C6.5625 1.75184 6.31066 1.5 6 1.5C5.68934 1.5 5.4375 1.75184 5.4375 2.0625V5.4375H2.0625C1.75184 5.4375 1.5 5.68934 1.5 6C1.5 6.31066 1.75184 6.5625 2.0625 6.5625H5.4375V9.9375C5.4375 10.2482 5.68934 10.5 6 10.5Z"
                 fill="white"
               ></path>
@@ -161,7 +160,7 @@ const ShelfCounter = ({ onClick }) => {
           </button>
         </div>
       </div>
-    </>
+    )
   );
 };
 

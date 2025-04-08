@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setConfiguration,
+  updateBackwall,
   updateLastShelvePostion,
   updateSectionDimensions,
+  updateSideWall,
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
 
 const DimensionsComponent = () => {
+
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
@@ -70,6 +73,122 @@ const DimensionsComponent = () => {
   };
 
   const handleDimensionChange = (dimension, value) => {
+
+    
+    const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
+    const isRightSidewall = sections[activeSectionId].sideWall["right"].isRight;
+    const isBackwall = sections[activeSectionId].backWall.type;
+    const backWall = sections[activeSectionId].backWall;
+
+    // checking if active section is having left ,right
+    if(isLeftSidewall || isRightSidewall){
+      //checking weather there are multiple sections
+      const numOfSections = Object.keys(sections).length;
+      
+      if(numOfSections > 1 && isRightSidewall){
+        // check if selected section is section_1
+        if(activeSectionId == 'section_1' && dimension == "height"){
+          if(sections[activeSectionId].sideWall["left"].height > value ){
+            const leftSide = sections[activeSectionId].sideWall["left"];
+            dispatch(updateSideWall({
+              sectionId: activeSectionId,
+              side: "left",
+              ...leftSide,
+              height: value, 
+            }));
+          }
+        }
+        else {
+          if (dimension === 'height') {
+            const leftWall = sections[activeSectionId].sideWall["left"];
+            const rightWall = sections[activeSectionId].sideWall["right"];
+            if (isLeftSidewall && isRightSidewall) {
+              if (leftWall.height > value && rightWall.height > value) {
+                dispatch(updateSideWall({
+                  sectionId: activeSectionId,
+                  side: "left",
+                  ...leftWall,
+                  height: value,
+                }));
+                dispatch(updateSideWall({
+                  sectionId: activeSectionId,
+                  side: "right",
+                  ...rightWall,
+                  height: value,
+                }));
+              }
+            }
+            else if (isLeftSidewall && leftWall.height > value) {
+              dispatch(updateSideWall({
+                sectionId: activeSectionId,
+                side: "left",
+                ...leftWall,
+                height: value,
+              }));
+            }
+            else if (isRightSidewall && rightWall.height > value) {
+              dispatch(updateSideWall({
+                sectionId: activeSectionId,
+                side: "right",
+                ...rightWall,
+                height: value,
+              }));
+            }
+          }
+        }
+      }
+      else {
+        if (dimension === 'height') {
+          const leftWall = sections[activeSectionId].sideWall["left"];
+          const rightWall = sections[activeSectionId].sideWall["right"];
+          if (isLeftSidewall && isRightSidewall) {
+            if (leftWall.height > value && rightWall.height > value) {
+              dispatch(updateSideWall({
+                sectionId: activeSectionId,
+                side: "left",
+                ...leftWall,
+                height: value,
+              }));
+              dispatch(updateSideWall({
+                sectionId: activeSectionId,
+                side: "right",
+                ...rightWall,
+                height: value,
+              }));
+            }
+          }
+          else if (isLeftSidewall && leftWall.height > value) {
+            dispatch(updateSideWall({
+              sectionId: activeSectionId,
+              side: "left",
+              ...leftWall,
+              height: value,
+            }));
+          }
+          else if (isRightSidewall && rightWall.height > value) {
+            dispatch(updateSideWall({
+              sectionId: activeSectionId,
+              side: "right",
+              ...rightWall,
+              height: value,
+            }));
+          }
+        }
+      }
+      
+    }
+
+    if(isBackwall && backWall.height > value){
+        dispatch(updateBackwall({
+          sectionId: activeSectionId,
+          type: sections[activeSectionId].backWall.type,
+          height: value,
+        }))
+    }
+
+
+
+
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
     setDimensions(newDimensions);

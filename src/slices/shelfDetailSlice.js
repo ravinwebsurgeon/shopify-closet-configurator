@@ -12,23 +12,46 @@ const initialState = {
     depth: [20, 30, 40, 50, 60, 70, 80],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
+   selectedSideWall:'',
+   selectedBackwall:'',
   racks: {},
 };
 
-const executionObject = {
-  color: "metal",
-  material: "metal",
-  topCaps: "topCaps",
-  braces: "X-braces",
-  feet: "Plastic",
-};
+const executionObject ={
+    "color":"metal",
+    "material":"metal",
+    "topCaps":"topCaps",
+    "braces":"X-braces",
+    "feet":"Plastic"
+}
+
+const sideWallObject = {
+  left:{
+    isLeft:false,
+    type:"",
+    height:""
+  },
+  right:{
+    isRight:false,
+    type:"",
+    height:""
+  }
+}
+
+const backwallObject = {
+  type:"",
+  height:""
+}
+
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
-  width,
-  height,
+  width:Number(width),
+  height:Number(height),
   standHeight: parseInt(height),
   shelves,
+  sideWall:sideWallObject,
+  backWall:backwallObject,
 });
 
 const showCounter = true;
@@ -85,7 +108,7 @@ const shelfDetailSlice = createSlice({
           ...state.racks.sections,
           ...newSection,
         },
-        depth: shelfDepth,
+        depth: Number(shelfDepth),
         execution: {
           ...executionObject,
           ...(state.racks.execution || {}),
@@ -104,7 +127,6 @@ const shelfDetailSlice = createSlice({
       };
     },
     setCurrSelectedSection: (state, action) => {
-      console.log("selected section payload", action.payload);
       state.racks.selectedSection = action.payload;
     },
     deleteSection: (state, action) => {
@@ -183,8 +205,7 @@ const shelfDetailSlice = createSlice({
     },
     updateShelvePostion: (state, action) => {
       const { sectionId, position, shelfKey } = action.payload;
-
-      if (position > 0) {
+      if (position >= 0) {
         const shelves = state.racks.sections[sectionId].shelves;
         const shelfKeys = Object.keys(shelves).sort((a, b) => {
           return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
@@ -193,11 +214,72 @@ const shelfDetailSlice = createSlice({
         if (shelfKeys.length > 0) {
           shelves[shelfKey] = {
             ...shelves[shelfKey],
-            position: {...shelves[shelfKey].position, top:position + 'em', },
+            position: { ...shelves[shelfKey].position, top: position + "em" },
           };
         }
       }
     },
+    setCurrSideWall: (state, action) => {
+      state.selectedSideWall = action.payload;
+    },
+    updateSideWall: (state, action) => {
+      const { sectionId, side, type, height } = action.payload;
+      if (state.racks.sections[sectionId]) {
+        state.racks.sections[sectionId].sideWall[side] = {
+          ...(state.racks.sections[sectionId].sideWall[side] || {}),
+          isLeft: side === "left",
+          isRight: side === "right",
+          type,
+          height,
+        };
+      }
+    },
+    updateShelveIndexAndPostion: (state, action) => {
+      const { sectionId, shelves } = action.payload;
+      if (shelves.length > 0) {
+        const newShelves = state.racks.sections[sectionId].shelves;
+
+        shelves.map((item, index) => {
+          newShelves[item.key] = {
+            ...shelves[item.key],
+            position: { zIndex: shelves.length - index, top: item.top + "em" },
+          };
+        });
+      }
+    },
+    deleteSideWall: (state,action) =>{
+      const {sectionId,side} = action.payload;
+      if (state.racks.sections[sectionId]) {
+        state.racks.sections[sectionId].sideWall[side] = {
+          isLeft: side == "left" ? false : state.racks.sections[sectionId].sideWall.left.isLeft,
+          isRight: side == "right" ? false : state.racks.sections[sectionId].sideWall.right.isRight,
+          type: "",
+          height: ""
+        };
+      }
+    },
+    setCurrBackwall : (state,action) =>{
+      state.selectedBackwall = action.payload;
+    },
+    updateBackwall : (state,action) =>{
+      const { sectionId, type, height } = action.payload;
+      if (state.racks.sections[sectionId]){
+        state.racks.sections[sectionId].backWall = {
+          ...(state.racks.sections[sectionId].backWall || {}),
+          type,
+          height,
+        };
+      }
+    },
+    deleteBackwall : (state,action) =>{
+      const {sectionId} = action.payload;
+      if (state.racks.sections[sectionId]){
+        state.racks.sections[sectionId].backWall ={
+          type:"",
+          height:""
+        }
+      }
+    }
   },
 });
 
@@ -215,9 +297,16 @@ export const {
   setShowCounter,
   updateShelvesPosition,
   deleteShelf,
-  setEditingSides,
+  updateShelvePostion,
+  updateShelveIndexAndPostion,
+  setEditingSides,  
   setEditingBackwall,
-  updateShelvePostion
+  updateSideWall,
+  setCurrSideWall,
+  deleteSideWall,
+  setCurrBackwall,
+  updateBackwall,
+  deleteBackwall
 } = shelfDetailSlice.actions;
 
 // export default reducer
