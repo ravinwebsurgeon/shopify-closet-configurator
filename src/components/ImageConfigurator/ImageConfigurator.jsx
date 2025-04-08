@@ -12,6 +12,7 @@ import {
   setEditingBackwall,
   setEditingSides,
   setShowCounter,
+  updateSideWall,
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
@@ -24,6 +25,7 @@ import SideAddBtn from "../SidesComp/SideAddBtn";
 import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
 import Backwall from "../BackComponent/Backwall";
+import XBrace from "../XBraceComponent/XBrace";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -35,6 +37,29 @@ const ImageConfigurator = () => {
   const [racks, setRacks] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
   const [selectedRack, setSelectedRack] = useState();
+
+  // const[scale,setScale] = useState(0.9);
+
+  const getScale =(sectionHeight) =>{
+    const scalingMap = {
+      "220": 0.882,
+      "250": 0.828,
+      "300": 0.747
+    };
+
+      const sortedHeights = Object.keys(scalingMap)
+      .map(Number)
+      .sort((a, b) => b - a);
+
+    for (const h of sortedHeights) {
+      if (height >= h) {
+        return parseFloat(scalingMap[h]);
+      }
+    }
+
+    return 0.9; 
+
+  }
 
   const [prevSection, setPrevSection] = useState({
     key: "",
@@ -135,6 +160,14 @@ const ImageConfigurator = () => {
     return positions;
   };
 
+
+  const getMaxHeight = () =>{
+    const result = Object.values(sections).some(section => section.height > 220);
+    return result ;
+  }
+
+ 
+
   // function used to calculate no. of racks
   const findOptimizedRacks = (totalWidth) => {
     let bestCombination = null;
@@ -228,10 +261,28 @@ const ImageConfigurator = () => {
     const activeIndex = sectionKeys.indexOf(sectionKey);
     const previousSection =
       activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
-    const nextSectionId =
-      activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
-    const nextSection = sections[nextSectionId];
-    const prevSection = sections[previousSection];
+    const nextSectionId = activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
+      const prevSection = sections[previousSection];
+      
+      const selectedSection = sections[sectionKey];
+      const nextSection = nextSectionId ? sections[nextSectionId] :null;
+
+      if (
+        selectedSection?.sideWall?.right &&
+        selectedSection.sideWall.right.isRight && 
+        nextSection
+      ){
+        const rightSideWall = selectedSection.sideWall.right;
+        dispatch(
+          updateSideWall({
+            sectionId: nextSectionId,
+            side: "left",
+            ...rightSideWall,
+          })
+        );
+    
+      }
+
     // if (prevSection && nextSection) {
     //   console.log(prevSection.height, nextSection.height);
     //   console.log("prevSection---->", prevSection);
@@ -279,8 +330,9 @@ const ImageConfigurator = () => {
     const activeIndex = sectionKeys.indexOf(selectedSection);
     const previousSection =
       activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
-    setPrevSection((prev) => ({ ...prev, key: previousSection }));
-  }, [selectedSection]);
+      setPrevSection((prev)=>({...prev, key:previousSection}));
+  },[selectedSection])
+
   return (
     <>
       <div
@@ -431,8 +483,10 @@ const ImageConfigurator = () => {
                       {/* shelf section */}
                       <div>
                         <div
-                          data-indicator-index={index + 1}
-                          className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c Section_height${
+                          data-indicator-index={index+1}
+                          className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c
+                            ${executionValues.color === "black" ? "Section_black" : ""} 
+                            Section_height${
                             section.height || 100
                           } Section_width${section.width || 55}`}
                           style={{ zIndex: index }}
@@ -553,23 +607,10 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                          {selectedSection === sectionKey &&
-                            isEdtingWall &&
-                            !sections[sectionKey].backWall.type && (
-                              <EditingBack />
-                            )}
-
-                          <Backwall
-                            type={sections[sectionKey].backWall.type}
-                            height={sections[sectionKey].backWall.height}
-                            id={sectionKey}
-                            selectedSectionBackWall={backWallSelectedSection}
-                            selectedSection={selectedSection}
-                            setBackWallSelectedSection={
-                              setBackWallSelectedSection
-                            }
-                            setSelectedSection={setSelectedSection}
-                          />
+                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack/>}
+                        {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
+                        <Backwall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
+                        
                         </div>
                       </div>
                       <div className="">
@@ -663,7 +704,6 @@ const ImageConfigurator = () => {
       </div>
       <ModalComponent isOpen={isModalOpen}>
         <AddSection onClose={() => setIsModalOpen(false)}>
-          {/* <DimensionsComponent /> */}
         </AddSection>
       </ModalComponent>
     </>
