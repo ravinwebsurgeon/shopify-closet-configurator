@@ -12,30 +12,30 @@ const initialState = {
     depth: [20, 30, 40, 50, 60, 70, 80],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
-   selectedSideWall:'',
+  selectedSideWall: "",
   racks: {},
 };
 
-const executionObject ={
-    "color":"metal",
-    "material":"metal",
-    "topCaps":"topCaps",
-    "braces":"X-braces",
-    "feet":"Plastic"
-}
+const executionObject = {
+  color: "metal",
+  material: "metal",
+  topCaps: "topCaps",
+  braces: "X-braces",
+  feet: "Plastic",
+};
 
 const sideWallObject = {
-  left:{
-    isLeft:false,
-    type:"",
-    height:""
+  left: {
+    isLeft: false,
+    type: "",
+    height: "",
   },
-  right:{
-    isRight:false,
-    type:"",
-    height:""
-  }
-}
+  right: {
+    isRight: false,
+    type: "",
+    height: "",
+  },
+};
 
 const selectedSection = "section_1";
 const activeTab = "dimensions";
@@ -44,7 +44,7 @@ const createInitialSection = (width, height, shelves) => ({
   height,
   standHeight: parseInt(height),
   shelves,
-  sideWall:sideWallObject
+  sideWall: sideWallObject,
 });
 
 const showCounter = true;
@@ -199,7 +199,7 @@ const shelfDetailSlice = createSlice({
     },
     updateShelvePostion: (state, action) => {
       const { sectionId, position, shelfKey } = action.payload;
-      if (position > 0) {
+      if (position >= 0) {
         const shelves = state.racks.sections[sectionId].shelves;
         const shelfKeys = Object.keys(shelves).sort((a, b) => {
           return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
@@ -208,12 +208,12 @@ const shelfDetailSlice = createSlice({
         if (shelfKeys.length > 0) {
           shelves[shelfKey] = {
             ...shelves[shelfKey],
-            position: {...shelves[shelfKey].position, top:position + 'em', },
+            position: { ...shelves[shelfKey].position, top: position + "em" },
           };
         }
       }
     },
-    setCurrSideWall : (state,action) =>{
+    setCurrSideWall: (state, action) => {
       state.selectedSideWall = action.payload;
     },
     updateSideWall: (state, action) => {
@@ -228,8 +228,19 @@ const shelfDetailSlice = createSlice({
         };
       }
     },
+    updateShelveIndexAndPostion: (state, action) => {
+      const { sectionId, shelves } = action.payload;
+      if (shelves.length > 0) {
+        const newShelves = state.racks.sections[sectionId].shelves;
 
-
+        shelves.map((item, index) => {
+          newShelves[item.key] = {
+            ...shelves[item.key],
+            position: { zIndex: shelves.length - index, top: item.top + "em" },
+          };
+        });
+      }
+    },
   },
 });
 
@@ -252,6 +263,7 @@ export const {
   updateShelvePostion,
   updateSideWall,
   setCurrSideWall,
+  updateShelveIndexAndPostion,
 } = shelfDetailSlice.actions;
 
 // export default reducer

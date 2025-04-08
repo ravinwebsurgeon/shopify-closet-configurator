@@ -2,7 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
-import { updateShelvePostion } from "../../../slices/shelfDetailSlice";
+import {
+  updateShelveIndexAndPostion,
+  updateShelvePostion,
+} from "../../../slices/shelfDetailSlice";
 
 const ShelveChangePosition = ({ sectionId, shelfKey }) => {
   const dispatch = useDispatch();
@@ -34,14 +37,8 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
     (shelf) => shelf.key === shelfKey
   );
   const currentPosition = getShelvesKeys[selectedIndex]?.top || 0;
-
-  const previousShelf = getShelvesKeys[selectedIndex - 1] || null;
   const nextShelf = getShelvesKeys[selectedIndex + 1] || null;
-
-  const previousShelfTop = previousShelf?.top || 0;
   const nextShelfTop = nextShelf?.top || 0;
-
-  const spaceBefore = previousShelf ? currentPosition - previousShelfTop : 0;
   const spaceAfter = nextShelf ? nextShelfTop - currentPosition : 0;
 
   const [buttons, setButtons] = useState({
@@ -51,125 +48,247 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
     bottomRight: { active: false },
   });
 
-  useEffect(() => {
+  const activeDeactiveBtns = () => {
     const topPosition = parseFloat(getCurrentShelvePosition?.top);
-    const maxPosition = getBottomShelfPostionMax;
-    const prevShelves = () => {
-      return shelvesKeys
-        .map((item, index, array) => {
-          const shelveTop = parseFloat(getShelves[item]?.position?.top);
-          const prevItem = array
-            .filter(
-              (prev) => parseFloat(getShelves[prev]?.position?.top) < shelveTop
-            )
-            .sort(
-              (a, b) =>
-                parseFloat(getShelves[b]?.position?.top) -
-                parseFloat(getShelves[a]?.position?.top)
-            )[0];
-          const prevShelveTop =
-            parseFloat(getShelves[prevItem]?.position?.top) || 0;
-          return shelveTop <= topPosition
-            ? { shelveTop, space: shelveTop - prevShelveTop, item, prevItem }
-            : null;
-        })
-        .filter((pos) => pos !== null);
-    };
-    const nextShelves = () => {
-      return shelvesKeys
-        .map((item, index, array) => {
-          const shelveTop = parseFloat(getShelves[item]?.position?.top);
-          const nextItem = array
-            .filter(
-              (next) => parseFloat(getShelves[next]?.position?.top) > shelveTop
-            )
-            .sort(
-              (a, b) =>
-                parseFloat(getShelves[a]?.position?.top) -
-                parseFloat(getShelves[b]?.position?.top)
-            )[0];
-
-          if (!nextItem) return null;
-          const nextShelveTop = parseFloat(getShelves[nextItem]?.position?.top);
-          return shelveTop >= topPosition
-            ? {
-                shelveTop,
-                space: nextShelveTop - shelveTop,
-                item,
-                nextItem,
-              }
-            : null;
-        })
-        .filter((pos) => pos !== null);
-    };
-    setSpaces((prev) => ({
-      ...prev,
-      prevShelves: prevShelves(),
-      nextShelves: nextShelves(),
-    }));
+    const previousShelve = prevShelves(topPosition);
+    const nextShelve = nextShelves(topPosition);
+    const previous = previousShelve.sort((a, b) => b.shelveTop - a.shelveTop);
+    const next = nextShelve.sort((a, b) => a.shelveTop - b.shelveTop);
+    const nextElementSpace = next.find((item) => item.space >= 3.75);
+    const prevElementSpace = previous.find((item) => item.space >= 3.75);
     setButtons((prev) => ({
       ...prev,
-      topLeft: { active: topPosition > 3.75 && spaceBefore >= 3.75 },
-      topRight: { active: topPosition > 5 && spaceBefore >= 8.75 },
+      topLeft: {
+        ...prev.topLeft,
+        active:
+          shelfKey == getShelvesKeys[0].key && topPosition > 0
+            ? true
+            : prevElementSpace
+            ? prevElementSpace.space >= 3.75
+            : false,
+      },
+      topRight: {
+        ...prev.topRight,
+        active:
+          shelfKey == getShelvesKeys[0].key && topPosition > 0
+            ? true
+            : prevElementSpace
+            ? prevElementSpace.space >= 5
+            : false,
+      },
       bottomLeft: {
-        active: topPosition < maxPosition - 3.75,
+        ...prev.bottomLeft,
+        active: nextElementSpace ? nextElementSpace.space >= 3.75 : false,
       },
       bottomRight: {
-        active: topPosition <= maxPosition - 8.75,
+        ...prev.bottomRight,
+        active: nextElementSpace ? nextElementSpace.space >= 5 : false,
       },
     }));
+  };
+  useEffect(() => {
+    activeDeactiveBtns();
   }, [shelfKey]);
+  useEffect(() => {}, [getShelvesKeys]);
+  const prevShelves = (topPosition) => {
+    return shelvesKeys
+      .map((item, index, array) => {
+        const shelveTop = parseFloat(getShelves[item]?.position?.top);
+        const prevItem = array
+          .filter(
+            (prev) => parseFloat(getShelves[prev]?.position?.top) < shelveTop
+          )
+          .sort(
+            (a, b) =>
+              parseFloat(getShelves[b]?.position?.top) -
+              parseFloat(getShelves[a]?.position?.top)
+          )[0];
+        const prevShelveTop =
+          parseFloat(getShelves[prevItem]?.position?.top) || 0;
+        return shelveTop <= topPosition
+          ? { shelveTop, space: shelveTop - prevShelveTop, item, prevItem }
+          : null;
+      })
+      .filter((pos) => pos !== null);
+  };
+  const nextShelves = (topPosition) => {
+    return shelvesKeys
+      .map((item, index, array) => {
+        const shelveTop = parseFloat(getShelves[item]?.position?.top);
+        const nextItem = array
+          .filter(
+            (next) => parseFloat(getShelves[next]?.position?.top) > shelveTop
+          )
+          .sort(
+            (a, b) =>
+              parseFloat(getShelves[a]?.position?.top) -
+              parseFloat(getShelves[b]?.position?.top)
+          )[0];
+
+        if (!nextItem) return null;
+        const nextShelveTop = parseFloat(getShelves[nextItem]?.position?.top);
+        return shelveTop >= topPosition
+          ? {
+              shelveTop,
+              space: nextShelveTop - shelveTop,
+              item,
+              nextItem,
+            }
+          : null;
+      })
+      .filter((pos) => pos !== null);
+  };
+  useEffect(() => {
+    const topPosition = parseFloat(getCurrentShelvePosition?.top);
+    setSpaces((prev) => ({
+      ...prev,
+      prevShelves: prevShelves(topPosition),
+      nextShelves: nextShelves(topPosition),
+    }));
+  }, [sections, shelfKey]);
 
   const handlePositionChange = (type) => {
-    const currentTop = parseFloat(getCurrentShelvePosition?.top);
-    const maxBottom = getBottomShelfPostionMax;
-    const gap = type.includes("Right") ? 5 : 1.25;
-    const sortedPrevShelves = spaces?.prevShelves.sort(
+    const topPosition = parseFloat(getCurrentShelvePosition?.top);
+    const previousShelve = prevShelves(topPosition);
+    const nextShelve = nextShelves(topPosition);
+    const sortedPrevShelves = previousShelve.sort(
       (a, b) => b.shelveTop - a.shelveTop
+    );
+    const sortedNextShelves = nextShelve.sort(
+      (a, b) => a.shelveTop - b.shelveTop
     );
     const findPrevElementSpace = sortedPrevShelves.find(
       (item) => item.space >= 5
     );
-
+    const currentTop = parseFloat(getCurrentShelvePosition?.top);
+    const maxBottom = getBottomShelfPostionMax;
+    const gap = type.includes("Right") ? 5 : 1.25;
     let newPosition = type.includes("top")
       ? currentTop - gap
       : currentTop + gap;
-    const prevPostion = newPosition - findPrevElementSpace?.shelveTop || 3.75;
-    console.log("findPrevElementSpace", findPrevElementSpace);
-    console.log("sortedPrevShelves", sortedPrevShelves);
-    console.log("prevPostion", prevPostion);
-    console.log("newPosition", newPosition);
-    // if (prevPostion < 3.75) {
-    //   newPosition = type.includes("top")
-    //     ? findPrevElementSpace.shelveTop - 5
-    //     : currentTop + gap;
-    //   dispatch(
-    //     updateShelvePostion({ sectionId, position: newPosition, shelfKey })
-    //   );
-    // }
+    const nextElementSpaceJump = sortedNextShelves.find(
+      (item) => item.space >= 8.75
+    );
+    if (type.includes("top")) {
+      if (sortedPrevShelves[0]?.space <= 5) {
+        const theGap = sortedPrevShelves[0]?.space - 3.75;
 
-    console.log(newPosition, prevPostion, findPrevElementSpace);
+        if (theGap >= 1.25) {
+          newPosition = newPosition - (theGap - 1.25);
+        }
+      }
+    }
+    if (type.includes("bottom")) {
+      if (sortedNextShelves[0]?.space <= 5) {
+        const theGap = sortedNextShelves[0]?.space - 3.75;
+
+        if (theGap >= 1.25) {
+          newPosition = newPosition - (theGap - 1.25);
+        }
+      }
+    }
+
+    activeDeactiveBtns();
+    console.log(
+      "sortedPrevShelves-->",
+      sortedPrevShelves,
+      findPrevElementSpace,
+      sortedPrevShelves[0]?.space - 1.25 >= 3.75,
+      sortedPrevShelves[0]?.space - 1.25
+    );
     if (
-      (type.includes("top") && shelfKey == "shelves_1" ? true : (
-        sortedPrevShelves[0]?.space >= 3.75 ) && shelfKey == "shelves_1" ? true :
-        newPosition >= 3.75) ||
-      (type.includes("bottom") &&
-        spaceAfter >= 3.75 &&
-        newPosition <= maxBottom - 3.75)
+      type.includes("topLeft") &&
+      (shelfKey == getShelvesKeys[0].key
+        ? true
+        : sortedPrevShelves[0]?.space > 3.75) &&
+      (shelfKey == getShelvesKeys[0].key ? true : newPosition >= 3.75)
     ) {
-      
       dispatch(
         updateShelvePostion({ sectionId, position: newPosition, shelfKey })
       );
-      // setButtons((prev) => ({
-      //   ...prev,
-      //   topLeft: { active: topPosition > 3.75 && sortedPrevShelves[0]?.space >= 3.75 }     
-      // }));
+    } else if (
+      type.includes("topRight") &&
+      (shelfKey == getShelvesKeys[0].key
+        ? true
+        : sortedPrevShelves[0]?.space > 5) &&
+      (shelfKey == getShelvesKeys[0].key ? true : newPosition >= 3.75)
+    ) {
+      dispatch(
+        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+      );
+    } else if (sortedPrevShelves[0]?.space <= 8.75 && type.includes("top")) {
+      console.log(
+        "sortedPrevShelves-->",
+        sortedPrevShelves,
+        findPrevElementSpace
+      );
+      if (findPrevElementSpace && findPrevElementSpace.space >= 5) {
+        const jumpPostion =
+          findPrevElementSpace.shelveTop - (type == "topRight" ? 10 : 3.75);
+        dispatch(
+          updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+        );
+        const sortedShelves = shelvesKeys
+          .map((item) => ({
+            key: item,
+            top:
+              item === shelfKey
+                ? jumpPostion
+                : parseFloat(getShelves[item]?.position?.top) || 0,
+          }))
+          .sort((a, b) => a.top - b.top)
+          .map((shelf) => shelf);
+        dispatch(
+          updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+        );
+      }
+    } else if (
+      type.includes("bottomLeft") &&
+      (shelfKey == getShelvesKeys[getShelvesKeys.length - 1].key
+        ? true
+        : sortedNextShelves[0]?.space - 1.25 >= 3.75) &&
+      newPosition <= maxBottom
+    ) {
+      dispatch(
+        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+      );
+    } else if (
+      type.includes("bottomRight") &&
+      (shelfKey == getShelvesKeys[getShelvesKeys.length - 1].key
+        ? true
+        : sortedNextShelves[0]?.space > 5) &&
+      (shelfKey == getShelvesKeys[getShelvesKeys.length - 1].key
+        ? true
+        : newPosition >= 3.75) &&
+      newPosition <= maxBottom
+    ) {
+      dispatch(
+        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+      );
+    } else if (sortedNextShelves[0]?.space <= 8.75 && type.includes("bottom")) {
+      if (nextElementSpaceJump && nextElementSpaceJump.space >= 5) {
+        const jumpPostion =
+          nextElementSpaceJump.shelveTop + (type == "bottomRight" ? 5 : 3.75);
+        dispatch(
+          updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+        );
+        const sortedShelves = shelvesKeys
+          .map((item) => ({
+            key: item,
+            top:
+              item === shelfKey
+                ? jumpPostion
+                : parseFloat(getShelves[item]?.position?.top) || 0,
+          }))
+          .sort((a, b) => a.top - b.top)
+          .map((shelf) => shelf);
+        dispatch(
+          updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+        );
+      }
     }
   };
-  useEffect(() => {
-    console.log(spaces);
-  }, [spaces]);
+
   const buttonStyle =
     "mv_btns flex items-center border border-white text-sm font-medium py-[5px] px-4 min-w-[108px] justify-center font-roboto ";
 
