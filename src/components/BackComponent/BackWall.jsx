@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./Backwall.css";
+import "./BackWall.css";
 import { useDispatch } from "react-redux";
 import { setCurrSelectedSection, setEditingBackwall } from "../../slices/shelfDetailSlice";
-const Backwall = ({type,height,id,selectedSectionBackWall , selectedSection, setSelectedSection, setBackWallSelectedSection}) => {
+const BackWall = ({type,height,id,selectedSectionBackWall , selectedSection, setSelectedSection, setBackWallSelectedSection}) => {
 
     const dispatch = useDispatch();
     
@@ -33,4 +33,4 @@ const Backwall = ({type,height,id,selectedSectionBackWall , selectedSection, set
   );
 };
 
-export default Backwall;
+export default BackWall;
