@@ -3,7 +3,7 @@ import './SideRemoveBtn.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteSideWall, setEditingSides } from '../../slices/shelfDetailSlice';
 
-const SideRemoveBtn = ({ll,cc,leftSide, sectionKey, leftPrevSide, setisHighlighted}) => {
+const SideRemoveBtn = ({leftSide, sectionKey, leftPrevSide, setisHighlighted}) => {
 
     const dispatch = useDispatch();
     const sectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);

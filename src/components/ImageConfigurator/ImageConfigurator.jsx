@@ -423,6 +423,7 @@ const ImageConfigurator = () => {
                             highlighted={isHighlighted.left === sectionKey}
                           />
                         )}
+                       {sections[sectionKey].sideWall.left.isLeft && <SideWall type={sections[sectionKey].sideWall.left.type} height={sections[sectionKey].sideWall.left.height}  highlighted={isHighlighted.left === sectionKey}/>}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
