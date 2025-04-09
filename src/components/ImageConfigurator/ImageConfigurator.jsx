@@ -542,8 +542,7 @@ const ImageConfigurator = () => {
                                           `${shelf.position.top}`
                                         )
                                       }
-                                    >
-                                      <span className="ssdf"> {shelfkey}</span>
+                                    >                                      
                                       <div className="Legbord_inner__eOg0b">
                                         <div className="Legbord_left__ERgV5"></div>
                                         <div className="Legbord_middle__D8U0x"></div>
