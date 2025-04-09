@@ -8,3 +8,13 @@
     --color-light-1001:#a0a0a0;
     --shadow-10xl:0 0 6px 1px #fff;
 }
+span.ssdf {
+    position: absolute;
+    z-index: 1;
+    font-size: 12px;
+    text-transform: uppercase;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -7px;
+    font-weight: bold;
+}
