@@ -3,7 +3,7 @@ import './XBrace.css';
 
 const XBrace = () => {
   return (
-    <div class="Section_brace Section_braceX"></div>
+    <div className="Section_brace Section_braceX"></div>
   )
 }
 
