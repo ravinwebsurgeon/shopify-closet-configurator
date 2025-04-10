@@ -11,8 +11,8 @@ const getComponentPrice =({
 }) =>{
      let key = '';
      let rawPrice = '';
-
-    if(height && width) key = `${height}x${width}`
+    if(subtype == 'sliding_partition') key = `${depth}`
+    else if(height && width) key = `${height}x${width}`
     else if(height && depth) key = `${height}x${depth}`
     else if(width && depth) key = `${width}x${depth}`
 

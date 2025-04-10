@@ -10,10 +10,16 @@ import {
   setProductInfoModalContent,
 } from "../../slices/shelfDetailSlice";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
+import getComponentPrice from "../../utils/getPrice";
 
 const CompartmentsMain = () => {
   const dispatch = useDispatch();
+  const selectedSection = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const dimension = useSelector((state) => state.shelfDetail.racks);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
   const selectedSectionKey = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
@@ -76,7 +82,13 @@ const CompartmentsMain = () => {
               key={item.id}
               dimention={item.dimention}
               image={item.image}
-              price={item.price}
+              price={getComponentPrice({
+                material: color,
+                component: "compartment",
+                subtype: item.id,
+                width: dimension.sections[selectedSection].width,
+                depth: dimension.depth,
+              })}
               title={item.title}
               itemAction={() => addComparmentToShelve({ id: item.id })}
               openModal={(e) => openModal(e)}

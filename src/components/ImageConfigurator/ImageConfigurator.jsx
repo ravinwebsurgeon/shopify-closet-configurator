@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 //
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
-import ModalComponent from "../ModalComponent/ModalComponent";
-import DimensionsComponent from "../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent";
 import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   deleteSection,
   setCompartmentHighlighted,
   setCurrSelectedSection,
-  setCurrSideWall,
   setEditingBackwall,
   setEditingSides,
   setShowCounter,
@@ -17,11 +14,9 @@ import {
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
-import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
 
 import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
-import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator/ShelveChangeIndicator";
 import SideAddBtn from "../SidesComp/SideAddBtn";
 import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
@@ -30,7 +25,6 @@ import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
 import BackWall from "../BackComponent/BackWall";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
-import DeleteAndConfirm from "../DeleteAndConfirm/DeleteAndConfirm";
 import SidePoll from "../Shared/SidePoll/SidePoll";
 import Modal from "../Shared/Modal/Modal";
 
@@ -41,31 +35,9 @@ const ImageConfigurator = () => {
     (state) => state.shelfDetail.racks.showCounter
   );
   const [positionArr, setPositionArr] = useState([]);
-  const [racks, setRacks] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
-  const [selectedRack, setSelectedRack] = useState();
 
   // const[scale,setScale] = useState(0.9);
-
-  const getScale = (sectionHeight) => {
-    const scalingMap = {
-      220: 0.882,
-      250: 0.828,
-      300: 0.747,
-    };
-
-    const sortedHeights = Object.keys(scalingMap)
-      .map(Number)
-      .sort((a, b) => b - a);
-
-    for (const h of sortedHeights) {
-      if (height >= h) {
-        return parseFloat(scalingMap[h]);
-      }
-    }
-
-    return 0.9;
-  };
 
   const [prevSection, setPrevSection] = useState({
     key: "",
@@ -110,8 +82,6 @@ const ImageConfigurator = () => {
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
-  const shelfDepth = initialShelfValue.depth;
-  const rackWidth = initialShelfValue.width || 55;
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const sectionKeys = Object.keys(sections);
   const heightArr = [
@@ -149,55 +119,11 @@ const ImageConfigurator = () => {
     dispatch(setEditingSides(true));
   };
 
-  // function used to set shelves at a specific height
-  const GeneratePosArr = (currShelfHeight) => {
-    const Result = heightArr.find((obj) => obj[currShelfHeight] !== undefined);
-    const heightResult = parseInt(Object.values(Result)[0]);
-
-    const positions = [];
-
-    for (let i = 0; i < shelfCount; i++) {
-      const topPosition = ((heightResult - 9.5) / (shelfCount - 1)) * i;
-      positions.push({
-        zIndex: shelfCount - i,
-        top: `${topPosition}em`,
-      });
-    }
-    return positions;
-  };
-
   const getMaxHeight = () => {
     const result = Object.values(sections).some(
       (section) => section.height > 220
     );
     return result;
-  };
-
-  // function used to calculate no. of racks
-  const findOptimizedRacks = (totalWidth) => {
-    let bestCombination = null;
-    const availableWidths = [100, 130, 115, 85, 70, 55];
-
-    const findCombination = (remaining, combination = []) => {
-      if (remaining === 0) {
-        if (!bestCombination || combination.length < bestCombination.length) {
-          bestCombination = [...combination];
-        }
-        return;
-      }
-
-      for (let width of availableWidths) {
-        if (remaining >= width) {
-          findCombination(remaining - width, [...combination, width]);
-        }
-      }
-    };
-
-    findCombination(totalWidth);
-
-    if (totalWidth === 230) return [115, 115];
-
-    return bestCombination || [];
   };
 
   useEffect(() => {
@@ -270,8 +196,6 @@ const ImageConfigurator = () => {
       activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
     const nextSectionId =
       activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
-    const prevSection = sections[previousSection];
-
     const selectedSection = sections[sectionKey];
     const nextSection = nextSectionId ? sections[nextSectionId] : null;
 
@@ -289,15 +213,7 @@ const ImageConfigurator = () => {
         })
       );
     }
-
-    // if (prevSection && nextSection) {
-    //   console.log(prevSection.height, nextSection.height);
-    //   console.log("prevSection---->", prevSection);
-    //   console.log("nextSection---->", nextSection);
-    //   console.log(prevSection.standHeight, prevSection.height);
-    // }
-
-    dispatch(deleteSection(sectionKey));
+  dispatch(deleteSection(sectionKey));
   };
   const closeShelfDeleteModal = () => {
     setIsShelfSelected({
@@ -626,11 +542,29 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack  />}
-                        {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
-                        {console.log("section-->",section)}
-                        {Number(section?.width) < 115 && <BackWall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>}
-                        
+                          {selectedSection === sectionKey &&
+                            isEdtingWall &&
+                            !sections[sectionKey].backWall.type && (
+                              <EditingBack />
+                            )}
+                          {(getMaxHeight() ||
+                            (parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
+                              sections[sectionKey].height > 100)) &&
+                            executionValues.braces == "X-braces" && <XBrace />}
+                          {console.log("section-->", section)}
+                          {Number(section?.width) < 115 && (
+                            <BackWall
+                              type={sections[sectionKey].backWall.type}
+                              height={sections[sectionKey].backWall.height}
+                              id={sectionKey}
+                              selectedSectionBackWall={backWallSelectedSection}
+                              selectedSection={selectedSection}
+                              setBackWallSelectedSection={
+                                setBackWallSelectedSection
+                              }
+                              setSelectedSection={setSelectedSection}
+                            />
+                          )}
                         </div>
                       </div>
                       <div className="">

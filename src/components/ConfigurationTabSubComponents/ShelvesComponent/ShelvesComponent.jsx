@@ -10,6 +10,7 @@ import {
   setShowCounter,
 } from "../../../slices/shelfDetailSlice";
 import ItemBlock from "../../Shared/ItemBlock/ItemBlock";
+import getComponentPrice from "../../../utils/getPrice";
 
 const ShelvesComponent = () => {
   const dispatch = useDispatch();
@@ -41,12 +42,12 @@ const ShelvesComponent = () => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
-  // const price = getComponentPrice({
-  //   material: color,
-  //   component:'shelves',
-  //   width,
-  //   depth
-  // })
+  const price = getComponentPrice({
+    material: color,
+    component:'shelves',
+    width:dimention.sections[selectedSection].width,
+    depth:dimention.depth
+  })
   return (
     <div className="shelf-data-conatiner">
       {inputData && (
@@ -62,7 +63,7 @@ const ShelvesComponent = () => {
             dimention.depth - 2
           } cm `}
           title={inputData.title}
-          price={"11.93"}
+          price={price}
           itemAction={() => handleCardClick()}
           openModal={(e) => openModal(e)}
         />

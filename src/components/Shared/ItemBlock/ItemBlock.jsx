@@ -33,7 +33,7 @@ const ItemBlock = ({
             {dimention}
           </p>
           <span className="font-inter font-semibold text-left text-light-1002 text-sm tracking-normal block mt-3 leading-none">
-            €{price}
+            {price}
           </span>
         </div>
       </button>

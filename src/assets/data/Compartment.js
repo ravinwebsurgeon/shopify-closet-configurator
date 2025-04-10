@@ -12,7 +12,7 @@ export const compartmentData = [
     },
   },
   {
-    id: "sliding_Screen_20cm",
+    id: "sliding_partition",
     image: "/compartment/schuifschot-metal.png",
     title: "Sliding screen 20cm high",
     dimention: "30 cm",
