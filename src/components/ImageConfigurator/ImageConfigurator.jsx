@@ -626,26 +626,11 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                          {selectedSection === sectionKey &&
-                            isEdtingWall &&
-                            !sections[sectionKey].backWall.type && (
-                              <EditingBack />
-                            )}
-                          {(getMaxHeight() ||
-                            (parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
-                              sections[sectionKey].height > 100)) &&
-                            executionValues.braces == "X-braces" && <XBrace />}
-                          <BackWall
-                            type={sections[sectionKey].backWall.type}
-                            height={sections[sectionKey].backWall.height}
-                            id={sectionKey}
-                            selectedSectionBackWall={backWallSelectedSection}
-                            selectedSection={selectedSection}
-                            setBackWallSelectedSection={
-                              setBackWallSelectedSection
-                            }
-                            setSelectedSection={setSelectedSection}
-                          />
+                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack  />}
+                        {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
+                        {console.log("section-->",section)}
+                        {Number(section?.width) < 115 && <BackWall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>}
+                        
                         </div>
                       </div>
                       <div className="">

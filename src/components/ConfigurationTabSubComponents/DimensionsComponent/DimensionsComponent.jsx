@@ -186,15 +186,24 @@ const DimensionsComponent = () => {
       }
     }
 
-    if (isBackwall && backWall.height > value) {
-      dispatch(
-        updateBackwall({
+    if(isBackwall  && dimension == "height" && backWall.height > value){
+        dispatch(updateBackwall({
           sectionId: activeSectionId,
           type: sections[activeSectionId].backWall.type,
           height: value,
         })
       );
     }
+    //  delete the section back wall when width > 100
+    if(isBackwall  && dimension == "width" && value > 100){
+      dispatch(updateBackwall({
+        sectionId: activeSectionId,
+        type: "",
+        height: "",
+      }))
+  }
+
+
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };

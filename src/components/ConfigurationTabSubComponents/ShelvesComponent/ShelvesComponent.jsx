@@ -41,6 +41,12 @@ const ShelvesComponent = () => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
+  // const price = getComponentPrice({
+  //   material: color,
+  //   component:'shelves',
+  //   width,
+  //   depth
+  // })
   return (
     <div className="shelf-data-conatiner">
       {inputData && (

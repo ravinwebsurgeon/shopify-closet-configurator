@@ -60,7 +60,7 @@
   
   .dimension-slider::-webkit-slider-runnable-track {
     height: 6px;
-    background: linear-gradient(to right, #2196f3 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
+    background: linear-gradient(to right, #f37221 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
     border-radius: 3px;
   }
   
