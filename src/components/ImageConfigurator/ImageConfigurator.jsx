@@ -213,7 +213,7 @@ const ImageConfigurator = () => {
         })
       );
     }
-  dispatch(deleteSection(sectionKey));
+    dispatch(deleteSection(sectionKey));
   };
   const closeShelfDeleteModal = () => {
     setIsShelfSelected({
@@ -551,7 +551,6 @@ const ImageConfigurator = () => {
                             (parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
                               sections[sectionKey].height > 100)) &&
                             executionValues.braces == "X-braces" && <XBrace />}
-                          {console.log("section-->", section)}
                           {Number(section?.width) < 115 && (
                             <BackWall
                               type={sections[sectionKey].backWall.type}

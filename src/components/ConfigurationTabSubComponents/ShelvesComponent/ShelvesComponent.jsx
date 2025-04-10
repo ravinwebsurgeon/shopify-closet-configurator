@@ -44,10 +44,10 @@ const ShelvesComponent = () => {
   };
   const price = getComponentPrice({
     material: color,
-    component:'shelves',
-    width:dimention.sections[selectedSection].width,
-    depth:dimention.depth
-  })
+    component: "shelves",
+    width: dimention.sections[selectedSection].width,
+    depth: dimention.depth,
+  });
   return (
     <div className="shelf-data-conatiner">
       {inputData && (
