@@ -118,7 +118,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
               ></path>
             </svg>{" "}
           </button>
-          <span className="shelf-counter !text-sm font-roboto">
+          <span className="shelf-counter !text-sm font-inter">
             {shelfCount}
           </span>
           <button

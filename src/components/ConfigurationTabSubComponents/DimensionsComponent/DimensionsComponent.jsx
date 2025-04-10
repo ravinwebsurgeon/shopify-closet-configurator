@@ -10,7 +10,6 @@ import {
 import "./DimensionsComponent.css";
 
 const DimensionsComponent = () => {
-
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
@@ -73,121 +72,129 @@ const DimensionsComponent = () => {
   };
 
   const handleDimensionChange = (dimension, value) => {
-
-    
     const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
     const isRightSidewall = sections[activeSectionId].sideWall["right"].isRight;
     const isBackwall = sections[activeSectionId].backWall.type;
     const backWall = sections[activeSectionId].backWall;
 
     // checking if active section is having left ,right
-    if(isLeftSidewall || isRightSidewall){
+    if (isLeftSidewall || isRightSidewall) {
       //checking weather there are multiple sections
       const numOfSections = Object.keys(sections).length;
-      
-      if(numOfSections > 1 && isRightSidewall){
+
+      if (numOfSections > 1 && isRightSidewall) {
         // check if selected section is section_1
-        if(activeSectionId == 'section_1' && dimension == "height"){
-          if(sections[activeSectionId].sideWall["left"].height > value ){
+        if (activeSectionId == "section_1" && dimension == "height") {
+          if (sections[activeSectionId].sideWall["left"].height > value) {
             const leftSide = sections[activeSectionId].sideWall["left"];
-            dispatch(updateSideWall({
-              sectionId: activeSectionId,
-              side: "left",
-              ...leftSide,
-              height: value, 
-            }));
+            dispatch(
+              updateSideWall({
+                sectionId: activeSectionId,
+                side: "left",
+                ...leftSide,
+                height: value,
+              })
+            );
           }
-        }
-        else {
-          if (dimension === 'height') {
+        } else {
+          if (dimension === "height") {
             const leftWall = sections[activeSectionId].sideWall["left"];
             const rightWall = sections[activeSectionId].sideWall["right"];
             if (isLeftSidewall && isRightSidewall) {
               if (leftWall.height > value && rightWall.height > value) {
-                dispatch(updateSideWall({
+                dispatch(
+                  updateSideWall({
+                    sectionId: activeSectionId,
+                    side: "left",
+                    ...leftWall,
+                    height: value,
+                  })
+                );
+                dispatch(
+                  updateSideWall({
+                    sectionId: activeSectionId,
+                    side: "right",
+                    ...rightWall,
+                    height: value,
+                  })
+                );
+              }
+            } else if (isLeftSidewall && leftWall.height > value) {
+              dispatch(
+                updateSideWall({
                   sectionId: activeSectionId,
                   side: "left",
                   ...leftWall,
                   height: value,
-                }));
-                dispatch(updateSideWall({
+                })
+              );
+            } else if (isRightSidewall && rightWall.height > value) {
+              dispatch(
+                updateSideWall({
                   sectionId: activeSectionId,
                   side: "right",
                   ...rightWall,
                   height: value,
-                }));
-              }
-            }
-            else if (isLeftSidewall && leftWall.height > value) {
-              dispatch(updateSideWall({
-                sectionId: activeSectionId,
-                side: "left",
-                ...leftWall,
-                height: value,
-              }));
-            }
-            else if (isRightSidewall && rightWall.height > value) {
-              dispatch(updateSideWall({
-                sectionId: activeSectionId,
-                side: "right",
-                ...rightWall,
-                height: value,
-              }));
+                })
+              );
             }
           }
         }
-      }
-      else {
-        if (dimension === 'height') {
+      } else {
+        if (dimension === "height") {
           const leftWall = sections[activeSectionId].sideWall["left"];
           const rightWall = sections[activeSectionId].sideWall["right"];
           if (isLeftSidewall && isRightSidewall) {
             if (leftWall.height > value && rightWall.height > value) {
-              dispatch(updateSideWall({
+              dispatch(
+                updateSideWall({
+                  sectionId: activeSectionId,
+                  side: "left",
+                  ...leftWall,
+                  height: value,
+                })
+              );
+              dispatch(
+                updateSideWall({
+                  sectionId: activeSectionId,
+                  side: "right",
+                  ...rightWall,
+                  height: value,
+                })
+              );
+            }
+          } else if (isLeftSidewall && leftWall.height > value) {
+            dispatch(
+              updateSideWall({
                 sectionId: activeSectionId,
                 side: "left",
                 ...leftWall,
                 height: value,
-              }));
-              dispatch(updateSideWall({
+              })
+            );
+          } else if (isRightSidewall && rightWall.height > value) {
+            dispatch(
+              updateSideWall({
                 sectionId: activeSectionId,
                 side: "right",
                 ...rightWall,
                 height: value,
-              }));
-            }
-          }
-          else if (isLeftSidewall && leftWall.height > value) {
-            dispatch(updateSideWall({
-              sectionId: activeSectionId,
-              side: "left",
-              ...leftWall,
-              height: value,
-            }));
-          }
-          else if (isRightSidewall && rightWall.height > value) {
-            dispatch(updateSideWall({
-              sectionId: activeSectionId,
-              side: "right",
-              ...rightWall,
-              height: value,
-            }));
+              })
+            );
           }
         }
       }
-      
     }
 
-    if(isBackwall && backWall.height > value){
-        dispatch(updateBackwall({
+    if (isBackwall && backWall.height > value) {
+      dispatch(
+        updateBackwall({
           sectionId: activeSectionId,
           type: sections[activeSectionId].backWall.type,
           height: value,
-        }))
+        })
+      );
     }
-
-
-
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
@@ -196,7 +203,7 @@ const DimensionsComponent = () => {
     if (activeSectionId && sections) {
       const updatedSection = sections[activeSectionId];
       let positions = null;
- 
+
       if (dimension === "height" && updatedSection.shelves) {
         const sectionKeys = Object.keys(sections).sort((a, b) => {
           return parseInt(a.split("_")[1]) - parseInt(b.split("_")[1]);
@@ -273,37 +280,15 @@ const DimensionsComponent = () => {
 
   return (
     <>
-      <div className="dimensions-content">
+      <div className="dimensions-content flex flex-col gap-[33px]">
         <div className="dimension-row">
-          <label>Width</label>
+          <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
+            Height
+            <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
+              {dimensions.height} cm
+            </span>
+          </label>
           <div className="dimension-control">
-            <span>{dimensions.width} cm</span>
-            <div className="slider-container">
-              <input
-                type="range"
-                min="0"
-                max={dimensionOptions.width.length - 1}
-                value={dimensionOptions.width.indexOf(dimensions.width)}
-                className="dimension-slider"
-                style={calculateSliderStyle(
-                  dimensions.width,
-                  dimensionOptions.width
-                )}
-                onChange={(e) =>
-                  handleDimensionChange(
-                    "width",
-                    dimensionOptions.width[e.target.value]
-                  )
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="dimension-row">
-          <label>Height</label>
-          <div className="dimension-control">
-            <span>{dimensions.height} cm</span>
             <div className="slider-container">
               <input
                 type="range"
@@ -327,11 +312,44 @@ const DimensionsComponent = () => {
             </div>
           </div>
         </div>
+        <div className="dimension-row">
+          <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
+            Width
+            <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
+              {dimensions.width} cm
+            </span>
+          </label>
+          <div className="dimension-control">
+            <div className="slider-container">
+              <input
+                type="range"
+                min="0"
+                max={dimensionOptions.width.length - 1}
+                value={dimensionOptions.width.indexOf(dimensions.width)}
+                className="dimension-slider"
+                style={calculateSliderStyle(
+                  dimensions.width,
+                  dimensionOptions.width
+                )}
+                onChange={(e) =>
+                  handleDimensionChange(
+                    "width",
+                    dimensionOptions.width[e.target.value]
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="dimension-row">
-          <label>Depth</label>
+          <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
+            Depth
+            <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
+              {dimensions.depth} cm
+            </span>
+          </label>
           <div className="dimension-control">
-            <span>{dimensions.depth} cm</span>
             <div className="slider-container">
               <input
                 type="range"
@@ -352,11 +370,6 @@ const DimensionsComponent = () => {
               />
             </div>
           </div>
-        </div>
-
-        <div className="dimension-note">
-          The depth indicated above applies to the entire cabinet. It is
-          possible that parts may be removed as a result of the resizing.
         </div>
       </div>
     </>
