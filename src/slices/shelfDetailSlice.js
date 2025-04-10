@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { compartmentData } from "../assets/data/Compartment";
 
 const initialState = {
   configuration: null,
@@ -12,46 +13,46 @@ const initialState = {
     depth: [20, 30, 40, 50, 60, 70, 80],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
-   selectedSideWall:'',
-   selectedBackwall:'',
+  selectedSideWall: "",
+  selectedBackwall: "",
   racks: {},
 };
 
-const executionObject ={
-    "color":"metal",
-    "material":"metal",
-    "topCaps":"topCaps",
-    "braces":"X-braces",
-    "feet":"Plastic"
-}
+const executionObject = {
+  color: "metal",
+  material: "metal",
+  topCaps: "topCaps",
+  braces: "X-braces",
+  feet: "Plastic",
+};
 
 const sideWallObject = {
-  left:{
-    isLeft:false,
-    type:"",
-    height:""
+  left: {
+    isLeft: false,
+    type: "",
+    height: "",
   },
-  right:{
-    isRight:false,
-    type:"",
-    height:""
-  }
-}
+  right: {
+    isRight: false,
+    type: "",
+    height: "",
+  },
+};
 
 const backwallObject = {
-  type:"",
-  height:""
-}
+  type: "",
+  height: "",
+};
 
 const selectedSection = "section_1";
 const activeTab = "dimensions";
 const createInitialSection = (width, height, shelves) => ({
-  width:Number(width),
-  height:Number(height),
+  width: Number(width),
+  height: Number(height),
   standHeight: parseInt(height),
   shelves,
-  sideWall:sideWallObject,
-  backWall:backwallObject,
+  sideWall: sideWallObject,
+  backWall: backwallObject,
 });
 
 const showCounter = true;
@@ -247,23 +248,29 @@ const shelfDetailSlice = createSlice({
         });
       }
     },
-    deleteSideWall: (state,action) =>{
-      const {sectionId,side} = action.payload;
+    deleteSideWall: (state, action) => {
+      const { sectionId, side } = action.payload;
       if (state.racks.sections[sectionId]) {
         state.racks.sections[sectionId].sideWall[side] = {
-          isLeft: side == "left" ? false : state.racks.sections[sectionId].sideWall.left.isLeft,
-          isRight: side == "right" ? false : state.racks.sections[sectionId].sideWall.right.isRight,
+          isLeft:
+            side == "left"
+              ? false
+              : state.racks.sections[sectionId].sideWall.left.isLeft,
+          isRight:
+            side == "right"
+              ? false
+              : state.racks.sections[sectionId].sideWall.right.isRight,
           type: "",
-          height: ""
+          height: "",
         };
       }
     },
-    setCurrBackwall : (state,action) =>{
+    setCurrBackwall: (state, action) => {
       state.selectedBackwall = action.payload;
     },
-    updateBackwall : (state,action) =>{
+    updateBackwall: (state, action) => {
       const { sectionId, type, height } = action.payload;
-      if (state.racks.sections[sectionId]){
+      if (state.racks.sections[sectionId]) {
         state.racks.sections[sectionId].backWall = {
           ...(state.racks.sections[sectionId].backWall || {}),
           type,
@@ -271,15 +278,56 @@ const shelfDetailSlice = createSlice({
         };
       }
     },
-    deleteBackwall : (state,action) =>{
-      const {sectionId} = action.payload;
-      if (state.racks.sections[sectionId]){
-        state.racks.sections[sectionId].backWall ={
-          type:"",
-          height:""
-        }
+    deleteBackwall: (state, action) => {
+      const { sectionId } = action.payload;
+      if (state.racks.sections[sectionId]) {
+        state.racks.sections[sectionId].backWall = {
+          type: "",
+          height: "",
+        };
       }
-    }
+    },
+    addComparment: (state, action) => {
+      const { sectionId, shelfKey, compartmentType, compartmentCount } =
+        action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves).sort((a, b) => {
+        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+      });
+
+      if (shelfKeys.length > 0) {
+        shelves[shelfKey] = {
+          ...shelves[shelfKey],
+          compartments: {
+            type: compartmentType,
+            count: compartmentCount || null,
+          },
+        };
+      }
+    },
+    removeComparment: (state, action) => {
+      const { sectionId, shelfKey } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves).sort((a, b) => {
+        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+      });
+
+      if (shelfKeys.length > 0) {
+        shelves[shelfKey] = {
+          ...shelves[shelfKey],
+          compartments: false,
+        };
+      }
+    },
+    setCompartmentHighlighted: (state, action) => {
+      state.isCompartmentHighlighted = action.payload;
+    },
+    setProductInfoModalContent: (state, action) => {
+      state.productInformation = action.payload;
+    },
+    setOpenModal: (state, action) => {
+      state.isModalOpen = action.payload;
+    },
   },
 });
 
@@ -299,14 +347,19 @@ export const {
   deleteShelf,
   updateShelvePostion,
   updateShelveIndexAndPostion,
-  setEditingSides,  
+  setEditingSides,
   setEditingBackwall,
   updateSideWall,
   setCurrSideWall,
   deleteSideWall,
   setCurrBackwall,
   updateBackwall,
-  deleteBackwall
+  deleteBackwall,
+  addComparment,
+  setCompartmentHighlighted,
+  removeComparment,
+  setProductInfoModalContent,
+  setOpenModal,
 } = shelfDetailSlice.actions;
 
 // export default reducer

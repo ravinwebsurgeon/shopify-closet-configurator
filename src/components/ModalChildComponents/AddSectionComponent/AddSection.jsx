@@ -86,12 +86,6 @@ const AddSection = ({ children, onClose }) => {
 
   return (
     <>
-      <div className="header-div">
-        <h2>Add New Section</h2>
-        <button className="add-section-close" onClick={onClose}>
-          <FontAwesomeIcon icon={faXmark} />
-        </button>
-      </div>
       <AddSectionDimensions
         dimensions={dimensions}
         setDimensions={setDimensions}

@@ -2,13 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 //
 import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
-import ModalComponent from "../ModalComponent/ModalComponent";
-import DimensionsComponent from "../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent";
 import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   deleteSection,
+  setCompartmentHighlighted,
   setCurrSelectedSection,
-  setCurrSideWall,
   setEditingBackwall,
   setEditingSides,
   setShowCounter,
@@ -16,11 +14,9 @@ import {
 } from "../../slices/shelfDetailSlice";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
-import ShelfRemoveBtn from "../ShelfRemove/ShelfRemoveBtn";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
 
 import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
-import ShelveChangeIndicator from "../ShelvingConfigurator/ShelveChangeIndicator/ShelveChangeIndicator";
 import SideAddBtn from "../SidesComp/SideAddBtn";
 import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
@@ -28,6 +24,9 @@ import BackAddBtn from "../BackAddBtn/BackAddBtn";
 import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
 import BackWall from "../BackComponent/BackWall";
+import CompartmentsButton from "../Compartments/CompartmentsButton";
+import SidePoll from "../Shared/SidePoll/SidePoll";
+import Modal from "../Shared/Modal/Modal";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -36,32 +35,9 @@ const ImageConfigurator = () => {
     (state) => state.shelfDetail.racks.showCounter
   );
   const [positionArr, setPositionArr] = useState([]);
-  const [racks, setRacks] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
-  const [selectedRack, setSelectedRack] = useState();
 
   // const[scale,setScale] = useState(0.9);
-
-  const getScale =(sectionHeight) =>{
-    const scalingMap = {
-      "220": 0.882,
-      "250": 0.828,
-      "300": 0.747
-    };
-
-      const sortedHeights = Object.keys(scalingMap)
-      .map(Number)
-      .sort((a, b) => b - a);
-
-    for (const h of sortedHeights) {
-      if (height >= h) {
-        return parseFloat(scalingMap[h]);
-      }
-    }
-
-    return 0.9; 
-
-  }
 
   const [prevSection, setPrevSection] = useState({
     key: "",
@@ -106,8 +82,6 @@ const ImageConfigurator = () => {
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
-  const shelfDepth = initialShelfValue.depth;
-  const rackWidth = initialShelfValue.width || 55;
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const sectionKeys = Object.keys(sections);
   const heightArr = [
@@ -145,56 +119,11 @@ const ImageConfigurator = () => {
     dispatch(setEditingSides(true));
   };
 
-  // function used to set shelves at a specific height
-  const GeneratePosArr = (currShelfHeight) => {
-    const Result = heightArr.find((obj) => obj[currShelfHeight] !== undefined);
-    const heightResult = parseInt(Object.values(Result)[0]);
-
-    const positions = [];
-
-    for (let i = 0; i < shelfCount; i++) {
-      const topPosition = ((heightResult - 9.5) / (shelfCount - 1)) * i;
-      positions.push({
-        zIndex: shelfCount - i,
-        top: `${topPosition}em`,
-      });
-    }
-    return positions;
-  };
-
-
-  const getMaxHeight = () =>{
-    const result = Object.values(sections).some(section => section.height > 220);
-    return result ;
-  }
-
- 
-
-  // function used to calculate no. of racks
-  const findOptimizedRacks = (totalWidth) => {
-    let bestCombination = null;
-    const availableWidths = [100, 130, 115, 85, 70, 55];
-
-    const findCombination = (remaining, combination = []) => {
-      if (remaining === 0) {
-        if (!bestCombination || combination.length < bestCombination.length) {
-          bestCombination = [...combination];
-        }
-        return;
-      }
-
-      for (let width of availableWidths) {
-        if (remaining >= width) {
-          findCombination(remaining - width, [...combination, width]);
-        }
-      }
-    };
-
-    findCombination(totalWidth);
-
-    if (totalWidth === 230) return [115, 115];
-
-    return bestCombination || [];
+  const getMaxHeight = () => {
+    const result = Object.values(sections).some(
+      (section) => section.height > 220
+    );
+    return result;
   };
 
   useEffect(() => {
@@ -230,7 +159,8 @@ const ImageConfigurator = () => {
         !event.target.closest(".Section_removeConfirmAccessoireButton") &&
         !event.target.closest(".mv_btns") &&
         !event.target.closest(".AddRemove_button") &&
-        !event.target.closest(".modal-content")
+        !event.target.closest(".modal-content") &&
+        !event.target.closest(".glb-remove-confirm")
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
@@ -244,6 +174,7 @@ const ImageConfigurator = () => {
         });
         dispatch(setEditingBackwall(false));
         setBackWallSelectedSection("");
+        dispatch(setCompartmentHighlighted(""));
       }
     };
 
@@ -263,35 +194,25 @@ const ImageConfigurator = () => {
     const activeIndex = sectionKeys.indexOf(sectionKey);
     const previousSection =
       activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
-    const nextSectionId = activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
-      const prevSection = sections[previousSection];
-      
-      const selectedSection = sections[sectionKey];
-      const nextSection = nextSectionId ? sections[nextSectionId] :null;
+    const nextSectionId =
+      activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
+    const selectedSection = sections[sectionKey];
+    const nextSection = nextSectionId ? sections[nextSectionId] : null;
 
-      if (
-        selectedSection?.sideWall?.right &&
-        selectedSection.sideWall.right.isRight && 
-        nextSection
-      ){
-        const rightSideWall = selectedSection.sideWall.right;
-        dispatch(
-          updateSideWall({
-            sectionId: nextSectionId,
-            side: "left",
-            ...rightSideWall,
-          })
-        );
-    
-      }
-
-    // if (prevSection && nextSection) {
-    //   console.log(prevSection.height, nextSection.height);
-    //   console.log("prevSection---->", prevSection);
-    //   console.log("nextSection---->", nextSection);
-    //   console.log(prevSection.standHeight, prevSection.height);
-    // }
-
+    if (
+      selectedSection?.sideWall?.right &&
+      selectedSection.sideWall.right.isRight &&
+      nextSection
+    ) {
+      const rightSideWall = selectedSection.sideWall.right;
+      dispatch(
+        updateSideWall({
+          sectionId: nextSectionId,
+          side: "left",
+          ...rightSideWall,
+        })
+      );
+    }
     dispatch(deleteSection(sectionKey));
   };
   const closeShelfDeleteModal = () => {
@@ -332,8 +253,8 @@ const ImageConfigurator = () => {
     const activeIndex = sectionKeys.indexOf(selectedSection);
     const previousSection =
       activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
-      setPrevSection((prev)=>({...prev, key:previousSection}));
-  },[selectedSection])
+    setPrevSection((prev) => ({ ...prev, key: previousSection }));
+  }, [selectedSection]);
 
   return (
     <>
@@ -358,11 +279,13 @@ const ImageConfigurator = () => {
               </button>
             ))}
             <button
-              className="w-[100px] h-[30px] cursor-pointer border border-[#0665C5] font-medium font-inter rounded-[5px] text-[#0665C5] text-[12px]"
+              className="w-[100px] h-[30px] ml-[15px] cursor-pointer border border-[#0665C5] flex items-center justify-center font-medium font-inter rounded-[5px] text-[#0665C5] text-[10px]"
               onClick={() => setIsModalOpen(true)}
             >
-              {" "}
-              + Add Section
+              <span className="font-inter font-light text-[30px] leading-none tracking-normal text-[#0665C5] mt-[-5px]">
+                +
+              </span>{" "}
+              Add Section
             </button>
           </div>
           <div className="hidedoors-div">Hide doors</div>
@@ -377,7 +300,7 @@ const ImageConfigurator = () => {
           `}
               >
                 <span
-                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#d4d7db] font-roboto`}
+                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#d4d7db] font-inter`}
                 >
                   {maxHeight + 2.7} cm
                 </span>
@@ -424,37 +347,28 @@ const ImageConfigurator = () => {
                             highlighted={isHighlighted.left === sectionKey}
                           />
                         )}
-                       {sections[sectionKey].sideWall.left.isLeft && <SideWall type={sections[sectionKey].sideWall.left.type} height={sections[sectionKey].sideWall.left.height}  highlighted={isHighlighted.left === sectionKey}/>}
+                        {sections[sectionKey].sideWall.left.isLeft && (
+                          <SideWall
+                            type={sections[sectionKey].sideWall.left.type}
+                            height={sections[sectionKey].sideWall.left.height}
+                            highlighted={isHighlighted.left === sectionKey}
+                          />
+                        )}
                         <div className="Staander_voor__AegR3">
                           <div className="Staander_voorTop__1m0QA"></div>
                           <div className="Staander_voorMiddle__O-Po9"></div>
                           <div className="Staander_voorBottom__dVzsj"></div>
                         </div>
                       </div>
-                      <div>
-                        {isShelfSelected?.key != "" &&
-                        sectionKey == selectedSection ? (
-                          <div
-                            className={`shelfRemoveBtnOver shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
-                          >
-                            <ShelfRemoveBtn
-                              top={isShelfSelected?.top}
-                              shelfId={isShelfSelected?.key}
-                              onClick={() => setSelectedShelf(null)}
-                              onClose={closeShelfDeleteModal}
-                            />
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                        {isShelfSelected?.key != "" &&
-                          sectionKey == selectedSection && (
-                            <ShelveChangeIndicator
-                              selectedShelfKey={isShelfSelected?.key}
-                              selectedSectionKey={selectedSection}
-                            />
-                          )}
-                      </div>
+                      <SidePoll
+                        closeShelfDeleteModal={closeShelfDeleteModal}
+                        isShelfSelected={isShelfSelected}
+                        section={section}
+                        sectionKey={sectionKey}
+                        selectedSection={selectedSection}
+                        setSelectedShelf={setSelectedShelf}
+                      />
+
                       {/* div for edit sides or back */}
                       <div className="test">
                         {selectedSection == sectionKey && editingSides && (
@@ -486,12 +400,16 @@ const ImageConfigurator = () => {
                       {/* shelf section */}
                       <div>
                         <div
-                          data-indicator-index={index+1}
+                          data-indicator-index={index + 1}
                           className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c
-                            ${executionValues.color === "black" ? "Section_black" : ""} 
+                            ${
+                              executionValues.color === "black"
+                                ? "Section_black"
+                                : ""
+                            } 
                             Section_height${
-                            section.height || 100
-                          } Section_width${section.width || 55}`}
+                              section.height || 100
+                            } Section_width${section.width || 55}`}
                           style={{ zIndex: index }}
                         >
                           {selectedSection === sectionKey &&
@@ -502,7 +420,7 @@ const ImageConfigurator = () => {
           `}
                               >
                                 <span
-                                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
+                                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-inter`}
                                 >
                                   {parseFloat(section.height) + 2.7} cm
                                 </span>
@@ -512,44 +430,59 @@ const ImageConfigurator = () => {
                             {section.shelves &&
                               Object.entries(section.shelves).map(
                                 ([shelfkey, shelf]) => (
-                                  <div
-                                    key={shelfkey}
-                                    className={`Legbord_Legbord__Outer`}
-                                    style={{
-                                      zIndex: shelf.position.zIndex,
-                                      top: shelf.position.top,
-                                    }}
-                                  >
-                                    <button
-                                      className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                                  <React.Fragment key={shelfkey}>
+                                    {shelf?.compartments && (
+                                      <div
+                                        className={`Legbord_Legbord__Outer !absolute w-full`}
+                                        style={{
+                                          zIndex: shelf.position.zIndex + 1,
+                                          top: shelf.position.top,
+                                        }}
+                                      >
+                                        <CompartmentsButton
+                                          shelfkey={shelfkey}
+                                          compartments={shelf?.compartments}
+                                        />
+                                      </div>
+                                    )}
+                                    <div
+                                      className={`Legbord_Legbord__Outer`}
+                                      style={{
+                                        zIndex: shelf.position.zIndex,
+                                        top: shelf.position.top,
+                                      }}
+                                    >
+                                      <button
+                                        className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
                       } Legbord_clickable__uTn2b ${
-                                        selectedShelf ===
-                                        `${sectionKey}-${shelfkey}`
-                                          ? "Legboard_isHighlighted"
-                                          : ""
-                                      }`}
-                                      key={shelfkey}
-                                      onClick={(e) =>
-                                        handleSelectedShelfClick(
-                                          e,
-                                          `${sectionKey}-${shelfkey}`,
-                                          `${sectionKey}`,
-                                          `${shelfkey}`,
-                                          `${shelf.position.top}`
-                                        )
-                                      }
-                                    >                                      
-                                      <div className="Legbord_inner__eOg0b">
-                                        <div className="Legbord_left__ERgV5"></div>
-                                        <div className="Legbord_middle__D8U0x"></div>
-                                        <div className="Legbord_right__HB8+U"></div>
-                                      </div>
-                                    </button>
-                                  </div>
+                                          selectedShelf ===
+                                          `${sectionKey}-${shelfkey}`
+                                            ? "Legboard_isHighlighted"
+                                            : ""
+                                        }`}
+                                        key={shelfkey}
+                                        onClick={(e) =>
+                                          handleSelectedShelfClick(
+                                            e,
+                                            `${sectionKey}-${shelfkey}`,
+                                            `${sectionKey}`,
+                                            `${shelfkey}`,
+                                            `${shelf.position.top}`
+                                          )
+                                        }
+                                      >
+                                        <div className="Legbord_inner__eOg0b">
+                                          <div className="Legbord_left__ERgV5"></div>
+                                          <div className="Legbord_middle__D8U0x"></div>
+                                          <div className="Legbord_right__HB8+U"></div>
+                                        </div>
+                                      </button>
+                                    </div>
+                                  </React.Fragment>
                                 )
                               )}
                           </div>
@@ -557,7 +490,7 @@ const ImageConfigurator = () => {
                           <div className="Section_sectionInterface">
                             <div className="Section_sectionNumberContainer sk_hide_on_print">
                               <button
-                                className={`Section_sectionNumber font-roboto ${
+                                className={`Section_sectionNumber font-inter ${
                                   selectedSection === sectionKey
                                     ? "Section_sectionNumberActive"
                                     : ""
@@ -609,10 +542,28 @@ const ImageConfigurator = () => {
                               onClick={() => dispatch(setShowCounter(false))}
                             />
                           </div>
-                        {(selectedSection === sectionKey && isEdtingWall && !sections[sectionKey].backWall.type) && <EditingBack  />}
-                        {((getMaxHeight()) || (parseInt(sectionKey.split('_')[1],10) % 2 !== 0) && (sections[sectionKey].height > 100) ) && executionValues.braces == "X-braces" && <XBrace/>}
-                        <BackWall type={sections[sectionKey].backWall.type} height={sections[sectionKey].backWall.height} id={sectionKey} selectedSectionBackWall={backWallSelectedSection} selectedSection={selectedSection} setBackWallSelectedSection={setBackWallSelectedSection} setSelectedSection={setSelectedSection}/>
-                        
+                          {selectedSection === sectionKey &&
+                            isEdtingWall &&
+                            !sections[sectionKey].backWall.type && (
+                              <EditingBack />
+                            )}
+                          {(getMaxHeight() ||
+                            (parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
+                              sections[sectionKey].height > 100)) &&
+                            executionValues.braces == "X-braces" && <XBrace />}
+                          {Number(section?.width) < 115 && (
+                            <BackWall
+                              type={sections[sectionKey].backWall.type}
+                              height={sections[sectionKey].backWall.height}
+                              id={sectionKey}
+                              selectedSectionBackWall={backWallSelectedSection}
+                              selectedSection={selectedSection}
+                              setBackWallSelectedSection={
+                                setBackWallSelectedSection
+                              }
+                              setSelectedSection={setSelectedSection}
+                            />
+                          )}
                         </div>
                       </div>
                       <div className="">
@@ -695,7 +646,7 @@ const ImageConfigurator = () => {
           `}
               >
                 <span
-                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-roboto`}
+                  className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-inter`}
                 >
                   {depth + 2.5} cm
                 </span>
@@ -704,10 +655,15 @@ const ImageConfigurator = () => {
           </div>
         </div>
       </div>
-      <ModalComponent isOpen={isModalOpen}>
-        <AddSection onClose={() => setIsModalOpen(false)}>
-        </AddSection>
-      </ModalComponent>
+      {isModalOpen && (
+        <Modal
+          isModalOpen={isModalOpen}
+          mainHeading={"Nieuwe sectie"}
+          closeModal={() => setIsModalOpen(false)}
+        >
+          <AddSection onClose={() => setIsModalOpen(false)}></AddSection>
+        </Modal>
+      )}
     </>
   );
 };

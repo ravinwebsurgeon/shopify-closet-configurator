@@ -329,7 +329,7 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
   };
 
   const buttonStyle =
-    "mv_btns flex items-center border border-white text-sm font-medium py-[5px] px-4 min-w-[108px] justify-center font-roboto ";
+    "mv_btns flex items-center border border-white text-sm font-medium py-[5px] px-4 min-w-[108px] justify-center font-inter ";
 
   return (
     <div className="flex flex-col items-center gap-2">

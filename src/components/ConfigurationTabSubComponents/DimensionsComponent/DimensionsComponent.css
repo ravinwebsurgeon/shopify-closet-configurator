@@ -1,21 +1,10 @@
-.dimensions-content {
-    padding: 10px 0;
-    font-family: "Ubuntu", sans-serif;
-  }
+
   
   .dimension-row {
     /* margin-bottom: 35px; */
     position: relative;
   }
-  
-  .dimension-row label {
-    display: block;
-    color: #333;
-    /* margin-bottom: 15px; */
-    font-size: 13px;
-    font-weight: 500;
-  }
-  
+
   .dimension-control {
     display: flex;
     align-items: flex-start;
@@ -71,7 +60,7 @@
   
   .dimension-slider::-webkit-slider-runnable-track {
     height: 6px;
-    background: linear-gradient(to right, #2196f3 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
+    background: linear-gradient(to right, #f37221 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
     border-radius: 3px;
   }
   
@@ -110,3 +99,36 @@
     line-height: 1.5;
     border: 1px solid #ffe0b2;
   }
+
+  .dimension-slider {background: transparent;}
+
+.dimension-slider::-webkit-slider-runnable-track {
+  background:   
+  linear-gradient(to right, #EB6200 var(--value-percent, 50%), #e0e0e0 var(--value-percent, 50%));
+}
+
+.dimension-slider::-webkit-slider-thumb {
+    background: #F8F8F8;
+    border: 0;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    width: 16px;
+    height: 16px;
+}
+
+
+.dimension-row {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.dimension-control {
+    width: 100%;
+    align-items: center;
+    flex: 1;
+}
+
+.slider-container {
+    padding: 0;
+}

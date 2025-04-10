@@ -34,7 +34,7 @@ const SectionDimensionsIndicator = () => {
 
           >
             <span
-              className={`text-sm bg-white px-2 whitespace-nowrap font-bold text-[#d4d7db] font-roboto`}
+              className={`text-sm bg-white px-2 whitespace-nowrap font-bold text-[#d4d7db] font-inter`}
             >
               {totalWidth + 4 + 0.3 * sectionItems.length} cm
             </span>
@@ -51,7 +51,7 @@ const SectionDimensionsIndicator = () => {
             <span
               className={`text-sm bg-white px-2 whitespace-nowrap font-bold ${
                 selectedSection == item ? "text-[#5c5c5c] " : "text-[#d4d7db] "
-              } font-roboto`}
+              } font-inter`}
             >
               {sections[item].width} cm
             </span>

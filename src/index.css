@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-    --font-roboto: "Roboto", "sans-serif";
+    --font-inter: "Roboto", "sans-serif";
     --font-inter: "Inter", "sans-serif";
     --color-blue-1000: #3c9cea;
+    --color-red-1000:#EB6200;
     --color-light-1000:#e6e6e6;
     --color-light-1001:#a0a0a0;
+    --color-light-1002:#5c5c5c;
     --shadow-10xl:0 0 6px 1px #fff;
 }
 span.ssdf {
@@ -17,4 +19,29 @@ span.ssdf {
     transform: translateX(-50%);
     top: -7px;
     font-weight: bold;
+}
+.modal-wrapper 
+ .rte p, .modal-wrapper 
+ .rte li, .modal-wrapper 
+ .rte ul {
+    margin-top: 16px;
+}
+.glb-remove-confirm {
+    background-color: #fff;
+    border: 1px solid #5c5c5c;
+    border-radius: 2px;
+    display: flex;
+    height: 32px;
+    justify-content: space-between;
+    visibility: visible;
+    width: 64px;
+    pointer-events: all;
+    position: absolute;
+    right: -40px;
+}
+.modal-wrapper .rte li {
+    color: #000;
+}
+.modal-wrapper .rte a {
+    text-decoration: underline;
 }

@@ -43,7 +43,7 @@ button.AddSection:hover {
 }
 
 .demo-config {
-    height: 89vh;
+    height: calc(100dvh - 90px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -637,6 +637,11 @@ button.AddSection:hover {
 /* Higlighting section for legboard*/
 
 .Legbord_Legbord__k51II.Legboard_isHighlighted {
+    -webkit-filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
+    opacity: .7;
+}
+.isHighlighted {
     -webkit-filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
     filter: invert(58%) sepia(73%) saturate(2715%) hue-rotate(182deg) brightness(98%) contrast(87%) opacity(.7);
     opacity: .7;
