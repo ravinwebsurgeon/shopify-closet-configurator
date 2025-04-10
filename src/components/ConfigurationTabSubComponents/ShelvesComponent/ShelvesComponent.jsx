@@ -5,12 +5,15 @@ import legboard from '../../../assets/legbord-metal-55.png'
 import legboardBlack from '../../../assets/legboard-black-55.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowCounter } from '../../../slices/shelfDetailSlice'
-
+import getComponentPrice from '../../../utils/getPrice'
 
 const ShelvesComponent = () => {
   
   const dispatch = useDispatch();
   const color = useSelector((state)=>state.shelfDetail.racks.execution.color);
+   const selectedSection = useSelector((state)=>state.shelfDetail.racks.selectedSection);
+    const width = useSelector((state)=>state.shelfDetail.racks.sections[selectedSection].width);
+    const depth = useSelector((state)=>state.shelfDetail.racks.depth);
 
   const cardData = [
     {id:"metal",imgSrc:legboard,label:"Shelf with support"},
@@ -21,12 +24,7 @@ const ShelvesComponent = () => {
     return cardData.find((data) => data.id === color)
   };
 
-
-  const [inputData,setInputData] = useState(getData(color))
-
-  
-
-  
+  const [inputData,setInputData] = useState(getData(color));
 
   useEffect(()=>{
     setInputData(getData(color))
@@ -39,6 +37,12 @@ const ShelvesComponent = () => {
   };
 
 
+  const price = getComponentPrice({
+    material: color,
+    component:'shelves',
+    width,
+    depth
+  })
 
   return (
     <div className='shelf-data-conatiner'>
@@ -51,7 +55,10 @@ const ShelvesComponent = () => {
             {inputData.label}
           </span>
           <span className="shelf-dimensions">
-            83 X 30 cm
+            {`${width-2} x ${depth} cm`}
+          </span>
+          <span className="shelf-price text-[#5c5c5c]">
+            {`${price}`}
           </span>
         </div>
       </div>
