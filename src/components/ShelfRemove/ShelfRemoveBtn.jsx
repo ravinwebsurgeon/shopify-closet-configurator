@@ -19,6 +19,7 @@ const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
       dispatch(deleteShelf({ sectionId, shelfId }));
       onClose();
     }
+    onClick();
   
   };
 

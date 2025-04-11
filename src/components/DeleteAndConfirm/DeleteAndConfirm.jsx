@@ -6,7 +6,7 @@ const DeleteAndConfirm = ({ onDelete, onConfirm, section, top }) => {
   }
   return (
     <div
-      className={`shelfRemoveBtnOver !h-full scale-90 shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
+      className={`shelfRemoveBtnOver scale-90 shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
     >
       <div
         className="glb-remove-confirm rightArrow arrow_cstm"
