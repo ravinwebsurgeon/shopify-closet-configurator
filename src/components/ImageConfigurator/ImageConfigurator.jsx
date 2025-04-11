@@ -12,11 +12,8 @@ import {
   setShowCounter,
   updateSideWall,
 } from "../../slices/shelfDetailSlice";
-import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
-
-import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
 import SideAddBtn from "../SidesComp/SideAddBtn";
 import SideWall from "../SideWallComponent/SideWall";
 import BackAddBtn from "../BackAddBtn/BackAddBtn";
@@ -27,13 +24,10 @@ import BackWall from "../BackComponent/BackWall";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
 import SidePoll from "../Shared/SidePoll/SidePoll";
 import Modal from "../Shared/Modal/Modal";
+import SectionInterface from "./SectionInterface";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
-  const showCounter = useSelector(
-    (state) => state.shelfDetail.racks.showCounter
-  );
   const [positionArr, setPositionArr] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
 
@@ -63,9 +57,11 @@ const ImageConfigurator = () => {
   const currentSelectedSection = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
-  const [selectedSection, setSelectedSection] = useState(
-    currentSelectedSection
-  );
+  
+  const [selectedSection, setSelectedSection] = useState('');
+  useEffect(()=>{
+    setSelectedSection(currentSelectedSection)
+  },[currentSelectedSection])
   const [selectedShelf, setSelectedShelf] = useState(null);
 
   const newInitialValue = useSelector((state) => state.shelfDetail.racks);
@@ -190,31 +186,6 @@ const ImageConfigurator = () => {
     dispatch(setCurrSelectedSection(sectionKey));
   };
 
-  const handleSectionDelete = (e, sectionKey) => {
-    const activeIndex = sectionKeys.indexOf(sectionKey);
-    const previousSection =
-      activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
-    const nextSectionId =
-      activeIndex < sectionKeys.length ? sectionKeys[activeIndex + 1] : null;
-    const selectedSection = sections[sectionKey];
-    const nextSection = nextSectionId ? sections[nextSectionId] : null;
-
-    if (
-      selectedSection?.sideWall?.right &&
-      selectedSection.sideWall.right.isRight &&
-      nextSection
-    ) {
-      const rightSideWall = selectedSection.sideWall.right;
-      dispatch(
-        updateSideWall({
-          sectionId: nextSectionId,
-          side: "left",
-          ...rightSideWall,
-        })
-      );
-    }
-    dispatch(deleteSection(sectionKey));
-  };
   const closeShelfDeleteModal = () => {
     setIsShelfSelected({
       key: "",
@@ -263,8 +234,7 @@ const ImageConfigurator = () => {
         className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U"
       >
         <div className="row-container visualFrame-top">
-          <div className="spacer-div"></div>
-          <div className="addsection-div flex gap-[5px]">
+          <div className="addsection-div flex gap-[5px] !justify-start">
             {sectionKeys.map((item, index) => (
               <button
                 onClick={(e) => handleSectionClick(e, item)}
@@ -433,20 +403,47 @@ const ImageConfigurator = () => {
                                   <React.Fragment key={shelfkey}>
                                     {shelf?.compartments && (
                                       <div
-                                        className={`Legbord_Legbord__Outer !absolute w-full`}
+                                        className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
                                         style={{
                                           zIndex: shelf.position.zIndex + 1,
                                           top: shelf.position.top,
                                         }}
                                       >
-                                        <CompartmentsButton
-                                          shelfkey={shelfkey}
-                                          compartments={shelf?.compartments}
-                                        />
+                                        {shelf?.compartments?.type ==
+                                          "compartment_divider_set" && (
+                                          <CompartmentsButton
+                                            shelfkey={shelfkey}
+                                            selectedSection={
+                                              selectedSection === sectionKey
+                                            }
+                                            compartments={shelf?.compartments}
+                                            type="compartment_divider_set"
+                                          />
+                                        )}
+                                        {shelf?.compartments?.type ==
+                                          "sliding_partition" &&
+                                          Array.from(
+                                            {
+                                              length:
+                                                shelf?.compartments?.count,
+                                            },
+                                            (_, i) => i + 1
+                                          ).map((index) => (
+                                            <CompartmentsButton
+                                              shelfkey={shelfkey}
+                                              index={index}
+                                              selectedSection={
+                                                selectedSection === sectionKey
+                                              }
+                                              compartments={shelf?.compartments}
+                                              type="sliding_partition"
+                                            />
+                                          ))}
                                       </div>
                                     )}
                                     <div
                                       className={`Legbord_Legbord__Outer`}
+                                      data-shelfkey={shelfkey}
                                       style={{
                                         zIndex: shelf.position.zIndex,
                                         top: shelf.position.top,
@@ -475,6 +472,7 @@ const ImageConfigurator = () => {
                                           )
                                         }
                                       >
+                                        <span className="ssdf">{shelfkey}</span>
                                         <div className="Legbord_inner__eOg0b">
                                           <div className="Legbord_left__ERgV5"></div>
                                           <div className="Legbord_middle__D8U0x"></div>
@@ -487,61 +485,16 @@ const ImageConfigurator = () => {
                               )}
                           </div>
                           {/* Here section header dimensions div will come */}
-                          <div className="Section_sectionInterface">
-                            <div className="Section_sectionNumberContainer sk_hide_on_print">
-                              <button
-                                className={`Section_sectionNumber font-inter ${
-                                  selectedSection === sectionKey
-                                    ? "Section_sectionNumberActive"
-                                    : ""
-                                }`}
-                                onClick={(e) =>
-                                  handleSectionClick(e, sectionKey)
-                                }
-                              >
-                                {index + 1}
-                              </button>
-                              {selectedSection === sectionKey &&
-                                sectionKeys.length > 1 && (
-                                  <button
-                                    type="button"
-                                    className="AddRemove_button Section_removeButton z-[1] cursor-pointer"
-                                    key={sectionKey}
-                                    onClick={(e) =>
-                                      handleSectionDelete(e, sectionKey)
-                                    }
-                                  >
-                                    <i
-                                      className="Icon_container AddRemove_icon"
-                                      style={{ width: "14px", height: "16px" }}
-                                    >
-                                      <svg viewBox="0 0 14 16">
-                                        <path
-                                          fill="currentColor"
-                                          fillRule="evenodd"
-                                          d="M11 6a1 1 0 01.993.883L12 7v8a1 1 0 01-.883.993L11 16H3a1 1 0 01-.993-.883L2 15V7a1 1 0 011.993-.117L4 7v7h6V7a1 1 0 01.883-.993L11 6zM7 0c.513 0 .936.483.993 1.104L8 1.25V3h5a1 1 0 010 2H1a1 1 0 110-2h5V1.25C6 .56 6.448 0 7 0z"
-                                        ></path>
-                                      </svg>
-                                    </i>
-                                  </button>
-                                )}
-                            </div>
-                            {selectedSection == sectionKey && selectedShelf && (
-                              <ShelveChangePosition
-                                sectionId={selectedSection}
-                                shelfKey={isShelfSelected?.key}
-                              />
-                            )}
-
-                            <ShelfCounter
-                              showCounter={
-                                selectedSection == sectionKey &&
-                                activeTab == "shelves" &&
-                                showCounter
-                              }
-                              onClick={() => dispatch(setShowCounter(false))}
-                            />
-                          </div>
+                          <SectionInterface
+                            handleSectionClick={handleSectionClick}
+                            index={index}
+                            isShelfSelected={isShelfSelected}
+                            sectionKey={sectionKey}
+                            sectionKeys={sectionKeys}
+                            sections={sections}
+                            selectedSection={selectedSection}
+                            selectedShelf={selectedShelf}
+                          />
                           {selectedSection === sectionKey &&
                             isEdtingWall &&
                             !sections[sectionKey].backWall.type && (

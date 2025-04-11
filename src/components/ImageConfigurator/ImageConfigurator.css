@@ -40,6 +40,7 @@ button.AddSection:hover {
 
 .hidedoors-div {
     flex: 1;
+    display: none;
 }
 
 .demo-config {
@@ -871,3 +872,28 @@ border-color: transparent #fff transparent transparent;
     background-size: cover;
 }
 
+
+
+.Legbord__sliding_partition {
+    display: flex;
+    justify-content: flex-end;
+}
+.compartments_wrapper__slide{
+    position: absolute;
+}
+button.compartments_wrapper__slide:nth-child(1){
+    right: 15%;
+    z-index: 6;
+}
+button.compartments_wrapper__slide:nth-child(2){
+    right: 30%;
+    z-index: 5;
+}
+button.compartments_wrapper__slide:nth-child(3){
+    right: 45%;
+    z-index: 4;
+}
+button.compartments_wrapper__slide:nth-child(4){
+    right: 60%;
+    z-index: 3;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddSection.css";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,7 @@ import AddSectionDimensions from "./AddSectionDimensions";
 
 const AddSection = ({ children, onClose }) => {
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const dimension = useSelector((state) => state.shelfDetail.racks);
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
@@ -33,7 +34,9 @@ const AddSection = ({ children, onClose }) => {
     height: 100,
     depth: 20,
   });
-
+  useEffect(() => {
+    setDimensions((prev) => ({ ...prev, depth: dimension?.depth }));
+  }, []);
   const handleAddShelfCount = (e) => {
     e.preventDefault();
     setShelfCount((prevData) => prevData + 1);
@@ -52,7 +55,7 @@ const AddSection = ({ children, onClose }) => {
     const shelfDepth = dimensions.depth;
     const sectionsCount = Object.keys(sections);
     const lastSectionKey = sectionsCount[sectionsCount.length - 1];
-    const lastSection = sections[lastSectionKey];    
+    const lastSection = sections[lastSectionKey];
     if (dimensions.height > lastSection.height) {
       dispatch(
         updateSectionDimensions({
@@ -62,9 +65,15 @@ const AddSection = ({ children, onClose }) => {
         })
       );
     }
-    dispatch(setSection({racksCount,currShelfHeight:dimensions.height,shelfDepth,positions}));
-      onClose();  
-    
+    dispatch(
+      setSection({
+        racksCount,
+        currShelfHeight: dimensions.height,
+        shelfDepth,
+        positions,
+      })
+    );
+    onClose();
   };
 
   // function used to set shelves at a specific height

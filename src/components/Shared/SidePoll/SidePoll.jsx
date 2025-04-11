@@ -18,7 +18,7 @@ const SidePoll = ({
   );
   return (
     <div>
-      {isCompartmentHighlighted && (
+      {isCompartmentHighlighted && sectionKey == selectedSection && (
         <CompartmentDelete
           section={section}
           sectionKey={sectionKey}
@@ -32,7 +32,7 @@ const SidePoll = ({
           <ShelfRemoveBtn
             top={isShelfSelected?.top}
             shelfId={isShelfSelected?.key}
-            onClick={() => setSelectedShelf(null)}
+            onClick={() => setSelectedShelf(false)}
             onClose={closeShelfDeleteModal}
           />
         </div>

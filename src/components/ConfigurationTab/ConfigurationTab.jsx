@@ -8,6 +8,10 @@ import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
+import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
+import SlidingDoors from "../SlidingDoors/SlidingDoors";
+import Drawers from "../Drawers/Drawers";
+import WardrobeRod from "../WardrobeRods/WardrobeRod";
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
@@ -37,15 +41,32 @@ const ConfigurationTab = () => {
       label: "Vakverdeling",
       component: <CompartmentsMain />,
     },
-    { id: "revolvingdoors", label: "Draaideuren" },
-    { id: "slidingdoors", label: "Schuifdeuren" },
-    { id: "drawers", label: "Lades" },
-    { id: "wardroberods", label: "Garderobestangen" },
+    {
+      id: "revolvingdoors",
+      label: "Draaideuren",
+      component: <RevolvingDoors />,
+    },
+    { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
+    { id: "drawers", label: "Lades", component: <Drawers /> },
+    {
+      id: "wardroberods",
+      label: "Garderobestangen",
+      component: <WardrobeRod />,
+    },
   ];
-
+  const selectedTab = configTabs.find((tab) => tab.id === activeTab);
   return (
     <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden">
-      <div className="px-[25px] py-5 bg-[#FCFCFC] border-b border-[#E5E5E5]">
+      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
+        <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
+          {selectedTab.label}
+        </h2>
+        {/* {renderTabContent()} */}
+        {configTabs.find((tab) => tab.id === activeTab)?.component || (
+          <p style={{ fontFamily: "Ubuntu" }}>Not yet available !!!</p>
+        )}
+      </div>
+      <div className="px-[25px] py-5 bg-[#FCFCFC] border-t border-[#E5E5E5]">
         <h2 className="text-black font-inter text-base leading-[150%] tracking-[-2%] font-semibold">
           Extra opties
         </h2>
@@ -65,12 +86,6 @@ const ConfigurationTab = () => {
             </button>
           ))}
         </div>
-      </div>
-      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
-        {/* {renderTabContent()} */}
-        {configTabs.find((tab) => tab.id === activeTab)?.component || (
-          <p style={{ fontFamily: "Ubuntu" }}>Not yet available !!!</p>
-        )}
       </div>
       <div className="leftsec-comp-3">
         <div className="left-comp3-row-container p-[25px] flex justify-between items-end border-t border-[#E5E5E5]">
