@@ -290,7 +290,7 @@ const ImageConfigurator = () => {
           </div>
           <div className="hidedoors-div">Hide doors</div>
         </div>
-        <div className="demo-config">
+        <div className="demo-config" id="shelf-capture-area">
           <div className="main-wrapper__ relative">
             <SectionDimensionsIndicator />
             <div className="Visual_container__tG7BQ Carousel_visual__FfW0p">

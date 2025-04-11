@@ -8,11 +8,12 @@ const ItemBlock = ({
   title,
   dimention,
   price,
-  productInfo
+  productInfo,
 }) => {
+
   return (
     <div className="relative group/item w-[calc(50%-5px)]">
-    {productInfo &&  <button
+    {productInfo  &&  <button
         onClick={() => openModal(productInfo)}
         className="absolute top-2 right-2 cursor-pointer invisible opacity-0 transition-all duration-300 group-hover/item:opacity-100 group-hover/item:visible"
       >

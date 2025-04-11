@@ -30,7 +30,7 @@ const CompartmentsMain = () => {
     dispatch(setProductInfoModalContent(item.productInformation));
   };
   const getAvailbleShelve = () => {
-    console.log(shelves);
+    
     const shelvesKeys = Object.keys(shelves);
     const spaces = shelvesKeys
       .map((shelf, index, arr) => {
@@ -68,8 +68,6 @@ const CompartmentsMain = () => {
     } else {
       alert("No more divider sets fit in this section.");
     }
-    console.log(shelves);
-    console.log(spaces);
   };
 
   return (
@@ -77,6 +75,7 @@ const CompartmentsMain = () => {
       <div className="flex flex-wrap gap-2">
         {compartmentData &&
           compartmentData.map((item) => (
+            item.id == "compartment_divider_set"  && dimension.depth <= 20 ? null :
             <ItemBlock
               productInfo={item}
               key={item.id}

@@ -8,11 +8,20 @@ import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
 
   const dispatch = useDispatch();
+
+  // const handleAddToCart = async() =>{
+
+  //   const canvas = await html2canvas(document.getElementById("shelf-capture-area"));
+  //   const imageData = canvas.toDataURL('image/png');
+  //   saveAs(imageData,'shelf-design.png')
+  // }
 
   const handleSectionClick = (sectionKey) => {
     dispatch(setActiveTab(sectionKey));
