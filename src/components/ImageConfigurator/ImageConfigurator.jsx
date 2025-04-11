@@ -263,8 +263,7 @@ const ImageConfigurator = () => {
         className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U"
       >
         <div className="row-container visualFrame-top">
-          <div className="spacer-div"></div>
-          <div className="addsection-div flex gap-[5px]">
+          <div className="addsection-div flex gap-[5px] !justify-start">
             {sectionKeys.map((item, index) => (
               <button
                 onClick={(e) => handleSectionClick(e, item)}
@@ -532,15 +531,16 @@ const ImageConfigurator = () => {
                                 shelfKey={isShelfSelected?.key}
                               />
                             )}
-
-                            <ShelfCounter
-                              showCounter={
-                                selectedSection == sectionKey &&
-                                activeTab == "shelves" &&
-                                showCounter
-                              }
-                              onClick={() => dispatch(setShowCounter(false))}
-                            />
+                            {selectedSection == sectionKey && (
+                              <ShelfCounter
+                                showCounter={
+                                  selectedSection == sectionKey &&
+                                  activeTab == "shelves" &&
+                                  showCounter
+                                }
+                                onClick={() => dispatch(setShowCounter(false))}
+                              />
+                            )}
                           </div>
                           {selectedSection === sectionKey &&
                             isEdtingWall &&
