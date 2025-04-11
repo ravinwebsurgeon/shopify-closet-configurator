@@ -45,3 +45,11 @@ span.ssdf {
 .modal-wrapper .rte a {
     text-decoration: underline;
 }
+.backwall-warning br {
+    display: none;
+}
+
+.backwall-warning p {
+    display: block;
+    margin: 6px 0;
+}

@@ -8,9 +8,10 @@ import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
-import html2canvas from "html2canvas";
-import { saveAs } from "file-saver";
-import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
+import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
+import SlidingDoors from "../SlidingDoors/SlidingDoors";
+import Drawers from "../Drawers/Drawers";
+import WardrobeRod from "../WardrobeRods/WardrobeRod";
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
@@ -47,10 +48,14 @@ const ConfigurationTab = () => {
       label: "Vakverdeling",
       component: <CompartmentsMain />,
     },
-    { id: "revolvingdoors", label: "Draaideuren" },
-    { id: "slidingdoors", label: "Schuifdeuren" },
-    { id: "drawers", label: "Lades" },
-    { id: "wardroberods", label: "Garderobestangen", component:<WardrobeComponent/> },
+    {
+      id: "revolvingdoors",
+      label: "Draaideuren",
+      component: <RevolvingDoors />,
+    },
+    { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors />, },
+    { id: "drawers", label: "Lades",component: <Drawers /> },
+    { id: "wardroberods", label: "Garderobestangen",component: <WardrobeRod /> },
   ];
 
   return (
