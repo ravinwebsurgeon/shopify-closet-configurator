@@ -307,7 +307,7 @@ const shelfDetailSlice = createSlice({
     },
     removeComparment: (state, action) => {
       const { sectionId, shelfKey } = action.payload;
-      const shelves = state.racks.sections[sectionId].shelves;
+      const shelves = state.racks.sections[sectionId].shelves;      
       const shelfKeys = Object.keys(shelves).sort((a, b) => {
         return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
       });
@@ -359,7 +359,7 @@ export const {
   setCompartmentHighlighted,
   removeComparment,
   setProductInfoModalContent,
-  setOpenModal,
+  setOpenModal
 } = shelfDetailSlice.actions;
 
 // export default reducer

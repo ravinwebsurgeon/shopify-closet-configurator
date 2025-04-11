@@ -8,6 +8,10 @@ import {
 
 const CompartmentDelete = ({ section, sectionKey }) => {
   const dispatch = useDispatch();
+  const isCompartmentHighlighted = useSelector(
+    (state) => state.shelfDetail.isCompartmentHighlighted
+  );
+  console.log(isCompartmentHighlighted);
   const deleteCompartment = (isCompartmentHighlighted) => {
     dispatch(
       removeComparment({
@@ -18,16 +22,15 @@ const CompartmentDelete = ({ section, sectionKey }) => {
     closeCompartment();
   };
   const closeCompartment = () => {
-    dispatch(setCompartmentHighlighted(""));
+    dispatch(
+      setCompartmentHighlighted(false)
+    );
   };
 
-  const isCompartmentHighlighted = useSelector(
-    (state) => state.shelfDetail.isCompartmentHighlighted
-  );
   return (
     <DeleteAndConfirm
-      top={section?.shelves[isCompartmentHighlighted]?.position?.top}
-      onDelete={() => deleteCompartment(isCompartmentHighlighted)}
+      top={section?.shelves[isCompartmentHighlighted?.shelfkey]?.position?.top}
+      onDelete={() => deleteCompartment(isCompartmentHighlighted?.shelfkey)}
       onConfirm={closeCompartment}
       section={section}
     />
