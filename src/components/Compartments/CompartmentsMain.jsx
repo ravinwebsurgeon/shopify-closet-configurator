@@ -76,24 +76,28 @@ const CompartmentsMain = () => {
     <div className="">
       <div className="flex flex-wrap gap-2">
         {compartmentData &&
-          compartmentData.map((item) => (
-            <ItemBlock
-              productInfo={item}
-              key={item.id}
-              dimention={item.dimention}
-              image={item.image}
-              price={getComponentPrice({
-                material: color,
-                component: "compartment",
-                subtype: item.id,
-                width: dimension.sections[selectedSection].width,
-                depth: dimension.depth,
-              })}
-              title={item.title}
-              itemAction={() => addComparmentToShelve({ id: item.id })}
-              openModal={(e) => openModal(e)}
-            />
-          ))}
+          compartmentData.map((item) =>
+            item.id == "compartment_divider_set" && dimension.depth <= 20 ? (
+              ""
+            ) : (
+              <ItemBlock
+                productInfo={item}
+                key={item.id}
+                dimention={item.dimention}
+                image={item.image}
+                price={getComponentPrice({
+                  material: color,
+                  component: "compartment",
+                  subtype: item.id,
+                  width: dimension.sections[selectedSection].width,
+                  depth: dimension.depth,
+                })}
+                title={item.title}
+                itemAction={() => addComparmentToShelve({ id: item.id })}
+                openModal={(e) => openModal(e)}
+              />
+            )
+          )}
       </div>
     </div>
   );
