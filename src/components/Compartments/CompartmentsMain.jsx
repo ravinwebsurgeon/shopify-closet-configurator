@@ -29,33 +29,32 @@ const CompartmentsMain = () => {
     const shelveKeys = Object.keys(shelves) || [];
     setShelvesKeys(shelveKeys);
   }, []);
-  useEffect(()=>{
-    setCount(0)
-  },[selectedSectionKey])
+  useEffect(() => {
+    setCount(0);
+  }, [selectedSectionKey]);
   const openModal = (item) => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
   const getAvailbleShelve = (type) => {
     console.log(type);
-    const array = []
-    shelvesKeys.map(item => {
-      const object = {};       
-      object.key =  item;
-      object.top =  shelves[item]?.position?.top;
-      object.compartments =  shelves[item]?.compartments;
-      array.push(object)
+    const array = [];
+    shelvesKeys.map((item) => {
+      const object = {};
+      object.key = item;
+      object.top = shelves[item]?.position?.top;
+      object.compartments = shelves[item]?.compartments;
+      array.push(object);
     });
-    
+
     const shelvesSorted = array.sort((a, b) => b?.top - a?.top);
-    
+
     const spaces = shelvesSorted
-      .map((shelf, index, arr) => {    
-       
+      .map((shelf, index, arr) => {
         const fromTop = parseFloat(arr[index - 1]?.top) || 0;
         const shelftop = parseFloat(shelf?.top);
         const compartments = shelf?.compartments;
-        return {          
+        return {
           from: arr[index - 1]?.key,
           to: shelf.key,
           space: shelftop - fromTop,
@@ -65,9 +64,8 @@ const CompartmentsMain = () => {
       })
       .filter(Boolean);
     const gap = type == "compartment_divider_set" ? 12.5 : 13.75;
-      console.log("spaces--->", spaces)
+    console.log("spaces--->", spaces);
     const findAvailble = spaces.find((item) => {
-
       const compartments =
         type == "compartment_divider_set"
           ? !item?.compartments
@@ -82,7 +80,7 @@ const CompartmentsMain = () => {
   };
   const addComparmentToShelve = ({ id }) => {
     const spaces = getAvailbleShelve(id);
-    console.log("spaces--->", spaces)
+    console.log("spaces--->", spaces);
     if (spaces) {
       if (id == "compartment_divider_set") {
         dispatch(

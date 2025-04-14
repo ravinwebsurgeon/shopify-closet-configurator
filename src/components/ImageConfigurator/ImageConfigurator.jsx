@@ -4,13 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import "./ImageConfigurator.css";
 import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
-  deleteSection,
   setCompartmentHighlighted,
   setCurrSelectedSection,
   setEditingBackwall,
   setEditingSides,
-  setShowCounter,
-  updateSideWall,
 } from "../../slices/shelfDetailSlice";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
@@ -58,11 +55,11 @@ const ImageConfigurator = () => {
   const currentSelectedSection = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
-  
-  const [selectedSection, setSelectedSection] = useState('');
-  useEffect(()=>{
-    setSelectedSection(currentSelectedSection)
-  },[currentSelectedSection])
+
+  const [selectedSection, setSelectedSection] = useState("");
+  useEffect(() => {
+    setSelectedSection(currentSelectedSection);
+  }, [currentSelectedSection]);
   const [selectedShelf, setSelectedShelf] = useState(null);
 
   const newInitialValue = useSelector((state) => state.shelfDetail.racks);
@@ -400,93 +397,97 @@ const ImageConfigurator = () => {
                           <div className="Section_accessoires__+se2+">
                             {section.shelves &&
                               Object.entries(section.shelves).map(
-                                ([shelfkey, shelf],index) => (
-                                  <React.Fragment key={shelfkey}>
-                                    {shelf?.compartments && (
-                                      <div
-                                        className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
-                                        style={{
-                                          zIndex: shelf.position.zIndex + 1,
-                                          top: shelf.position.top,
-                                        }}
-                                      >
-                                        {shelf?.compartments?.type ==
-                                          "compartment_divider_set" && (
-                                          <CompartmentsButton
-                                            shelfkey={shelfkey}
-                                            selectedSection={
-                                              selectedSection === sectionKey
-                                            }
-                                            compartments={shelf?.compartments}
-                                            type="compartment_divider_set"
-                                          />
-                                        )}
-                                        {shelf?.compartments?.type ==
-                                          "sliding_partition" &&
-                                          Array.from(
-                                            {
-                                              length:
-                                                shelf?.compartments?.count,
-                                            },
-                                            (_, i) => i + 1
-                                          ).map((index) => (
+                                ([shelfkey, shelf], index, arr) => {
+                                  const nextEntry = arr[index + 1];
+                                  const nextShelf = nextEntry?.[1];
+                                  return (
+                                    <React.Fragment key={shelfkey}>
+                                      {shelf?.compartments && (
+                                        <div
+                                          key={shelfkey}
+                                          className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
+                                          style={{
+                                            zIndex: shelf.position.zIndex + 1,
+                                            top: shelf.position.top,
+                                          }}
+                                        >
+                                          {shelf?.compartments?.type ==
+                                            "compartment_divider_set" && (
                                             <CompartmentsButton
                                               shelfkey={shelfkey}
-                                              index={index}
                                               selectedSection={
                                                 selectedSection === sectionKey
                                               }
                                               compartments={shelf?.compartments}
-                                              type="sliding_partition"
+                                              type="compartment_divider_set"
                                             />
-                                          ))}
-                                      </div>
-                                    )}
-                                    {/* <WardrobeRods shelfkey={shelfkey} 
-                                      top={shelf.position.top} 
-                                      index={shelf.position.zIndex+1}
-                                    /> */}
-                                    <div
-                                      className={`Legbord_Legbord__Outer`}
-                                      data-shelfkey={shelfkey}
-                                      style={{
-                                        zIndex: shelf.position.zIndex,
-                                        top: shelf.position.top,
-                                      }}
-                                    >
-                                      <button
-                                        className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                                          )}
+                                          {shelf?.compartments?.type ==
+                                            "sliding_partition" &&
+                                            Array.from(
+                                              {
+                                                length:
+                                                  shelf?.compartments?.count,
+                                              },
+                                              (_, i) => i + 1
+                                            ).map((index) => (
+                                              <CompartmentsButton
+                                                shelfkey={shelfkey}
+                                                index={index}
+                                                selectedSection={
+                                                  selectedSection === sectionKey
+                                                }
+                                                compartments={
+                                                  shelf?.compartments
+                                                }
+                                                type="sliding_partition"
+                                              />
+                                            ))}
+                                        </div>
+                                      )}
+                                      <div
+                                        className={`Legbord_Legbord__Outer`}
+                                        data-shelfkey={shelfkey}
+                                        style={{
+                                          zIndex:
+                                            shelf.position.zIndex +
+                                            (nextShelf?.compartments ? 1 : 0),
+                                          top: shelf.position.top,
+                                        }}
+                                      >
+                                        <button
+                                          className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
                       } Legbord_clickable__uTn2b ${
-                                          selectedShelf ===
-                                          `${sectionKey}-${shelfkey}`
-                                            ? "Legboard_isHighlighted"
-                                            : ""
-                                        }`}
-                                        key={shelfkey}
-                                        onClick={(e) =>
-                                          handleSelectedShelfClick(
-                                            e,
-                                            `${sectionKey}-${shelfkey}`,
-                                            `${sectionKey}`,
-                                            `${shelfkey}`,
-                                            `${shelf.position.top}`
-                                          )
-                                        }
-                                      >
-                                        
-                                        <div className="Legbord_inner__eOg0b">
-                                          <div className="Legbord_left__ERgV5"></div>
-                                          <div className="Legbord_middle__D8U0x"></div>
-                                          <div className="Legbord_right__HB8+U"></div>
-                                        </div>
-                                      </button>
-                                    </div>
-                                  </React.Fragment>
-                                )
+                                            selectedShelf ===
+                                            `${sectionKey}-${shelfkey}`
+                                              ? "Legboard_isHighlighted"
+                                              : ""
+                                          }`}
+                                          key={shelfkey}
+                                          onClick={(e) =>
+                                            handleSelectedShelfClick(
+                                              e,
+                                              `${sectionKey}-${shelfkey}`,
+                                              `${sectionKey}`,
+                                              `${shelfkey}`,
+                                              `${shelf.position.top}`
+                                            )
+                                          }
+                                        >
+                                          <div className="Legbord_inner__eOg0b">
+                                            <div className="Legbord_left__ERgV5"></div>
+                                            <div className="Legbord_middle__D8U0x"></div>
+                                            <div className="Legbord_right__HB8+U"></div>
+                                          </div>
+                                        </button>
+                                      </div>
+                                    </React.Fragment>
+                                  );
+                                }
                               )}
                           </div>
                           {/* Here section header dimensions div will come */}
