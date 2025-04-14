@@ -16,6 +16,7 @@ const WardrobeComponent = () => {
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
    const sections = useSelector((state) => state.shelfDetail.racks.sections);
+   
    const selectedSectionKey = useSelector((state) => state.shelfDetail.racks.selectedSection);
   const section = sections[selectedSectionKey];
   const shelves = section?.shelves;
@@ -58,7 +59,7 @@ const WardrobeComponent = () => {
     // );
     for(const item of spaces){
         if(item.compartments){
-            if(item.remainingSpace > 2.0){
+            if(item.remainingSpace > 7.5){
                 return item;
             }
         }

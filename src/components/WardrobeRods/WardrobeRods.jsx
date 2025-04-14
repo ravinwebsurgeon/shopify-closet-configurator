@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import './WardrobeRods.css'
 
-const WardrobeRods = ({shelfkey,top,index}) => {
+const WardrobeRods = ({top,index}) => {
 
     const currTop = parseFloat(top);
-    const newTop = currTop+2+"em";
+    const newTop = currTop+1.5+"em";
 
     const [isRodHighlighted,setIsRodHighlighted] = useState('');
 
   return (
     <button
-      className={`Garderobe_Garderobe__cW0VR Section_garderobe__lck6- Garderobe_height50__7PHv0 Garderobe_metal__HYc6w Garderobe_black__m0wTQ Garderobe_clickable__dBOWm
-        ${isRodHighlighted == shelfkey? "Garderobe_isHighlighted__3zo47":""}`}
+      className={`Garderobe_Garderobe__cW0VR Section_garderobe__lck6- Garderobe_height50__7PHv0 Garderobe_metal__HYc6w Garderobe_black__m0wTQ Garderobe_clickable__dBOWm`}
+        
       style={{zIndex: {index}, top: `${newTop}`}}
-      onClick={()=>setIsRodHighlighted(shelfkey)}
-      key={shelfkey}
+      onClick={()=>alert(`rod clicked ...`)}
+
     >
       <div className="Garderobe_inner__jbyRf">
         <div className="Garderobe_container__ogs9T">

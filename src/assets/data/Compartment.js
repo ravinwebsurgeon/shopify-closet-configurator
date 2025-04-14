@@ -27,7 +27,7 @@ export const compartmentData = [
 
 export const revolvingDoors = [
   {
-    id: "door_set_oak_natural_50cm_high",
+    id: "door_set_oak_50",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-50x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-50x70.png",
@@ -43,7 +43,7 @@ export const revolvingDoors = [
     },
   },
   {
-    id: "door_set_oak_natural_100cm_high",
+    id: "door_set_oak_100",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-100x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-100x70.png",
@@ -60,7 +60,7 @@ export const revolvingDoors = [
     },
   },
   {
-    id: "door_set_white_50cm_high",
+    id: "door_set_white_50",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x70.png",
@@ -73,7 +73,7 @@ export const revolvingDoors = [
     productInformation: false,
   },
   {
-    id: "door_set_white_100cm_high",
+    id: "door_set_white_100",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x70.png",
@@ -86,7 +86,7 @@ export const revolvingDoors = [
     productInformation: false,
   },
   {
-    id: "door_set_metal_50cm_high",
+    id: "door_set_metal_50",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Wit-50x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Wit-50x70.png",
@@ -99,7 +99,7 @@ export const revolvingDoors = [
     productInformation: false,
   },
   {
-    id: "door_set_metal_100cm_high",
+    id: "door_set_metal_100",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Wit-100x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Wit-100x70.png",

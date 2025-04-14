@@ -79,6 +79,7 @@ const CompartmentsMain = () => {
     return findAvailble || null;
   };
   const addComparmentToShelve = ({ id }) => {
+    console.log("ID-->",id)
     const spaces = getAvailbleShelve(id);
     console.log("spaces--->", spaces);
     if (spaces) {

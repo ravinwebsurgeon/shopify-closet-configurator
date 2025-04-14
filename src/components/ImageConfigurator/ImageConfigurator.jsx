@@ -23,6 +23,7 @@ import SidePoll from "../Shared/SidePoll/SidePoll";
 import Modal from "../Shared/Modal/Modal";
 import WardrobeRods from "../WardrobeRods/WardrobeRods";
 import SectionInterface from "./SectionInterface";
+import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -445,6 +446,12 @@ const ImageConfigurator = () => {
                                             ))}
                                         </div>
                                       )}
+                                      {shelf?.wardrobeRod &&(
+                                        <WardrobeRods top={shelf.wardrobeRod.position} index={index+1}/>
+                                      )}
+                                      {
+                                        
+                                      }
                                       <div
                                         className={`Legbord_Legbord__Outer`}
                                         data-shelfkey={shelfkey}
@@ -457,11 +464,11 @@ const ImageConfigurator = () => {
                                       >
                                         <button
                                           className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
-                      ${
-                        executionValues.color === "black"
-                          ? "Legbord_black"
-                          : "Legbord_metal"
-                      } Legbord_clickable__uTn2b ${
+                                          ${
+                                            executionValues.color === "black"
+                                              ? "Legbord_black"
+                                              : "Legbord_metal"
+                                          } Legbord_clickable__uTn2b ${
                                             selectedShelf ===
                                             `${sectionKey}-${shelfkey}`
                                               ? "Legboard_isHighlighted"
@@ -484,6 +491,7 @@ const ImageConfigurator = () => {
                                             <div className="Legbord_right__HB8+U"></div>
                                           </div>
                                         </button>
+                                        
                                       </div>
                                     </React.Fragment>
                                   );
