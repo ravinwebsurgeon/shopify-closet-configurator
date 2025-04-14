@@ -27,6 +27,7 @@ import BackWall from "../BackComponent/BackWall";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
 import SidePoll from "../Shared/SidePoll/SidePoll";
 import Modal from "../Shared/Modal/Modal";
+import WardrobeRods from "../WardrobeRods/WardrobeRods";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -429,7 +430,7 @@ const ImageConfigurator = () => {
                           <div className="Section_accessoires__+se2+">
                             {section.shelves &&
                               Object.entries(section.shelves).map(
-                                ([shelfkey, shelf]) => (
+                                ([shelfkey, shelf],index) => (
                                   <React.Fragment key={shelfkey}>
                                     {shelf?.compartments && (
                                       <div
@@ -445,6 +446,10 @@ const ImageConfigurator = () => {
                                         />
                                       </div>
                                     )}
+                                    {/* <WardrobeRods shelfkey={shelfkey} 
+                                      top={shelf.position.top} 
+                                      index={shelf.position.zIndex+1}
+                                    /> */}
                                     <div
                                       className={`Legbord_Legbord__Outer`}
                                       style={{

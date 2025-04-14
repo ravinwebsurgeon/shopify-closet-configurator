@@ -29,8 +29,8 @@ const CompartmentsMain = () => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
+
   const getAvailbleShelve = () => {
-    
     const shelvesKeys = Object.keys(shelves);
     const spaces = shelvesKeys
       .map((shelf, index, arr) => {
