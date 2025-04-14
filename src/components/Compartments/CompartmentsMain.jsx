@@ -92,7 +92,6 @@ const CompartmentsMain = () => {
   };
   const addCompartmentToShelve = ({ id }) => {
     const spaces = getAvailbleShelve(id);
-
     if (spaces) {
       if (id == "compartment_divider_set") {
         dispatch(
