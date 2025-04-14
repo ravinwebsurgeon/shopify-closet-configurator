@@ -20,9 +20,7 @@ const CompartmentsMain = () => {
   const dimension = useSelector((state) => state.shelfDetail.racks);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const selectedSectionKey = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
+  const selectedSectionKey = useSelector((state) => state.shelfDetail.racks.selectedSection);
   const section = sections[selectedSectionKey];
   const shelves = section?.shelves;
   const openModal = (item) => {

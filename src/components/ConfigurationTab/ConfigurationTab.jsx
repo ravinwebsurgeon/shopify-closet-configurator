@@ -10,6 +10,7 @@ import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponen
 import CompartmentsMain from "../Compartments/CompartmentsMain";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
+import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
@@ -49,7 +50,7 @@ const ConfigurationTab = () => {
     { id: "revolvingdoors", label: "Draaideuren" },
     { id: "slidingdoors", label: "Schuifdeuren" },
     { id: "drawers", label: "Lades" },
-    { id: "wardroberods", label: "Garderobestangen" },
+    { id: "wardroberods", label: "Garderobestangen", component:<WardrobeComponent/> },
   ];
 
   return (
