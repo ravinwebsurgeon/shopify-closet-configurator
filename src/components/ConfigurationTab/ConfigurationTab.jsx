@@ -11,7 +11,8 @@ import CompartmentsMain from "../Compartments/CompartmentsMain";
 import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
 import SlidingDoors from "../SlidingDoors/SlidingDoors";
 import Drawers from "../Drawers/Drawers";
-import WardrobeRod from "../WardrobeRods/WardrobeRod";
+import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
+
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
@@ -58,7 +59,7 @@ const ConfigurationTab = () => {
     {
       id: "wardroberods",
       label: "Garderobestangen",
-      component: <WardrobeRod />,
+      component: <WardrobeComponent />,
     },
   ];
   const selectedTab = configTabs.find((tab) => tab.id === activeTab);
