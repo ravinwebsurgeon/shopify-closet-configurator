@@ -8,7 +8,6 @@ const WardrobeRods = ({shelfkey,top,index}) => {
 
     const [isRodHighlighted,setIsRodHighlighted] = useState('');
 
-
   return (
     <button
       className={`Garderobe_Garderobe__cW0VR Section_garderobe__lck6- Garderobe_height50__7PHv0 Garderobe_metal__HYc6w Garderobe_black__m0wTQ Garderobe_clickable__dBOWm
