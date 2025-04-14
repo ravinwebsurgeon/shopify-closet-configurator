@@ -493,6 +493,38 @@ const shelfDetailSlice = createSlice({
     setOpenModal: (state, action) => {
       state.isModalOpen = action.payload;
     },
+    setWardrobeRod: (state, action) => {
+      const { sectionId, shelfKey, position } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves).sort((a, b) => {
+        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+      });
+    
+      if (shelfKeys.includes(shelfKey)) {
+        shelves[shelfKey] = {
+          ...shelves[shelfKey],
+          wardrobeRod: {
+            position,
+          },
+        };
+      }
+    },
+    addRevolvingDoor :(state,action) =>{
+      
+      const {sectionId,doorKey,type,position} = action.payload;
+
+      if (!state.racks.sections[sectionId]) return;
+
+      if (!state.racks.sections[sectionId].revolvingDoor) {
+        state.racks.sections[sectionId].revolvingDoor = {};
+      }
+
+      state.racks.sections[sectionId].revolvingDoor[doorKey] = {
+        type,
+        position,
+      };
+
+    }
   },
 });
 
@@ -530,6 +562,8 @@ export const {
   setDrawerHighlighted,
   removeDrawer,
   updateDrawerPosition,
+  setWardrobeRod,
+  addRevolvingDoor
 } = shelfDetailSlice.actions;
 
 // export default reducer

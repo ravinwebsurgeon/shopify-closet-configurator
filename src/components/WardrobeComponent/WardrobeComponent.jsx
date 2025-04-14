@@ -14,10 +14,9 @@ const WardrobeComponent = () => {
   const [shelvesKeys, setShelvesKeys] = useState([]);
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
-  const selectedSectionKey = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
+   const sections = useSelector((state) => state.shelfDetail.racks.sections);
+   
+   const selectedSectionKey = useSelector((state) => state.shelfDetail.racks.selectedSection);
   const section = sections[selectedSectionKey];
   const shelves = section?.shelves;
   const cardData = [
@@ -27,15 +26,45 @@ const WardrobeComponent = () => {
       label: "Garderobestang met dragers",
     },
   ];
-  useEffect(() => {
-    const shelveKeys = Object.keys(shelves) || [];
-    setShelvesKeys(shelveKeys);
-  }, [shelves]);
-  const handleCardClick = (e, id) => {
-    setWardrobeRod(id);
-    const space = getAvailbleShelve({ shelvesKeys, shelves });
-    if (!space) {
-      alert("No more divider sets fit in this section.");
+
+  const getAvailbleShelve = () => {
+    const shelvesKeys = Object.keys(shelves);
+    const spaces = shelvesKeys
+      .map((shelf, index, arr) => {
+        if (index === 0) return null;
+        const fromKey = arr[index - 1];
+        const fromTop = parseFloat(shelves[fromKey]?.position?.top);
+        const shelftop = parseFloat(shelves[shelf]?.position?.top);
+        const compartments = shelves[shelf]?.compartments;
+
+        let remainingSpace = shelftop - fromTop;
+        if (index === 0) return null;
+        if(compartments){
+            remainingSpace = remainingSpace - 15.5
+        }
+        return {
+          from: fromKey,
+          to: shelf,
+          space: shelftop - fromTop,
+          compartments: compartments ? true : false,
+          remainingSpace,
+          shelfTop: shelftop,
+        };
+      })
+      .filter(Boolean);
+    console.log("spaces-->",spaces)
+    // const findAvailble = spaces.find(
+    //   (item) => item.remainingSpace >= 2.0 && item?.compartments
+    // );
+    for(const item of spaces){
+        if(item.compartments){
+            if(item.remainingSpace > 7.5){
+                return item;
+            }
+        }
+        else{
+            return item;
+        }
     }
     console.log();
     alert(`wardrobe rod clicked..`);

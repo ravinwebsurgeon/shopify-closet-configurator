@@ -25,6 +25,7 @@ import WardrobeRods from "../WardrobeRods/WardrobeRods";
 import SectionInterface from "./SectionInterface";
 import CompartmentViewer from "../Compartments/CompartmentViewer";
 import DrawersButton from "../Drawers/DrawersButton";
+import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
