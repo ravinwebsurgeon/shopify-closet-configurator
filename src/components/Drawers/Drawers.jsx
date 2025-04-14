@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
-
+import { addDrawer } from "../../slices/shelfDetailSlice";
 import getComponentPrice from "../../utils/getPrice";
-
 const Drawers = () => {
   const dispatch = useDispatch();
+  const [shelvesKeys, setShelvesKeys] = useState([]);
+  const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const selectedSectionKey = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
   const dimension = useSelector((state) => state.shelfDetail.racks);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const handleCardClick = (id) => {
-    console.log(id);
+  const section = sections[selectedSectionKey];
+  const shelves = section?.shelves;
+  useEffect(() => {
+    const shelveKeys = Object.keys(shelves) || [];
+    setShelvesKeys(shelveKeys);
+  }, [shelves]);
+  const handleCardClick = () => {
+    const space = getAvailbleShelve({ shelvesKeys, shelves });
+    console.log(space);
+    const _space = space?.shelfTop - 7.5;
+    dispatch(
+      addDrawer({
+        sectionId: selectedSectionKey,
+        shelfKey: space?.to,
+        top: space?.to?.includes("compartment_") ? _space - 11.25 : _space,
+      })
+    );
   };
   const openModal = () => {};
   return (
@@ -57,3 +73,49 @@ const Drawers = () => {
 };
 
 export default Drawers;
+
+const getAvailbleShelve = ({ shelvesKeys, shelves }) => {
+  const array = [];
+  shelvesKeys.map((item) => {
+    const object = {};
+    object.key = item;
+    object.top =
+      shelves[item]?.drawer?.position?.top ||
+      shelves[item]?.compartments?.position?.top ||
+      shelves[item]?.position?.top;
+    object.isDrawer = shelves[item]?.drawer || shelves[item]?.compartments;
+    array.push(object);
+  });
+
+  const shelvesSorted = array.sort((a, b) => b?.top - a?.top);
+  const spaces = shelvesSorted
+    .map((shelf, index, arr) => {
+      const fromTop = parseFloat(arr[index - 1]?.top) || 0;
+      const next = arr[index + 1];
+      const shelftop = parseFloat(shelf?.top);
+      const drawer = shelf?.isDrawer;
+
+      return {
+        from: arr[index - 1]?.key,
+        to: shelf.key,
+        space: shelftop - fromTop,
+        drawer: drawer,
+        shelfTop: shelftop,
+        nextKey: next?.key,
+      };
+    })
+    .filter(Boolean);
+
+  let gap = 12.5;
+  const reversed = spaces.reverse();
+  const findAvailble = reversed.find((item) => {
+    console.log(item);
+    let condition = item.space >= gap;
+    if (item?.to?.includes("compartment_") && item?.from?.includes("drawer_")) {
+      gap = 18.76;
+    }
+
+    return condition;
+  });
+  return findAvailble || null;
+};

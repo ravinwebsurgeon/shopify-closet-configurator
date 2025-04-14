@@ -6,6 +6,7 @@ const CompartmentsButton = ({
   shelfkey,
   compartments,
   type,
+  index,
   selectedSection,
 }) => {
   const dispatch = useDispatch();
@@ -49,20 +50,24 @@ const CompartmentsButton = ({
           setCompartmentHighlighted({
             shelfkey,
             compartmentType: compartments?.type,
+            compartmentCount:compartments?.count,
+            selectedCount: index,
           })
         );
       }}
       className={`compartments_wrapper compartments_wrapper__slide
     ${
-      isCompartmentHighlighted?.shelfkey == shelfkey && selectedSection
+      isCompartmentHighlighted?.shelfkey == shelfkey &&
+      isCompartmentHighlighted?.selectedCount == index &&
+      selectedSection
         ? "isHighlighted"
         : ""
     }
     `}
     >
-      <div class="compartments_wrapper_inner_slide">
-        <div class="compartments_wrapper_continer">
-          <div class="compartments_wrapper-slide"></div>
+      <div className="compartments_wrapper_inner_slide">
+        <div className="compartments_wrapper_continer">
+          <div className="compartments_wrapper-slide"></div>
         </div>
       </div>
     </button>

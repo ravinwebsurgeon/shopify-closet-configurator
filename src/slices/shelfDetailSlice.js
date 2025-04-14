@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { compartmentData } from "../assets/data/Compartment";
 
 const initialState = {
   configuration: null,
@@ -140,6 +139,20 @@ const shelfDetailSlice = createSlice({
       const { sectionId, dimension, value, positions } = action.payload;
       if (dimension === "depth") {
         state.racks.depth = value;
+        if (value <= 20) {
+          const shelves = state.racks.sections[sectionId].shelves;
+          const shelfKeys = Object.keys(shelves).sort((a, b) => {
+            return (
+              parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10)
+            );
+          });
+
+          shelfKeys.forEach((key) => {
+            if (key.startsWith("compartment_")) {
+              delete shelves[key];
+            }
+          });
+        }
       } else if (state.racks.sections && state.racks.sections[sectionId]) {
         state.racks.sections[sectionId][dimension] = value;
         if (dimension === "height" && positions) {
@@ -194,6 +207,14 @@ const shelfDetailSlice = createSlice({
     deleteShelf: (state, action) => {
       const { sectionId, shelfId } = action.payload;
       const section = state.racks.sections[sectionId];
+      const shelfKeys = Object.keys(section.shelves);
+      const index = shelfKeys.indexOf(shelfId);
+      if (index > 0) {
+        const prevKey = shelfKeys[index - 1];
+        if (prevKey.includes("compartment_")) {
+          delete section.shelves[prevKey];
+        }
+      }
       if (section) {
         delete section.shelves[shelfId];
       }
@@ -287,40 +308,139 @@ const shelfDetailSlice = createSlice({
         };
       }
     },
-    addComparment: (state, action) => {
+    addCompartment: (state, action) => {
       const { sectionId, shelfKey, compartmentType, compartmentCount } =
         action.payload;
       const shelves = state.racks.sections[sectionId].shelves;
-      const shelfKeys = Object.keys(shelves).sort((a, b) => {
-        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
-      });
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
 
-      if (shelfKeys.length > 0) {
-        shelves[shelfKey] = {
-          ...shelves[shelfKey],
-          compartments: {
-            type: compartmentType,
-            count: compartmentCount || null,
-          },
-        };
+      const isSliding = compartmentType === "sliding_partition";
+      const targetShelf = shelves[shelfKey];
+
+      if (isSliding && targetShelf?.compartments) {
+        targetShelf.compartments.count = compartmentCount || 0;
+        return;
       }
-    },
-    removeComparment: (state, action) => {
-      const { sectionId, shelfKey } = action.payload;
-      const shelves = state.racks.sections[sectionId].shelves;      
-      const shelfKeys = Object.keys(shelves).sort((a, b) => {
-        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
-      });
 
-      if (shelfKeys.length > 0) {
-        shelves[shelfKey] = {
-          ...shelves[shelfKey],
-          compartments: false,
-        };
+      for (let i = 0; i < shelfKeys.length; i++) {
+        const key = shelfKeys[i];
+        const shelf = shelves[key];
+
+        if (key === shelfKey && !shelf?.compartments) {
+          updatedShelves[`compartment_${i + 1}`] = {
+            compartments: {
+              type: compartmentType,
+              position: { top: shelf.position.top },
+              count: compartmentCount || null,
+            },
+          };
+        }
+
+        updatedShelves[key] = shelf;
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
+
+    updateCompartmentPostion: (state, action) => {
+      const {
+        sectionId,
+        shelfKey,
+        selectedKey,
+        compartmentType,
+        compartmentCount,
+      } = action.payload;
+
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves) {
+        delete shelves[selectedKey];
+      }
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+      for (let i = 0; i < shelfKeys.length; i++) {
+        const key = shelfKeys[i];
+
+        if (key === shelfKey && !shelves[shelfKey]?.compartments) {
+          const newShelf = {
+            compartments: {
+              type: compartmentType,
+              position: {
+                top: shelves[shelfKey].position.top,
+              },
+              count: compartmentCount || null,
+            },
+          };
+          state.isCompartmentHighlighted = {
+            shelfkey: `compartment_${i + 1}`,
+            compartmentType: compartmentType,
+            count: compartmentCount,
+          };
+          updatedShelves[`compartment_${i + 1}`] = newShelf;
+        }
+
+        updatedShelves[key] = shelves[key];
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
+    removeCompartment: (state, action) => {
+      const { sectionId, shelfKey, compartment } = action.payload;
+      const shelves = state.racks.sections?.[sectionId]?.shelves;
+
+      if (!shelves || !compartment) return;
+
+      const { compartmentType, shelfkey } = compartment;
+
+      if (compartmentType === "sliding_partition") {
+        const targetShelf = shelves[shelfkey];
+        if (targetShelf?.compartments?.count > 0) {
+          targetShelf.compartments.count -= 1;
+        }
+      } else {
+        delete shelves[shelfKey];
       }
     },
     setCompartmentHighlighted: (state, action) => {
       state.isCompartmentHighlighted = action.payload;
+    },
+    addDrawer: (state, action) => {
+      const { sectionId, shelfKey, top } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+
+      for (let i = 0; i < shelfKeys.length; i++) {
+        const key = shelfKeys[i];
+        const shelf = shelves[key];
+        console.log(top);
+        if (key === shelfKey) {
+          let drawerIndex = 1;
+          let newKey = `drawer_${drawerIndex}`;
+          while (shelves[newKey] || updatedShelves[newKey]) {
+            drawerIndex++;
+            newKey = `drawer_${drawerIndex}`;
+          }
+
+          updatedShelves[newKey] = {
+            drawer: {
+              position: { top: top + "em" },
+            },
+          };
+        }
+
+        updatedShelves[key] = shelf;
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
+    removeDrawer: (state, action) => {
+      const { sectionId, shelfKey, drawer } = action.payload;
+      const shelves = state.racks.sections?.[sectionId]?.shelves;
+      delete shelves[shelfKey];
+    },
+    setDrawerHighlighted: (state, action) => {
+      state.highlightedDrawer = action.payload;
     },
     setProductInfoModalContent: (state, action) => {
       state.productInformation = action.payload;
@@ -355,11 +475,15 @@ export const {
   setCurrBackwall,
   updateBackwall,
   deleteBackwall,
-  addComparment,
+  addCompartment,
   setCompartmentHighlighted,
-  removeComparment,
+  removeCompartment,
   setProductInfoModalContent,
-  setOpenModal
+  setOpenModal,
+  updateCompartmentPostion,
+  addDrawer,
+  setDrawerHighlighted,
+  removeDrawer,
 } = shelfDetailSlice.actions;
 
 // export default reducer

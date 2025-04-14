@@ -6,6 +6,7 @@ import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   setCompartmentHighlighted,
   setCurrSelectedSection,
+  setDrawerHighlighted,
   setEditingBackwall,
   setEditingSides,
 } from "../../slices/shelfDetailSlice";
@@ -18,11 +19,12 @@ import BackAddBtn from "../BackAddBtn/BackAddBtn";
 import XBrace from "../XBraceComponent/XBrace";
 import EditingBack from "../ConfigurationTabSubComponents/BackwallComponent/EditingBack";
 import BackWall from "../BackComponent/BackWall";
-import CompartmentsButton from "../Compartments/CompartmentsButton";
 import SidePoll from "../Shared/SidePoll/SidePoll";
 import Modal from "../Shared/Modal/Modal";
 import WardrobeRods from "../WardrobeRods/WardrobeRods";
 import SectionInterface from "./SectionInterface";
+import CompartmentViewer from "../Compartments/CompartmentViewer";
+import DrawersButton from "../Drawers/DrawersButton";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -169,6 +171,7 @@ const ImageConfigurator = () => {
         dispatch(setEditingBackwall(false));
         setBackWallSelectedSection("");
         dispatch(setCompartmentHighlighted(""));
+        dispatch(setDrawerHighlighted(""));
       }
     };
 
@@ -398,93 +401,71 @@ const ImageConfigurator = () => {
                             {section.shelves &&
                               Object.entries(section.shelves).map(
                                 ([shelfkey, shelf], index, arr) => {
-                                  const nextEntry = arr[index + 1];
-                                  const nextShelf = nextEntry?.[1];
                                   return (
                                     <React.Fragment key={shelfkey}>
-                                      {shelf?.compartments && (
-                                        <div
+                                      {shelf?.compartments &&
+                                        shelfkey.includes("compartment") && (
+                                          <CompartmentViewer
+                                            key={shelfkey}
+                                            arr={arr}
+                                            index={index}
+                                            sectionKey={sectionKey}
+                                            selectedSection={selectedSection}
+                                            shelf={shelf}
+                                            shelfkey={shelfkey}
+                                          />
+                                        )}
+                                      {shelfkey.includes("drawer_") && (
+                                        <DrawersButton
                                           key={shelfkey}
-                                          className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
-                                          style={{
-                                            zIndex: shelf.position.zIndex + 1,
-                                            top: shelf.position.top,
-                                          }}
-                                        >
-                                          {shelf?.compartments?.type ==
-                                            "compartment_divider_set" && (
-                                            <CompartmentsButton
-                                              shelfkey={shelfkey}
-                                              selectedSection={
-                                                selectedSection === sectionKey
-                                              }
-                                              compartments={shelf?.compartments}
-                                              type="compartment_divider_set"
-                                            />
-                                          )}
-                                          {shelf?.compartments?.type ==
-                                            "sliding_partition" &&
-                                            Array.from(
-                                              {
-                                                length:
-                                                  shelf?.compartments?.count,
-                                              },
-                                              (_, i) => i + 1
-                                            ).map((index) => (
-                                              <CompartmentsButton
-                                                shelfkey={shelfkey}
-                                                index={index}
-                                                selectedSection={
-                                                  selectedSection === sectionKey
-                                                }
-                                                compartments={
-                                                  shelf?.compartments
-                                                }
-                                                type="sliding_partition"
-                                              />
-                                            ))}
-                                        </div>
+                                          arr={arr}
+                                          index={index}
+                                          shelf={shelf}
+                                          shelfkey={shelfkey}
+                                        />
                                       )}
-                                      <div
-                                        className={`Legbord_Legbord__Outer`}
-                                        data-shelfkey={shelfkey}
-                                        style={{
-                                          zIndex:
-                                            shelf.position.zIndex +
-                                            (nextShelf?.compartments ? 1 : 0),
-                                          top: shelf.position.top,
-                                        }}
-                                      >
-                                        <button
-                                          className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                                      {!shelfkey.includes("compartment") &&
+                                        !shelfkey.includes("drawer_") && (
+                                          <div
+                                            className={`Legbord_Legbord__Outer`}
+                                            data-shelfkey={shelfkey}
+                                            data-type="shelve"
+                                            style={{
+                                              zIndex: arr.length - index,
+                                              top: shelf.position.top,
+                                            }}
+                                          >
+                                            <button
+                                              className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                       ${
                         executionValues.color === "black"
                           ? "Legbord_black"
                           : "Legbord_metal"
                       } Legbord_clickable__uTn2b ${
-                                            selectedShelf ===
-                                            `${sectionKey}-${shelfkey}`
-                                              ? "Legboard_isHighlighted"
-                                              : ""
-                                          }`}
-                                          key={shelfkey}
-                                          onClick={(e) =>
-                                            handleSelectedShelfClick(
-                                              e,
-                                              `${sectionKey}-${shelfkey}`,
-                                              `${sectionKey}`,
-                                              `${shelfkey}`,
-                                              `${shelf.position.top}`
-                                            )
-                                          }
-                                        >
-                                          <div className="Legbord_inner__eOg0b">
-                                            <div className="Legbord_left__ERgV5"></div>
-                                            <div className="Legbord_middle__D8U0x"></div>
-                                            <div className="Legbord_right__HB8+U"></div>
+                                                selectedShelf ===
+                                                `${sectionKey}-${shelfkey}`
+                                                  ? "Legboard_isHighlighted"
+                                                  : ""
+                                              }`}
+                                              key={shelfkey}
+                                              onClick={(e) =>
+                                                handleSelectedShelfClick(
+                                                  e,
+                                                  `${sectionKey}-${shelfkey}`,
+                                                  `${sectionKey}`,
+                                                  `${shelfkey}`,
+                                                  `${shelf.position.top}`
+                                                )
+                                              }
+                                            >
+                                              <div className="Legbord_inner__eOg0b">
+                                                <div className="Legbord_left__ERgV5"></div>
+                                                <div className="Legbord_middle__D8U0x"></div>
+                                                <div className="Legbord_right__HB8+U"></div>
+                                              </div>
+                                            </button>
                                           </div>
-                                        </button>
-                                      </div>
+                                        )}
                                     </React.Fragment>
                                   );
                                 }

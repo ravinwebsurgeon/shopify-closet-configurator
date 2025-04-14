@@ -4,6 +4,7 @@ import ShelveChangeIndicator from "../../ShelvingConfigurator/ShelveChangeIndica
 import DeleteAndConfirm from "../../DeleteAndConfirm/DeleteAndConfirm";
 import CompartmentDelete from "../../Compartments/CompartmentDelete";
 import { useSelector } from "react-redux";
+import DrawersDelete from "../../Drawers/DrawersDelete";
 
 const SidePoll = ({
   isShelfSelected,
@@ -16,6 +17,9 @@ const SidePoll = ({
   const isCompartmentHighlighted = useSelector(
     (state) => state.shelfDetail.isCompartmentHighlighted
   );
+  const highlightedDrawer = useSelector(
+    (state) => state.shelfDetail.highlightedDrawer
+  );
   return (
     <div>
       {isCompartmentHighlighted && sectionKey == selectedSection && (
@@ -24,6 +28,9 @@ const SidePoll = ({
           sectionKey={sectionKey}
           isShelfSelected={isShelfSelected}
         />
+      )}
+      {highlightedDrawer?.shelfkey && sectionKey == selectedSection && (
+        <DrawersDelete section={section} sectionKey={sectionKey} />
       )}
       {isShelfSelected?.key != "" && sectionKey == selectedSection ? (
         <div

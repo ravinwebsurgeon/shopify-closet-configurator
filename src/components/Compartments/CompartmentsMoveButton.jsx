@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addComparment,
-  removeComparment,
+  addCompartment,
+  removeCompartment,
   setCompartmentHighlighted,
+  updateCompartmentPostion,
 } from "../../slices/shelfDetailSlice";
 
 const CompartmentsMoveButton = ({ selected }) => {
@@ -28,15 +29,20 @@ const CompartmentsMoveButton = ({ selected }) => {
 
         const fromKey = arr[index - 1];
         const fromTop = parseFloat(shelves[fromKey]?.position?.top);
-        const selectedTop = shelves[selected?.shelfkey];
-        const shelftop = parseFloat(shelves[shelf]?.position?.top);
+        const selectedTop =
+          shelves[selected?.shelfkey]?.compartments?.position?.top ||
+          shelves[selected?.shelfkey]?.position?.top;
+        const shelftop = parseFloat(
+          shelves[shelf]?.compartments?.position?.top ||
+            shelves[shelf]?.position?.top
+        );
         const compartments = shelves[shelf]?.compartments;
         if (index === 0) return null;
         return {
           postions:
-            parseFloat(selectedTop?.position?.top) < shelftop
+            parseFloat(selectedTop) < shelftop
               ? "next"
-              : parseFloat(selectedTop?.position?.top) == shelftop
+              : parseFloat(selectedTop) == shelftop
               ? "current"
               : "prev",
           from: fromKey,
@@ -52,17 +58,20 @@ const CompartmentsMoveButton = ({ selected }) => {
   };
   const availbleShelve = () => {
     const getSpaces = getAvailbleShelve();
-    console.log(getSpaces);
+
     const findNext = getSpaces.find(
       (item) =>
-        item.postions == "next" && !item.compartments && item.space >= 12.5
+        item.postions == "next" && item.space >= 12.5 && !item?.compartments
     );
     const findPrev = getSpaces
       .sort((a, b) => b.index - a.index)
       .find(
         (item) =>
-          item.postions == "prev" && !item.compartments && item.space >= 12.5
+          item.postions == "prev" && item.space >= 12.5 && !item?.compartments
       );
+    // console.log("getSpaces--->", getSpaces);
+    // console.log("findNext--->", findNext);
+    // console.log("findPrev--->", findPrev);
     setSpaces({
       spaces: spaces,
       findPrev: findPrev,
@@ -70,7 +79,6 @@ const CompartmentsMoveButton = ({ selected }) => {
     });
   };
   useEffect(() => {
-    console.log(selected);
     availbleShelve();
   }, [selected]);
 
@@ -78,28 +86,22 @@ const CompartmentsMoveButton = ({ selected }) => {
     const moveingKey =
       postion == "prev" ? spaces?.findPrev?.to : spaces?.findNext?.to;
     dispatch(
-      removeComparment({
-        sectionId: selectedSectionKey,
-        shelfKey: selected?.shelfkey,
-      })
-    );
-    dispatch(
-      addComparment({
+      updateCompartmentPostion({
         sectionId: selectedSectionKey,
         shelfKey: moveingKey,
+        selectedKey: selected?.shelfkey,
         compartmentType: selected?.compartmentType,
-        compartmentCount: 1,
+        compartmentCount: selected?.compartmentCount || 1,
       })
     );
-    dispatch(
-      setCompartmentHighlighted({
-        shelfkey: moveingKey,
-        compartmentType: selected?.compartmentType,
-        count: selected?.count,
-      })
-    );
+    // dispatch(
+    //   setCompartmentHighlighted({
+    //     shelfkey: selected?.shelfkey,
+    //     compartmentType: selected?.compartmentType,
+    //     count: selected?.count,
+    //   })
+    // );
     availbleShelve();
-    console.log(moveingKey);
   };
   const btnStyle =
     "flex items-center justify-center font-inter gap-2 font-medium  rounded-[4px] border border-white  text-sm min-w-[216px] py-[5px] px-4 ";

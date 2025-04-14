@@ -11,8 +11,9 @@ const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
   const section = useSelector(
     (state) => state.shelfDetail.racks.sections[sectionId]
   );
-  const shelfCount = section ? Object.keys(section.shelves || {}).length : 0;
-
+  const shelfKeys = section ? Object.keys(section.shelves || {}).filter((key)=> key.includes("shelves_")) : [];
+  console.log(shelfKeys)
+  const shelfCount = shelfKeys.length;
   const handleDeleteShelf = (e) => {
     e.preventDefault();
     if (shelfCount > 3) {
@@ -20,7 +21,6 @@ const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
       onClose();
     }
     onClick();
-  
   };
 
   return (

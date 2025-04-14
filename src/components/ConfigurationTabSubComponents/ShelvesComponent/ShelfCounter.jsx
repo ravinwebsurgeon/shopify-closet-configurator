@@ -89,8 +89,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
 
   const handleRemoveShelf = (e) => {
     e.preventDefault();
-    setShelfCount((prevData) => prevData - 1);
-    console.log("position arrray", GeneratePosArr(shelfHeight, shelfCount));
+    setShelfCount((prevData) => prevData - 1);    
   };
 
   return (

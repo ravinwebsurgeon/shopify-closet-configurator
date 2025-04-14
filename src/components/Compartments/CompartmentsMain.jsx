@@ -1,11 +1,9 @@
 import "./Compartments.css";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { compartmentData } from "../../assets/data/Compartment";
-import IconInfo from "../../assets/icons/IconInfo";
-import Modal from "../Shared/Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addComparment,
+  addCompartment,
   setOpenModal,
   setProductInfoModalContent,
 } from "../../slices/shelfDetailSlice";
@@ -22,28 +20,39 @@ const CompartmentsMain = () => {
   const dimension = useSelector((state) => state.shelfDetail.racks);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const selectedSectionKey = useSelector((state) => state.shelfDetail.racks.selectedSection);
+  const selectedSectionKey = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const isCompartmentHighlighted = useSelector(
+    (state) => state.shelfDetail.isCompartmentHighlighted
+  );
   const section = sections[selectedSectionKey];
   const shelves = section?.shelves;
   useEffect(() => {
     const shelveKeys = Object.keys(shelves) || [];
     setShelvesKeys(shelveKeys);
-  }, []);
+  }, [shelves]);
   useEffect(() => {
     setCount(0);
   }, [selectedSectionKey]);
+  useEffect(() => {
+    setCount(isCompartmentHighlighted?.compartmentCount || 0);
+  }, [isCompartmentHighlighted]);
   const openModal = (item) => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
   const getAvailbleShelve = (type) => {
-    console.log(type);
     const array = [];
     shelvesKeys.map((item) => {
       const object = {};
       object.key = item;
-      object.top = shelves[item]?.position?.top;
-      object.compartments = shelves[item]?.compartments;
+      object.top =
+        shelves[item]?.compartments?.position?.top ||
+        shelves[item]?.drawer?.position?.top ||
+        shelves[item]?.position?.top;
+      object.isCompartments =
+        shelves[item]?.compartments || shelves[item]?.drawer;
       array.push(object);
     });
 
@@ -52,19 +61,22 @@ const CompartmentsMain = () => {
     const spaces = shelvesSorted
       .map((shelf, index, arr) => {
         const fromTop = parseFloat(arr[index - 1]?.top) || 0;
+        const next = arr[index + 1];
         const shelftop = parseFloat(shelf?.top);
-        const compartments = shelf?.compartments;
+        const compartments = shelf?.isCompartments;
+
         return {
           from: arr[index - 1]?.key,
           to: shelf.key,
           space: shelftop - fromTop,
           compartments: compartments,
           shelfTop: shelftop,
+          nextKey: next?.key,
         };
       })
       .filter(Boolean);
+
     const gap = type == "compartment_divider_set" ? 12.5 : 13.75;
-    console.log("spaces--->", spaces);
     const findAvailble = spaces.find((item) => {
       const compartments =
         type == "compartment_divider_set"
@@ -78,13 +90,13 @@ const CompartmentsMain = () => {
     });
     return findAvailble || null;
   };
-  const addComparmentToShelve = ({ id }) => {
+  const addCompartmentToShelve = ({ id }) => {
     const spaces = getAvailbleShelve(id);
-    console.log("spaces--->", spaces);
+
     if (spaces) {
       if (id == "compartment_divider_set") {
         dispatch(
-          addComparment({
+          addCompartment({
             sectionId: selectedSectionKey,
             shelfKey: spaces.to,
             compartmentType: id,
@@ -92,16 +104,11 @@ const CompartmentsMain = () => {
           })
         );
       } else {
-        const nextCount = count + 1;
-        let index = getArrayIndex(nextCount);
-        const top = parseFloat(shelves[shelvesKeys[0]].position.top);
-        if (top < 13.75) {
-          index = index + 1;
-        }
+        const nextCount = (spaces?.compartments?.count || count) + 1;
         dispatch(
-          addComparment({
+          addCompartment({
             sectionId: selectedSectionKey,
-            shelfKey: shelvesKeys[index],
+            shelfKey: spaces?.to,
             compartmentType: "sliding_partition",
             compartmentCount:
               nextCount % 4 == 1
@@ -141,7 +148,7 @@ const CompartmentsMain = () => {
                   depth: dimension.depth,
                 })}
                 title={item.title}
-                itemAction={() => addComparmentToShelve({ id: item.id })}
+                itemAction={() => addCompartmentToShelve({ id: item.id })}
                 openModal={(e) => openModal(e)}
               />
             )

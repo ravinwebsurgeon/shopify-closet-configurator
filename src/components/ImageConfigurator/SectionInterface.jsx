@@ -9,6 +9,7 @@ import {
 import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/ShelveChangePosition";
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
+import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 
 const SectionInterface = ({
   selectedSection,
@@ -96,7 +97,12 @@ const SectionInterface = ({
           shelfKey={isShelfSelected?.key}
         />
       )}
-
+      {selectedSection == sectionKey && selectedShelf && (
+        <DrawerChangePosition
+          sectionId={selectedSection}
+          shelfKey={isShelfSelected?.key}
+        />
+      )}
       <ShelfCounter
         showCounter={
           selectedSection == sectionKey && activeTab == "shelves" && showCounter
