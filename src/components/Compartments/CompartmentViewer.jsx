@@ -12,6 +12,7 @@ const CompartmentViewer = ({
   return (
     <div
       key={shelfkey}
+      data-key={shelfkey}
       data-type="compartment"
       className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
       style={{

@@ -434,8 +434,53 @@ const shelfDetailSlice = createSlice({
 
       state.racks.sections[sectionId].shelves = updatedShelves;
     },
+    updateDrawerPosition: (state, action) => {
+      const { sectionId, shelfKey, top, jump } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+      if (shelves && shelves[shelfKey] && shelves[shelfKey].drawer) {
+        shelves[shelfKey].drawer.position.top = top + "em";
+      }
+      if (jump) {
+        const newArray = [];
+        shelfKeys.map((item) => {
+          const top =
+            shelves[item]?.drawer?.position.top ||
+            shelves[item]?.compartments?.position?.top ||
+            shelves[item].position.top;
+          newArray.push({
+            item: { ...shelves[item] },
+            top: parseFloat(top),
+          });
+        });
+        let current = { shelfKey: shelfKey, top: top };
+        const sortedArray = newArray.sort((a, b) => a.top - b.top);
+        sortedArray.map((item, index) => {
+          console.log(item);
+          let key = `shelves_${index + 1}`;
+          if (item?.item?.drawer) {
+            key = `drawer_${index + 1}`;
+          }
+          if (item?.item?.compartments) {
+            key = `compartment_${index + 1}`;
+          }
+          if (item?.top == top) {
+            if (current) {
+              current.shelfKey = key;
+            }
+          }
+          updatedShelves[key] = item?.item;
+        });
+        state.racks.sections[sectionId].shelves = updatedShelves;
+        state.highlightedDrawer = {
+          shelfkey: current.shelfKey,
+          top: current.top,
+        };        
+      }
+    },
     removeDrawer: (state, action) => {
-      const { sectionId, shelfKey, drawer } = action.payload;
+      const { sectionId, shelfKey } = action.payload;
       const shelves = state.racks.sections?.[sectionId]?.shelves;
       delete shelves[shelfKey];
     },
@@ -484,6 +529,7 @@ export const {
   addDrawer,
   setDrawerHighlighted,
   removeDrawer,
+  updateDrawerPosition,
 } = shelfDetailSlice.actions;
 
 // export default reducer

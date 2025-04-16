@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  deleteShelf,
   setConfiguration,
   updateBackwall,
   updateLastShelvePostion,
@@ -8,6 +9,7 @@ import {
   updateSideWall,
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
+import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 
 const DimensionsComponent = () => {
   const dispatch = useDispatch();
@@ -71,12 +73,38 @@ const DimensionsComponent = () => {
     return positions;
   };
 
+  const shelves = activeSection?.shelves;
+  const shelvesKeys = Object.keys(shelves) || [];
   const handleDimensionChange = (dimension, value) => {
     const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
     const isRightSidewall = sections[activeSectionId].sideWall["right"].isRight;
     const isBackwall = sections[activeSectionId].backWall.type;
     const backWall = sections[activeSectionId].backWall;
 
+    if (dimension == "height") {
+      const items = [];
+      shelvesKeys.map((item) => {
+        const top = parseFloat(
+          shelves[item]?.drawer?.position?.top ||
+            shelves[item]?.compartments?.position?.top ||
+            shelves[item]?.position?.top
+        );
+        items.push({
+          key: item,
+          top: top,
+        });
+      });
+      items.map((item, index) => {
+        if (index === items?.length - 1) return null;
+        const maxTop = parseFloat(shelfCountsAccHeight[value]?.maxTop);
+        if (item?.top > maxTop && items?.length >= 3) {
+          console.log(item?.top, maxTop);
+          dispatch(
+            deleteShelf({ sectionId: activeSectionId, shelfId: item?.key })
+          );
+        }
+      });
+    }
     // checking if active section is having left ,right
     if (isLeftSidewall || isRightSidewall) {
       //checking weather there are multiple sections
@@ -186,8 +214,9 @@ const DimensionsComponent = () => {
       }
     }
 
-    if(isBackwall  && dimension == "height" && backWall.height > value){
-        dispatch(updateBackwall({
+    if (isBackwall && dimension == "height" && backWall.height > value) {
+      dispatch(
+        updateBackwall({
           sectionId: activeSectionId,
           type: sections[activeSectionId].backWall.type,
           height: value,
@@ -195,15 +224,15 @@ const DimensionsComponent = () => {
       );
     }
     //  delete the section back wall when width > 100
-    if(isBackwall  && dimension == "width" && value > 100){
-      dispatch(updateBackwall({
-        sectionId: activeSectionId,
-        type: "",
-        height: "",
-      }))
-  }
-
-
+    if (isBackwall && dimension == "width" && value > 100) {
+      dispatch(
+        updateBackwall({
+          sectionId: activeSectionId,
+          type: "",
+          height: "",
+        })
+      );
+    }
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };

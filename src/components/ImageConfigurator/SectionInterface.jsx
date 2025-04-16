@@ -54,6 +54,9 @@ const SectionInterface = ({
     dispatch(setCurrSelectedSection(prevSectionId));
     dispatch(deleteSection(sectionKey));
   };
+  const highlightedDrawer = useSelector(
+    (state) => state.shelfDetail.highlightedDrawer
+  );
   return (
     <div className="Section_sectionInterface">
       <div className="Section_sectionNumberContainer sk_hide_on_print">
@@ -97,10 +100,10 @@ const SectionInterface = ({
           shelfKey={isShelfSelected?.key}
         />
       )}
-      {selectedSection == sectionKey && selectedShelf && (
+      {selectedSection == sectionKey && highlightedDrawer && (
         <DrawerChangePosition
           sectionId={selectedSection}
-          shelfKey={isShelfSelected?.key}
+          selected={highlightedDrawer}
         />
       )}
       <ShelfCounter

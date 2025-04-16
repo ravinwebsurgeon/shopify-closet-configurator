@@ -428,7 +428,7 @@ const ImageConfigurator = () => {
                                         !shelfkey.includes("drawer_") && (
                                           <div
                                             className={`Legbord_Legbord__Outer`}
-                                            data-shelfkey={shelfkey}
+                                            data-key={shelfkey}
                                             data-type="shelve"
                                             style={{
                                               zIndex: arr.length - index,

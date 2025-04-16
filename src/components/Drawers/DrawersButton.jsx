@@ -10,6 +10,7 @@ const DrawersButton = ({ shelfkey, arr, index, shelf }) => {
     <div
       key={shelfkey}
       data-type="drawer"
+      data-key={shelfkey}
       className={`Legbord_Legbord__Outer !absolute w-full Legbord__drawer`}
       style={{
         zIndex: arr.length - index,
@@ -29,6 +30,9 @@ const DrawersButton = ({ shelfkey, arr, index, shelf }) => {
           )
         }
       >
+        <span className="ssdf">
+          {shelf?.drawer.position.top}
+        </span>
         <div className="lade_leff"></div>
         <div className="lade_middle"></div>
         <div className="lade_right"></div>

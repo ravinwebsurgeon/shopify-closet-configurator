@@ -20,15 +20,18 @@ const Drawers = () => {
   }, [shelves]);
   const handleCardClick = () => {
     const space = getAvailbleShelve({ shelvesKeys, shelves });
-    console.log(space);
-    const _space = space?.shelfTop - 7.5;
-    dispatch(
-      addDrawer({
-        sectionId: selectedSectionKey,
-        shelfKey: space?.to,
-        top: space?.to?.includes("compartment_") ? _space - 11.25 : _space,
-      })
-    );
+    if (space) {
+      const _space = space?.shelfTop - 7.5;
+      dispatch(
+        addDrawer({
+          sectionId: selectedSectionKey,
+          shelfKey: space?.to,
+          top: space?.to?.includes("compartment_") ? _space - 11.25 : _space,
+        })
+      );
+    } else {
+      alert("No more divider sets fit in this section.");
+    }
   };
   const openModal = () => {};
   return (
@@ -94,7 +97,6 @@ const getAvailbleShelve = ({ shelvesKeys, shelves }) => {
       const next = arr[index + 1];
       const shelftop = parseFloat(shelf?.top);
       const drawer = shelf?.isDrawer;
-
       return {
         from: arr[index - 1]?.key,
         to: shelf.key,
@@ -105,14 +107,12 @@ const getAvailbleShelve = ({ shelvesKeys, shelves }) => {
       };
     })
     .filter(Boolean);
-
   let gap = 12.5;
   const reversed = spaces.reverse();
   const findAvailble = reversed.find((item) => {
-    console.log(item);
     let condition = item.space >= gap;
     if (item?.to?.includes("compartment_") && item?.from?.includes("drawer_")) {
-      gap = 18.76;
+      condition = item.space >= 18.76;
     }
 
     return condition;
