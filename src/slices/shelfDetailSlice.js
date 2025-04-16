@@ -16,7 +16,8 @@ const initialState = {
   selectedSideWall: "",
   selectedBackwall: "",
   racks: {},
-};
+  deletedRevDoors : {}
+,};
 
 const executionObject = {
   color: "metal",
@@ -359,7 +360,34 @@ const shelfDetailSlice = createSlice({
         position,
       };
 
-    }
+    },
+    removeRevolvingDoor:(state,action) =>{
+      const { sectionId, doorKey } = action.payload;
+
+      if (
+        state.racks.sections[sectionId] &&
+        state.racks.sections[sectionId].revolvingDoor &&
+        state.racks.sections[sectionId].revolvingDoor[doorKey]
+      ) {
+        delete state.racks.sections[sectionId].revolvingDoor[doorKey];
+      }
+    },
+    setisRevolvingDoorHighlighted : (state,action) =>{
+      state.isRevolvingDoorHighlighted = action.payload;
+    },
+    storeDeletedRevDoor : (state,action) =>{
+      const {sectionId,doorKey,position,height} = action.payload;
+      if (!state.deletedRevDoors[sectionId]) {
+        state.deletedRevDoors[sectionId] = {};
+      }
+      state.deletedRevDoors[sectionId][doorKey] = { position, height };
+    },
+    removeDeletedDoor: (state, action) => {
+      const { sectionId, doorKey } = action.payload;
+      if (state.deletedRevDoors[sectionId]) {
+        delete state.deletedRevDoors[sectionId][doorKey];
+      }
+    },  
   },
 });
 
@@ -393,7 +421,11 @@ export const {
   setProductInfoModalContent,
   setOpenModal,
   setWardrobeRod,
-  addRevolvingDoor
+  addRevolvingDoor,
+  setisRevolvingDoorHighlighted,
+  removeRevolvingDoor,
+  storeDeletedRevDoor,
+  removeDeletedDoor,
 } = shelfDetailSlice.actions;
 
 // export default reducer

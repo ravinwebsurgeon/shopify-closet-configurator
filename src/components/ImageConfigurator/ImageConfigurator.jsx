@@ -449,9 +449,6 @@ const ImageConfigurator = () => {
                                       {shelf?.wardrobeRod &&(
                                         <WardrobeRods top={shelf.wardrobeRod.position} index={index+1}/>
                                       )}
-                                      {
-                                        
-                                      }
                                       <div
                                         className={`Legbord_Legbord__Outer`}
                                         data-shelfkey={shelfkey}
@@ -495,6 +492,11 @@ const ImageConfigurator = () => {
                                       </div>
                                     </React.Fragment>
                                   );
+                                }
+                              )}
+                              {section?.revolvingDoor && Object.entries(section.revolvingDoor).map(([key,door],index)=>{
+                                console.log("SECTION-->",sectionKey)
+                                  return <RevolvingDoor doorKey={key} type={door.type} position={door.position} width={section.width} section={sectionKey} /> 
                                 }
                               )}
                           </div>
