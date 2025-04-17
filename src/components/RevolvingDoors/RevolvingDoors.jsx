@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   addRevolvingDoor,
   setisRevolvingDoorHighlighted,
@@ -9,8 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import { revolvingDoors } from "../../assets/data/Compartment";
 import getComponentPrice from "../../utils/getPrice";
-import ModalComponent from "../ModalComponent/ModalComponent";
-import DoorConfirm from "../ModalChildComponents/DoorComp/DoorConfirm";
 
 const RevolvingDoors = () => {
   const dispatch = useDispatch();
@@ -37,11 +35,6 @@ const RevolvingDoors = () => {
   };
 
   const handleCardClick = (id) => {
-
-    if(feet != "Adjustable" && !contWithout){
-      setIsModalOpen(true);
-    }
-    
     let position = "";
     const sectionId = selectedSectionKey;
     const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
@@ -169,7 +162,7 @@ const RevolvingDoors = () => {
               dimention={`${dimension.sections[selectedSectionKey].width - 2}x${
                 dimension.depth
               } cm`}
-              image={color=="black" &&(data.id =="door_set_metal_50" || data.id=="door_set_metal_100")?data.black_image[dimension.sections[selectedSectionKey].width]:data.image[dimension.sections[selectedSectionKey].width]}
+              image={data.image[dimension.sections[selectedSectionKey].width]}
               itemAction={() => handleCardClick(data.id)}
               openModal={() => openModal(data)}
               price={getComponentPrice({
@@ -193,10 +186,6 @@ const RevolvingDoors = () => {
           <strong>55cm - 70cm - 85cm - 100cm</strong>
         </div>
       )}
-      {isModalOpen && <ModalComponent isOpen={isModalOpen}>
-          <DoorConfirm onClose={()=>setIsModalOpen(false)} setContWithout={setContWithout}/>
-        </ModalComponent>
-      }
     </div>
   );
 };
