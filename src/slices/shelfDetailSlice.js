@@ -15,8 +15,8 @@ const initialState = {
   selectedSideWall: "",
   selectedBackwall: "",
   racks: {},
-  deletedRevDoors : {}
-,};
+  deletedRevDoors: {},
+};
 
 const executionObject = {
   color: "metal",
@@ -500,7 +500,7 @@ const shelfDetailSlice = createSlice({
       const shelfKeys = Object.keys(shelves).sort((a, b) => {
         return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
       });
-    
+
       if (shelfKeys.includes(shelfKey)) {
         shelves[shelfKey] = {
           ...shelves[shelfKey],
@@ -510,9 +510,8 @@ const shelfDetailSlice = createSlice({
         };
       }
     },
-    addRevolvingDoor :(state,action) =>{
-      
-      const {sectionId,doorKey,type,position} = action.payload;
+    addRevolvingDoor: (state, action) => {
+      const { sectionId, doorKey, type, position, height } = action.payload;
 
       if (!state.racks.sections[sectionId]) return;
 
@@ -523,10 +522,10 @@ const shelfDetailSlice = createSlice({
       state.racks.sections[sectionId].revolvingDoor[doorKey] = {
         type,
         position,
+        height,
       };
-
     },
-    removeRevolvingDoor:(state,action) =>{
+    removeRevolvingDoor: (state, action) => {
       const { sectionId, doorKey } = action.payload;
 
       if (
@@ -537,11 +536,11 @@ const shelfDetailSlice = createSlice({
         delete state.racks.sections[sectionId].revolvingDoor[doorKey];
       }
     },
-    setisRevolvingDoorHighlighted : (state,action) =>{
+    setisRevolvingDoorHighlighted: (state, action) => {
       state.isRevolvingDoorHighlighted = action.payload;
     },
-    storeDeletedRevDoor : (state,action) =>{
-      const {sectionId,doorKey,position,height} = action.payload;
+    storeDeletedRevDoor: (state, action) => {
+      const { sectionId, doorKey, position, height } = action.payload;
       if (!state.deletedRevDoors[sectionId]) {
         state.deletedRevDoors[sectionId] = {};
       }
@@ -552,7 +551,7 @@ const shelfDetailSlice = createSlice({
       if (state.deletedRevDoors[sectionId]) {
         delete state.deletedRevDoors[sectionId][doorKey];
       }
-    },  
+    },
   },
 });
 

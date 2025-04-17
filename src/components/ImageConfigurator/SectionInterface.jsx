@@ -10,6 +10,7 @@ import ShelveChangePosition from "../ShelvingConfigurator/ShelveChangePosition/S
 import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/ShelfCounter";
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
+import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
 
 const SectionInterface = ({
   selectedSection,
@@ -26,6 +27,10 @@ const SectionInterface = ({
   const isCompartmentHighlighted = useSelector(
     (state) => state.shelfDetail.isCompartmentHighlighted
   );
+  const isRevolvingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isRevolvingDoorHighlighted
+  );
+
   const showCounter = useSelector(
     (state) => state.shelfDetail.racks.showCounter
   );
@@ -93,6 +98,9 @@ const SectionInterface = ({
       </div>
       {isCompartmentHighlighted && selectedSection == sectionKey && (
         <CompartmentsMoveButton selected={isCompartmentHighlighted} />
+      )}
+      {isRevolvingDoorHighlighted && selectedSection == sectionKey && (
+        <RevolvingDoorMoveButton selected={isRevolvingDoorHighlighted} />
       )}
       {selectedSection == sectionKey && selectedShelf && (
         <ShelveChangePosition
