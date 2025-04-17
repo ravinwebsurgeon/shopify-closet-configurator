@@ -24,6 +24,10 @@ const RevolvingDoors = () => {
     (state) =>
       state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
   );
+const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [contWithout,setContWithout] = useState(false);
+
   const getDoorPosition50 = (input) => {
     return 0.5 * input - 25;
   };
@@ -37,6 +41,7 @@ const RevolvingDoors = () => {
     if(feet != "Adjustable" && !contWithout){
       setIsModalOpen(true);
     }
+    
     let position = "";
     const sectionId = selectedSectionKey;
     const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
