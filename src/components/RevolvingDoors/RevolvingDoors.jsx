@@ -109,12 +109,15 @@ const RevolvingDoors = () => {
           };
         })
         .filter(Boolean);
-
+      console.log(spaces);
       if (spaces) {
         const findSpace = spaces.reduce((max, curr) => {
           return !max || curr.space > max.space ? curr : max;
         }, null);
-        if (findSpace?.space < 50 && doorTypeHeight === 50) {
+        if (
+          (findSpace?.space < 50 && doorTypeHeight === 50) ||
+          (findSpace?.space < 25 && doorTypeHeight === 25)
+        ) {
           alert("No more doors can be added to this section");
           return null;
         }
@@ -125,6 +128,13 @@ const RevolvingDoors = () => {
             type: id,
             position: findSpace?.shelfTop - doorTypeHeight,
             height: doorTypeHeight,
+          })
+        );
+        dispatch(
+          setisRevolvingDoorHighlighted({
+            id: doorKey,
+            type: id,
+            position,
           })
         );
       } else {
