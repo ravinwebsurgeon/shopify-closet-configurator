@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { updateRevolvingDoor } from "../../slices/shelfDetailSlice";
 
 const RevolvingDoorMoveButton = ({ selected }) => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const RevolvingDoorMoveButton = ({ selected }) => {
   useEffect(() => {
     handlePositionChange();
   }, [selected]);
-  const handlePositionChange = () => {
+  const handlePositionChange = (type) => {
     if (!selected || !revolvingDoorsAll) return;
     // console.log(selected);
     const doorTypeHeight = selected?.type.includes("50") ? 25 : 50;
@@ -34,76 +35,37 @@ const RevolvingDoorMoveButton = ({ selected }) => {
         key: "initial",
         height: 0,
       },
-      ...Object.entries(revolvingDoorsAll).map(([key, value]) => ({
-        key,
-        type: value?.type,
-        position: value?.position,
-        height: value?.height,
-      })),
+      ...(revolvingDoorsAll
+        ? Object.entries(revolvingDoorsAll).map(([key, value]) => ({
+            key,
+            type: value?.type,
+            position: value?.position,
+            height: value?.height,
+          }))
+        : []),
       {
-        position: sectionHeight / 2 - doorTypeHeight,
+        position: sectionHeight / 2,
         key: "last",
-        height: sectionHeight / 2 + doorTypeHeight,
+        height: sectionHeight / 2 + (doorTypeHeight == 50 ? 25 : 25),
       },
     ];
-    // console.log(revolvingDoorsKeys);
+
     const sortedDoors = revolvingDoorsKeys.sort(
       (a, b) => a.position - b.position
     );
     const selectedIndex = sortedDoors.findIndex(
       (item) => item.key === selected?.id
     );
-    // console.log(revolvingDoorsKeys);
     if (selectedIndex === -1) return;
-
-    const selectedDoor = sortedDoors[selectedIndex];
-    const selectedHeight = selectedDoor.type.includes("50") ? 25 : 50;
-    const obj = {
-      prev: [],
-      next: [],
-    };
-    // revolvingDoorsKeys &&
-    //   revolvingDoorsKeys
-    //     .sort((a, b) => a.position - b?.position)
-    //     ?.map((item) => {
-    //       const position = item?.position;
-    //       if ((item?.position ?? 0) < selectedDoor?.position) {
-    //         obj.prev.push({
-    //           type: "prev",
-    //           key: item?.key,
-    //           position: item?.position
-    //         });
-    //       }
-    //       console.log(item?.position, position, selectedDoor)
-    //       if (item?.position > selectedDoor?.position) {
-    //         obj.next.push({
-    //           type: "next",
-    //           key: item?.key,
-    //           fromKey
-    //           position: item?.position
-    //         });
-    //       }
-    //     });
-    // const sortPrevByPosition = obj.prev.sort((a, b) => b.position - a.position);
-    // const sortNextByPosition = obj.next.sort((a, b) => b.position - a.position);
-    // const findPrev = obj.prev.find((item) => {
-    //   return item?.space > 0;
-    // });
-    // const findNext = obj.next.find((item) => {
-    //   return item?.space > 0;
-    // });
-    const spaces = revolvingDoorsKeys
-      .map((item, index, arr) => {
+    const spaces = sortedDoors
+      ?.map((item, index, arr) => {
         if (index === 0) return null;
-
         const fromKey = arr[index - 1];
-        // console.log(fromKey)
-        const doorType = fromKey && fromKey?.type?.includes("50") ? 25 : 50;
-        const fromTop = arr[index - 1]?.height + doorType;
-        const top = item?.height;
-        // console.log(top, fromTop);
+        const fromTop = fromKey?.position + arr[index - 1]?.height;
+        const top = item?.position;
+
         return {
-          type: "",
+          type: top <= selected?.position ? "prev" : "next",
           from: fromKey?.key,
           to: item?.key,
           space: top - fromTop,
@@ -111,7 +73,52 @@ const RevolvingDoorMoveButton = ({ selected }) => {
         };
       })
       .filter(Boolean);
-    // console.log(spaces);
+    const filterPrev = spaces
+      .filter((item) => item.type === "prev")
+      .sort((a, b) => b.shelfTop - a.shelfTop);
+    const filterNext = spaces.filter((item) => item.type === "next");
+    const findPrev = spaces.find(
+      (item) => item.type === "prev" && item?.space > 1
+    );
+
+    const findNext = spaces.find(
+      (item) => item.type === "next" && item?.space > 1
+    );
+    setButtons({
+      topLeft: { active: findPrev?.space > 0 },
+      topRight: { active: findPrev?.space > 0 },
+      bottomLeft: { active: findNext?.space > 0 },
+      bottomRight: { active: findNext?.space > 0 },
+    });
+    const selectedDoor = sortedDoors.find((item) => item.key == selected?.id);
+
+    if (type) {
+      if (type.includes("Left")) {
+        const gap = type == "topLeft" ? 1.25 : -1.25;
+        const newPosition = selectedDoor?.position - gap;
+        console.log(newPosition);
+        dispatch(
+          updateRevolvingDoor({
+            sectionId: selectedSectionKey,
+            doorKey: selected?.id,
+            position: newPosition,
+          })
+        );
+      }
+      if (type.includes("Right")) {
+        const gap = type == "bottomRight" ? -5 : 5;
+        const newPosition = selectedDoor?.position - gap;
+        console.log(newPosition);
+        dispatch(
+          updateRevolvingDoor({
+            sectionId: selectedSectionKey,
+            doorKey: selected?.id,
+            position: newPosition,
+          })
+        );
+      }
+    }
+    console.log(findPrev, findNext, filterNext, filterPrev);
   };
 
   const buttonStyle =

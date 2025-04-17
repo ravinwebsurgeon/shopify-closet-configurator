@@ -15,9 +15,9 @@ const initialState = {
   selectedSideWall: "",
   selectedBackwall: "",
   racks: {},
-  deletedRevDoors : {},
-  hideDoor : false
-,};
+  deletedRevDoors: {},
+  hideDoor: false,
+};
 
 const executionObject = {
   color: "metal",
@@ -526,6 +526,20 @@ const shelfDetailSlice = createSlice({
         height,
       };
     },
+    updateRevolvingDoor: (state, action) => {
+      const { sectionId, doorKey, position } = action.payload;
+
+      if (!state.racks.sections[sectionId]) return;
+
+      if (!state.racks.sections[sectionId].revolvingDoor) {
+        state.racks.sections[sectionId].revolvingDoor = {};
+      }
+
+      if (state.racks.sections[sectionId].revolvingDoor[doorKey]) {
+        state.racks.sections[sectionId].revolvingDoor[doorKey].position =
+          position;
+      }
+    },
     removeRevolvingDoor: (state, action) => {
       const { sectionId, doorKey } = action.payload;
 
@@ -553,9 +567,9 @@ const shelfDetailSlice = createSlice({
         delete state.deletedRevDoors[sectionId][doorKey];
       }
     },
-    setHideDoor:(state,action) =>{
-      state.hideDoor = action.payload; 
-    }
+    setHideDoor: (state, action) => {
+      state.hideDoor = action.payload;
+    },
   },
 });
 
@@ -600,6 +614,7 @@ export const {
   storeDeletedRevDoor,
   removeDeletedDoor,
   setHideDoor,
+  updateRevolvingDoor
 } = shelfDetailSlice.actions;
 
 // export default reducer
