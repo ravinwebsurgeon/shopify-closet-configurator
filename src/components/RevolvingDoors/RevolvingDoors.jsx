@@ -41,6 +41,7 @@ const RevolvingDoors = () => {
     if(feet != "Adjustable" && !contWithout){
       setIsModalOpen(true);
     }
+    
     let position = "";
     const sectionId = selectedSectionKey;
     const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
