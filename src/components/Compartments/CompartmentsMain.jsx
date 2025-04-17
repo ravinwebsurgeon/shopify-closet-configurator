@@ -14,6 +14,7 @@ import getComponentPrice from "../../utils/getPrice";
 
 const CompartmentsMain = () => {
   const dispatch = useDispatch();
+
   function getArrayIndex(number, chunkSize = 4) {
     return Math.floor((number - 1) / chunkSize);
   }
@@ -133,7 +134,7 @@ const CompartmentsMain = () => {
                 productInfo={item}
                 key={item.id}
                 dimention={item.dimention}
-                image={item.image}
+                image={color=="black"?item.black_image:item.image}
                 price={getComponentPrice({
                   material: color,
                   component: "compartment",
