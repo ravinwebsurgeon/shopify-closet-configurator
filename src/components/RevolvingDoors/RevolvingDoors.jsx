@@ -25,9 +25,9 @@ const RevolvingDoors = () => {
     (state) =>
       state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
   );
-const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
-  const [isModalOpen,setIsModalOpen] = useState(false);
-  const [contWithout,setContWithout] = useState(false);
+  const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contWithout, setContWithout] = useState(false);
 
   const getDoorPosition50 = (input) => {
     return 0.5 * input - 25;
@@ -38,11 +38,9 @@ const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
   };
 
   const handleCardClick = (id) => {
-
-    if(feet != "Adjustable" && !contWithout){
+    if (feet != "Adjustable" && !contWithout) {
       setIsModalOpen(true);
     }
-    
     let position = "";
     const sectionId = selectedSectionKey;
     const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
@@ -71,94 +69,65 @@ const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
         doorHeight === 50
           ? getDoorPosition50(heightLeft)
           : getDoorPosition100(heightLeft);
-      const revolvingDoorsKeys =
-        revolvingDoorsAll &&
-        Object.keys(revolvingDoorsAll).map((item) => {
+      const doorTypeHeight = id.includes("50") ? 25 : 50;
+      const revolvingDoorsKeys = [
+        {
+          position: 0,
+          key: "initial",
+          height: 0,
+        },
+        ...(revolvingDoorsAll
+          ? Object.entries(revolvingDoorsAll).map(([key, value]) => ({
+              key,
+              type: value?.type,
+              position: value?.position,
+              height: value?.height,
+            }))
+          : []),
+        {
+          position: sections[sectionId].height / 2,
+          key: "last",
+          height:
+            sections[sectionId].height / 2 + (doorTypeHeight == 50 ? 25 : 25),
+        },
+      ];
+
+      const revolvingDoorsKeysSorted = revolvingDoorsKeys.sort(
+        (a, b) => a.position - b?.position
+      );
+      const spaces = revolvingDoorsKeysSorted
+        ?.map((item, index, arr) => {
+          if (index === 0) return null;
+          const fromKey = arr[index - 1];
+          const fromTop = fromKey?.position + arr[index - 1]?.height;
+          const top = item?.position;
+
           return {
-            key: item,
-            type: revolvingDoorsAll[item]?.type,
-            position: revolvingDoorsAll[item]?.position,
+            from: fromKey?.key,
+            to: item?.key,
+            space: top - fromTop,
+            shelfTop: top,
           };
-        });
+        })
+        .filter(Boolean);
 
-      const spaces =
-        revolvingDoorsKeys &&
-        revolvingDoorsKeys
-          .sort((a, b) => a.position - b?.position)
-          ?.map((item, index, arr) => {
-            const typePrev = arr[index - 1]?.type?.includes("50") ? 25 : 50;
-            const typeNext = arr[index + 1]?.type?.includes("50") ? 25 : 50;
-            arr[index - 1]?.type;
-            const prevPos = arr[index - 1]?.position + typePrev || typePrev;
-            const nextPos =
-              arr[index + 1]?.position || sections[sectionId].height / 2;
-            const obj = {};
-            if (prevPos < item?.position) {
-              obj.prev = {
-                type: prevPos < item?.position ? "prev" : "next",
-                item: item?.key,
-                position: item?.position,
-                space: item?.position - prevPos,
-              };
-            }
-            if (nextPos) {
-              obj.next = {
-                type: "next",
-                item: item?.key,
-                position: item?.position + typeNext,
-                space: nextPos - (item?.position + typeNext),
-              };
-            }
-            return obj;
-          });
       if (spaces) {
-        const getNext = spaces
-          .filter((item) => item?.next && item.next.space > 0)
-          .map((item) => item.next);
-
-        const maxNext = getNext.reduce((max, curr) => {
-          return !max || curr.position > max.position ? curr : max;
+        const findSpace = spaces.reduce((max, curr) => {
+          return !max || curr.space > max.space ? curr : max;
         }, null);
-        const getPrev = spaces
-          .filter((item) => item?.prev && item.prev.space > 0)
-          .map((item) => item.prev);
-
-        const maxPrev = getPrev.reduce((max, curr) => {
-          return !max || curr.position > max.position ? curr : max;
-        }, null);
-
-        const spaceUnit = id?.includes("50") ? 1 : 2;
-
-        if (maxPrev && (spaceUnit !== 2 || maxPrev.space >= 50)) {
-          position = maxPrev.position - (spaceUnit === 2 ? 50 : 25);
-        }
-        if (
-          maxNext &&
-          maxNext.space >= (maxPrev?.space ?? 0) &&
-          (spaceUnit !== 2 || maxNext.space >= 50)
-        ) {
-          position = maxNext.position;
-        }
-        if (maxNext?.space < 50 && maxPrev?.space < 50 && spaceUnit == 2) {
+        if (findSpace?.space < 50 && doorTypeHeight === 50) {
           alert("No more doors can be added to this section");
-        } else {
-          dispatch(
-            addRevolvingDoor({
-              sectionId,
-              doorKey,
-              type: id,
-              position,
-            })
-          );
-
-          dispatch(
-            setisRevolvingDoorHighlighted({
-              id: doorKey,
-              type: id,
-              position,
-            })
-          );
+          return null;
         }
+        dispatch(
+          addRevolvingDoor({
+            sectionId,
+            doorKey,
+            type: id,
+            position: findSpace?.shelfTop - doorTypeHeight,
+            height: doorTypeHeight,
+          })
+        );
       } else {
         dispatch(
           addRevolvingDoor({
@@ -166,6 +135,7 @@ const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
             doorKey,
             type: id,
             position,
+            height: doorHeight === 100 ? 50 : 25,
           })
         );
 
@@ -199,7 +169,15 @@ const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
               dimention={`${dimension.sections[selectedSectionKey].width - 2}x${
                 dimension.depth
               } cm`}
-              image={color=="black" &&(data.id =="door_set_metal_50" || data.id=="door_set_metal_100")?data.black_image[dimension.sections[selectedSectionKey].width]:data.image[dimension.sections[selectedSectionKey].width]}
+              image={
+                color == "black" &&
+                (data.id == "door_set_metal_50" ||
+                  data.id == "door_set_metal_100")
+                  ? data.black_image[
+                      dimension.sections[selectedSectionKey].width
+                    ]
+                  : data.image[dimension.sections[selectedSectionKey].width]
+              }
               itemAction={() => handleCardClick(data.id)}
               openModal={() => openModal(data)}
               price={getComponentPrice({
@@ -223,10 +201,14 @@ const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
           <strong>55cm - 70cm - 85cm - 100cm</strong>
         </div>
       )}
-      {isModalOpen && <ModalComponent isOpen={isModalOpen}>
-          <DoorConfirm onClose={()=>setIsModalOpen(false)} setContWithout={setContWithout}/>
+      {isModalOpen && (
+        <ModalComponent isOpen={isModalOpen}>
+          <DoorConfirm
+            onClose={() => setIsModalOpen(false)}
+            setContWithout={setContWithout}
+          />
         </ModalComponent>
-      }
+      )}
     </div>
   );
 };

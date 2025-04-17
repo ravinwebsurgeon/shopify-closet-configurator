@@ -14,7 +14,8 @@ const RevolvingDoor = ({doorKey,type,position,width,section}) => {
   const handleDoorClick = (e,id) =>{
     dispatch(setisRevolvingDoorHighlighted({
       id,
-      position
+      position,
+      type
     }))
     
   }
