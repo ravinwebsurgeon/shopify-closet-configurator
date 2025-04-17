@@ -11,6 +11,7 @@ import { revolvingDoors } from "../../assets/data/Compartment";
 import getComponentPrice from "../../utils/getPrice";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import DoorConfirm from "../ModalChildComponents/DoorComp/DoorConfirm";
+import {toast } from 'react-toastify';
 
 const RevolvingDoors = () => {
   const dispatch = useDispatch();
@@ -158,7 +159,10 @@ const RevolvingDoors = () => {
         );
       }
     } else {
-      alert("No more doors can be added to this section");
+      //alert("No more doors can be added to this section");
+      toast("No more doors can be added to this section",{
+        position: "top-center",
+      })
     }
   };
 
