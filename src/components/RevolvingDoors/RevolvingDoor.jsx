@@ -28,7 +28,11 @@ const RevolvingDoor = ({doorKey,type,position,width,section}) => {
       onClick={(e)=>handleDoorClick(e,doorKey)}
     >
       <div className="Deuren_inner__dJXD6">
-        <div className="Deuren_container__Pk33j"></div>
+        <div className="Deuren_container__Pk33j">
+          <span className="ssdf">
+            {doorKey}
+          </span>
+        </div>
       </div>
     </button>
   );
