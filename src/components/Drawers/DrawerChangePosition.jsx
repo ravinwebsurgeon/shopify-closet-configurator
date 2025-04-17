@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDrawerPosition } from "../../slices/shelfDetailSlice";
-import { shelfCountsAccHeight } from "../../assets/data/ConfigratorData";
+import { doorsPositionMap, shelfCountsAccHeight } from "../../assets/data/ConfigratorData";
 const DrawerChangePosition = ({ selected }) => {
   const dispatch = useDispatch();
 
@@ -58,6 +58,7 @@ const DrawerChangePosition = ({ selected }) => {
           shelves[selected.shelfkey]?.drawer?.position?.top
         );
         const prevTop = parseFloat(shelves[topLeft?.prevKey]?.position?.top);
+        
         let newPostion = type.includes("top")
           ? currentPostion - 1.25
           : currentPostion + 1.25;
