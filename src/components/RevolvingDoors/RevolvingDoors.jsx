@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   addRevolvingDoor,
-  removeDeletedDoor,
   setisRevolvingDoorHighlighted,
   setOpenModal,
   setProductInfoModalContent,
@@ -21,113 +20,10 @@ const RevolvingDoors = () => {
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const dimension = useSelector((state) => state.shelfDetail.racks);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
-  const deletedRevDoors = useSelector((state) => state.shelfDetail.deletedRevDoors);
-
-  const [isModalOpen,setIsModalOpen] = useState(false);
-  const [contWithout,setContWithout] = useState(false);
-
-
-  // const getDoorPosition50 = (input) =>{
-  //   return  (0.5 * input) - 25
-  // }
-
-  // const getDoorPosition100 = (input) =>{
-  //   return  (0.5 * input) - 50
-  // }
-
-  // const handleCardClick = (id) => {
-  //   console.log("IIDD",id)
-  //   let height = "";
-  //   let position = "";
-  //   const sectionId = selectedSectionKey;
-  //   const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
-  //   console.log("REVOLING DOOR -->", JSON.stringify(revolvingDoors))
-  //   const nextDoorIndex = Object.keys(revolvingDoors).length + 1;
-  //   const doorKey = `door_${nextDoorIndex}`;
-
-  //   if(id.split('_')[3] == 50){
-  //     height = Object.keys(revolvingDoors).length > 0 ? sections[sectionId].height - Object.keys(revolvingDoors).length * 50 : sections[sectionId].height;
-  //     position = getDoorPosition50(height);
-  //   }
-  //   else if(id.split('_')[3] == 100){
-  //     height = Object.keys(revolvingDoors).length > 0 ? sections[sectionId].height - Object.keys(revolvingDoors).length * 100 : sections[sectionId].height;
-  //     position = getDoorPosition100(height);
-  //   }
-
-  //   // - Object.keys(revolvingDoors).length * 50
-  //   if(height  >= 50){
-  //     dispatch(addRevolvingDoor({
-  //       sectionId,
-  //       doorKey,
-  //       type:id,
-  //       position
-  //     }))
-  //     dispatch(setisRevolvingDoorHighlighted({
-  //       id:doorKey,
-  //       position
-  //     }))
-  //   }else{
-  //     alert(`no more doors can be added to this section`)
-  //   }
-
-  // };
-
-  // const getDoorPosition50 = (input) =>{
-  //   return  (0.5 * input) - 25
-  // }
-
-  // const getDoorPosition100 = (input) =>{
-  //   return  (0.5 * input) - 50
-  // }
-
-  // const handleCardClick = (id) => {
-  //   let height = "";
-  //   let position = "";
-  //   const sectionId = selectedSectionKey;
-  //   const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
-  //   const nextDoorIndex = Object.keys(revolvingDoors).length + 1;
-  //   const doorKey = `door_${nextDoorIndex}`;
-
-  //   // Calculate total used height by checking each door's actual height
-  //   let usedHeight = 0;
-  //   Object.keys(revolvingDoors).forEach(key => {
-  //     const doorType = revolvingDoors[key].type;
-  //     const doorHeight = parseInt(doorType.split('_')[3]);
-  //     usedHeight += doorHeight;
-  //   });
-
-  //   // Get the current door height
-  //   const doorHeight = parseInt(id.split('_')[3]);
-
-  //   // Calculate remaining height
-  //   const remainingHeight = sections[sectionId].height - usedHeight;
-
-  //   if(remainingHeight >= doorHeight){
-  //     if(doorHeight == 50){
-  //       height = sections[sectionId].height - usedHeight;
-  //       position = getDoorPosition50(height);
-  //     }
-  //     else if(doorHeight == 100){
-  //       height = sections[sectionId].height - usedHeight;
-  //       position = getDoorPosition100(height);
-  //     }
-
-  //     dispatch(addRevolvingDoor({
-  //       sectionId,
-  //       doorKey,
-  //       type:id,
-  //       position
-  //     }))
-  //     dispatch(setisRevolvingDoorHighlighted({
-  //       id:doorKey,
-  //       position
-  //     }))
-  //   }else{
-  //     alert(`no more doors can be added to this section`)
-  //   }
-  // };
-
+  const revolvingDoorsAll = useSelector(
+    (state) =>
+      state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
+  );
   const getDoorPosition50 = (input) => {
     return 0.5 * input - 25;
   };
@@ -135,102 +31,6 @@ const RevolvingDoors = () => {
   const getDoorPosition100 = (input) => {
     return 0.5 * input - 50;
   };
-
-  // const handleCardClick = (id) => {
-  //   let height = "";
-  //   let position = "";
-  //   const sectionId = selectedSectionKey;
-  //   const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
-
-  //   // Find gaps in door indices (deleted doors)
-  //   const existingIndices = Object.keys(revolvingDoors)
-  //     .map(key => parseInt(key.split('_')[1]))
-  //     .sort((a, b) => a - b);
-
-  //   // Find the first missing index or use next available
-  //   let nextDoorIndex = 1;
-  //   while (existingIndices.includes(nextDoorIndex)) {
-  //     nextDoorIndex++;
-  //   }
-  //   const doorKey = `door_${nextDoorIndex}`;
-
-  //   // Calculate total used height by checking each door's actual height
-  //   let usedHeight = 0;
-  //   Object.keys(revolvingDoors).forEach(key => {
-  //     const doorType = revolvingDoors[key].type;
-  //     const doorHeight = parseInt(doorType.split('_')[3]);
-  //     usedHeight += doorHeight;
-  //   });
-
-  //   // Get the current door height
-  //   const doorHeight = parseInt(id.split('_')[3]);
-
-  //   // Calculate remaining height
-  //   const remainingHeight = sections[sectionId].height - usedHeight;
-
-  //   if(remainingHeight >= doorHeight){
-  //     // Check if we're filling a deleted position
-  //     if (nextDoorIndex <= existingIndices.length) {
-  //       // We're filling a gap - find where the deleted door was
-
-  //       // Get positions of existing doors to better place the new door
-  //       const doorPositionsArray = [];
-  //       Object.keys(revolvingDoors).forEach(key => {
-  //         doorPositionsArray.push({
-  //           index: parseInt(key.split('_')[1]),
-  //           position: revolvingDoors[key].position
-  //         });
-  //       });
-
-  //       // Sort by position
-  //       doorPositionsArray.sort((a, b) => a.position - b.position);
-
-  //       if (nextDoorIndex === 1) {
-  //         // First door was deleted
-  //         position = sections[sectionId].height / 3;
-  //       } else if (nextDoorIndex > existingIndices[existingIndices.length - 1]) {
-  //         // Last door was deleted
-  //         position = (sections[sectionId].height * 2) / 3;
-  //       } else {
-  //         // Middle door was deleted - find the doors before and after
-  //         let beforePosition = 0;
-  //         let afterPosition = sections[sectionId].height;
-
-  //         for (const door of doorPositionsArray) {
-  //           if (door.index < nextDoorIndex) {
-  //             beforePosition = Math.max(beforePosition, door.position);
-  //           } else if (door.index > nextDoorIndex) {
-  //             afterPosition = Math.min(afterPosition, door.position);
-  //           }
-  //         }
-
-  //         // Place in the middle between the two surrounding doors
-  //         position = (beforePosition + afterPosition) / 2;
-  //       }
-  //     } else if(doorHeight == 50){
-  //       height = sections[sectionId].height - usedHeight;
-  //       position = getDoorPosition50(height);
-  //     }
-  //     else if(doorHeight == 100){
-  //       height = sections[sectionId].height - usedHeight;
-  //       position = getDoorPosition100(height);
-  //     }
-
-  //     dispatch(addRevolvingDoor({
-  //       sectionId,
-  //       doorKey,
-  //       type:id,
-  //       position
-  //     }))
-  //     dispatch(setisRevolvingDoorHighlighted({
-  //       id:doorKey,
-  //       position
-  //     }))
-  //   }else{
-  //     alert(`no more doors can be added to this section`)
-  //   }
-  // };
-
 
   const handleCardClick = (id) => {
 
@@ -240,60 +40,137 @@ const RevolvingDoors = () => {
     let position = "";
     const sectionId = selectedSectionKey;
     const revolvingDoors = sections[sectionId]?.revolvingDoor || {};
-    const deletedDoors = deletedRevDoors[sectionId] || {};
-    const doorHeight = parseInt(id.split('_')[3]);
-  
-    // Calculate used height
+    const doorHeight = parseInt(id.split("_")[3]);
     let usedHeight = 0;
-    Object.keys(revolvingDoors).forEach(key => {
-      const existingHeight = parseInt(revolvingDoors[key].type.split('_')[3]);
+    Object.keys(revolvingDoors).forEach((key) => {
+      const existingHeight = parseInt(revolvingDoors[key].type.split("_")[3]);
       usedHeight += existingHeight;
     });
-  
+
     const remainingHeight = sections[sectionId].height - usedHeight;
-  
+
     if (remainingHeight >= doorHeight) {
-      // Try to reuse deleted door positions
-      const reusableKey = Object.keys(deletedDoors).find(key => {
-        const { position, height } = deletedDoors[key];
-        return height >= doorHeight;
-      });
-  
       let doorKey;
-      if (reusableKey) {
-        // Reuse deleted door
-        position = deletedDoors[reusableKey].position;
-        doorKey = reusableKey;
-  
-        dispatch(removeDeletedDoor({ sectionId, doorKey }));
-      } else {
-        // No deleted door to reuse, create a new one
-        const existingIndices = Object.keys(revolvingDoors)
-          .map(key => parseInt(key.split('_')[1]))
-          .sort((a, b) => a - b);
-  
-        let nextIndex = 1;
-        while (existingIndices.includes(nextIndex)) {
-          nextIndex++;
-        }
-        doorKey = `door_${nextIndex}`;
-  
-        // Default positioning
-        const heightLeft = sections[sectionId].height - usedHeight;
-        position = doorHeight === 50 ? getDoorPosition50(heightLeft) : getDoorPosition100(heightLeft);
+      const existingIndices = Object.keys(revolvingDoors)
+        .map((key) => parseInt(key.split("_")[1]))
+        .sort((a, b) => a - b);
+
+      let nextIndex = 1;
+      while (existingIndices.includes(nextIndex)) {
+        nextIndex++;
       }
-  
-      dispatch(addRevolvingDoor({
-        sectionId,
-        doorKey,
-        type: id,
-        position
-      }));
-  
-      dispatch(setisRevolvingDoorHighlighted({
-        id: doorKey,
-        position
-      }));
+      doorKey = `door_${nextIndex}`;
+      const heightLeft = sections[sectionId].height - usedHeight;
+      position =
+        doorHeight === 50
+          ? getDoorPosition50(heightLeft)
+          : getDoorPosition100(heightLeft);
+      const revolvingDoorsKeys =
+        revolvingDoorsAll &&
+        Object.keys(revolvingDoorsAll).map((item) => {
+          return {
+            key: item,
+            type: revolvingDoorsAll[item]?.type,
+            position: revolvingDoorsAll[item]?.position,
+          };
+        });
+
+      const spaces =
+        revolvingDoorsKeys &&
+        revolvingDoorsKeys
+          .sort((a, b) => a.position - b?.position)
+          ?.map((item, index, arr) => {
+            const typePrev = arr[index - 1]?.type?.includes("50") ? 25 : 50;
+            const typeNext = arr[index + 1]?.type?.includes("50") ? 25 : 50;
+            arr[index - 1]?.type;
+            const prevPos = arr[index - 1]?.position + typePrev || typePrev;
+            const nextPos =
+              arr[index + 1]?.position || sections[sectionId].height / 2;
+            const obj = {};
+            if (prevPos < item?.position) {
+              obj.prev = {
+                type: prevPos < item?.position ? "prev" : "next",
+                item: item?.key,
+                position: item?.position,
+                space: item?.position - prevPos,
+              };
+            }
+            if (nextPos) {
+              obj.next = {
+                type: "next",
+                item: item?.key,
+                position: item?.position + typeNext,
+                space: nextPos - (item?.position + typeNext),
+              };
+            }
+            return obj;
+          });
+      if (spaces) {
+        const getNext = spaces
+          .filter((item) => item?.next && item.next.space > 0)
+          .map((item) => item.next);
+
+        const maxNext = getNext.reduce((max, curr) => {
+          return !max || curr.position > max.position ? curr : max;
+        }, null);
+        const getPrev = spaces
+          .filter((item) => item?.prev && item.prev.space > 0)
+          .map((item) => item.prev);
+
+        const maxPrev = getPrev.reduce((max, curr) => {
+          return !max || curr.position > max.position ? curr : max;
+        }, null);
+
+        const spaceUnit = id?.includes("50") ? 1 : 2;
+
+        if (maxPrev && (spaceUnit !== 2 || maxPrev.space >= 50)) {
+          position = maxPrev.position - (spaceUnit === 2 ? 50 : 25);
+        }
+        if (
+          maxNext &&
+          maxNext.space >= (maxPrev?.space ?? 0) &&
+          (spaceUnit !== 2 || maxNext.space >= 50)
+        ) {
+          position = maxNext.position;
+        }
+        if (maxNext?.space < 50 && maxPrev?.space < 50 && spaceUnit == 2) {
+          alert("No more doors can be added to this section");
+        } else {
+          dispatch(
+            addRevolvingDoor({
+              sectionId,
+              doorKey,
+              type: id,
+              position,
+            })
+          );
+
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: doorKey,
+              type: id,
+              position,
+            })
+          );
+        }
+      } else {
+        dispatch(
+          addRevolvingDoor({
+            sectionId,
+            doorKey,
+            type: id,
+            position,
+          })
+        );
+
+        dispatch(
+          setisRevolvingDoorHighlighted({
+            id: doorKey,
+            type: id,
+            position,
+          })
+        );
+      }
     } else {
       alert("No more doors can be added to this section");
     }
