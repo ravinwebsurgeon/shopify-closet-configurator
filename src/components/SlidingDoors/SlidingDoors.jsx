@@ -41,9 +41,8 @@ const SlidingDoors = () => {
                   openModal={() => openModal(data)}
                   price={getComponentPrice({
                     material: color,
-                    component: "backwall",
+                    component: "sliding_door",
                     subtype: data.id,
-                    height: dimension.sections[selectedSectionKey].height,
                     width: dimension.sections[selectedSectionKey].width,
                   })}
                   productInfo={data?.productInformation}
