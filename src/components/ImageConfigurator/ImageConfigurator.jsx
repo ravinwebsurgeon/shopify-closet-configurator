@@ -9,6 +9,7 @@ import {
   setDrawerHighlighted,
   setEditingBackwall,
   setEditingSides,
+  setHideDoor,
 } from "../../slices/shelfDetailSlice";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
@@ -26,6 +27,8 @@ import SectionInterface from "./SectionInterface";
 import CompartmentViewer from "../Compartments/CompartmentViewer";
 import DrawersButton from "../Drawers/DrawersButton";
 import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -76,6 +79,8 @@ const ImageConfigurator = () => {
   const isEdtingWall = useSelector(
     (state) => state.shelfDetail.racks.isEditingBackwall
   );
+
+  const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -260,7 +265,11 @@ const ImageConfigurator = () => {
               Add Section
             </button>
           </div>
-          <div className="hidedoors-div">Hide doors</div>
+          <div className=" hidden flex items-center gap-4 justify-center w-[30%] cursor-pointer select-none 
+            text-[12px] font-inter text-[#0665C5]" onClick={()=>dispatch(setHideDoor(!hideDoor))}>
+            {!hideDoor ? (<><FontAwesomeIcon icon={faEyeSlash}/><p>Verberg deuren</p></>) :
+            (<><FontAwesomeIcon icon={faEye}/><p>Toon deuren</p></>)}
+          </div>
         </div>
         <div className="demo-config" id="shelf-capture-area">
           <div className="main-wrapper__ relative">

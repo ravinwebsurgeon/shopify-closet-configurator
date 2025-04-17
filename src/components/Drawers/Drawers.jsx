@@ -44,13 +44,12 @@ const Drawers = () => {
             dimention={`${dimension.sections[selectedSectionKey].width - 2} x ${
               dimension.depth
             } cm`}
-            image={`/drawers/Lades-Metaal-Zilver-${dimension.sections[selectedSectionKey].width}.png`}
+            image={color=="black"?`/drawers/drawer-metal-black-${dimension.sections[selectedSectionKey].width}.png`:`/drawers/Lades-Metaal-Zilver-${dimension.sections[selectedSectionKey].width}.png`}
             itemAction={() => handleCardClick("lade_met_dragers")}
             openModal={() => openModal()}
             price={getComponentPrice({
               material: color,
-              component: "backwall",
-              subtype: "lade_met_dragers",
+              component: "drawer",
               depth: dimension.depth,
               width: dimension.sections[selectedSectionKey].width,
             })}

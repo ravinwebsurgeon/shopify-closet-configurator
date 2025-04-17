@@ -15,8 +15,9 @@ const initialState = {
   selectedSideWall: "",
   selectedBackwall: "",
   racks: {},
-  deletedRevDoors: {},
-};
+  deletedRevDoors : {},
+  hideDoor : false
+,};
 
 const executionObject = {
   color: "metal",
@@ -552,6 +553,9 @@ const shelfDetailSlice = createSlice({
         delete state.deletedRevDoors[sectionId][doorKey];
       }
     },
+    setHideDoor:(state,action) =>{
+      state.hideDoor = action.payload; 
+    }
   },
 });
 
@@ -595,6 +599,7 @@ export const {
   removeRevolvingDoor,
   storeDeletedRevDoor,
   removeDeletedDoor,
+  setHideDoor,
 } = shelfDetailSlice.actions;
 
 // export default reducer
