@@ -5,6 +5,8 @@ import DeleteAndConfirm from "../../DeleteAndConfirm/DeleteAndConfirm";
 import CompartmentDelete from "../../Compartments/CompartmentDelete";
 import { useSelector } from "react-redux";
 import DrawersDelete from "../../Drawers/DrawersDelete";
+import RevolvingDoorDelete from "../../RevolvingDoors/RevolvingDoorDelete";
+import RevolvingDoorSetShelves from "../../RevolvingDoors/RevolvingDoorSetShelves";
 
 const SidePoll = ({
   isShelfSelected,
@@ -20,6 +22,10 @@ const SidePoll = ({
   const highlightedDrawer = useSelector(
     (state) => state.shelfDetail.highlightedDrawer
   );
+  const isRevolvingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isRevolvingDoorHighlighted
+  );
+
   return (
     <div>
       {isCompartmentHighlighted && sectionKey == selectedSection && (
@@ -31,6 +37,15 @@ const SidePoll = ({
       )}
       {highlightedDrawer?.shelfkey && sectionKey == selectedSection && (
         <DrawersDelete section={section} sectionKey={sectionKey} />
+      )}
+      {isRevolvingDoorHighlighted && sectionKey == selectedSection && (
+        <RevolvingDoorDelete
+          section={section}
+          door={isRevolvingDoorHighlighted}
+        />
+      )}
+      {!isRevolvingDoorHighlighted && sectionKey == selectedSection && (
+        <RevolvingDoorSetShelves section={section} />
       )}
       {isShelfSelected?.key != "" && sectionKey == selectedSection ? (
         <div

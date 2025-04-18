@@ -9,6 +9,7 @@ import {
   setDrawerHighlighted,
   setEditingBackwall,
   setEditingSides,
+  setHideDoor,
 } from "../../slices/shelfDetailSlice";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
 import EditingSides from "../ConfigurationTabSubComponents/SidesComponent/EditingSides";
@@ -25,6 +26,10 @@ import WardrobeRods from "../WardrobeRods/WardrobeRods";
 import SectionInterface from "./SectionInterface";
 import CompartmentViewer from "../Compartments/CompartmentViewer";
 import DrawersButton from "../Drawers/DrawersButton";
+import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import CompartmentsButton from "../Compartments/CompartmentsButton";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -75,6 +80,9 @@ const ImageConfigurator = () => {
   const isEdtingWall = useSelector(
     (state) => state.shelfDetail.racks.isEditingBackwall
   );
+
+  const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
+  
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -172,6 +180,8 @@ const ImageConfigurator = () => {
         setBackWallSelectedSection("");
         dispatch(setCompartmentHighlighted(""));
         dispatch(setDrawerHighlighted(""));
+        dispatch(setHideDoor(false));
+       
       }
     };
 
@@ -208,6 +218,9 @@ const ImageConfigurator = () => {
     setSelectedShelf(value);
     handleSectionClick(e, sectionkey);
     setTopPosition(position);
+    dispatch(setHideDoor(true));
+    
+    
   };
   const sectionItems = Object.keys(sections);
   const maxHeight = sectionItems
@@ -259,7 +272,23 @@ const ImageConfigurator = () => {
               Add Section
             </button>
           </div>
-          <div className="hidedoors-div">Hide doors</div>
+          <div
+            className=" hidden flex items-center gap-4 justify-center w-[30%] cursor-pointer select-none 
+            text-[12px] font-inter text-[#0665C5]"
+            onClick={() => dispatch(setHideDoor(!hideDoor))}
+          >
+            {!hideDoor ? (
+              <>
+                <FontAwesomeIcon icon={faEyeSlash} />
+                <p>Verberg deuren</p>
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faEye} />
+                <p>Toon deuren</p>
+              </>
+            )}
+          </div>
         </div>
         <div className="demo-config" id="shelf-capture-area">
           <div className="main-wrapper__ relative">
@@ -428,7 +457,7 @@ const ImageConfigurator = () => {
                                         !shelfkey.includes("drawer_") && (
                                           <div
                                             className={`Legbord_Legbord__Outer`}
-                                            data-shelfkey={shelfkey}
+                                            data-key={shelfkey}
                                             data-type="shelve"
                                             style={{
                                               zIndex: arr.length - index,
@@ -437,16 +466,18 @@ const ImageConfigurator = () => {
                                           >
                                             <button
                                               className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
-                      ${
-                        executionValues.color === "black"
-                          ? "Legbord_black"
-                          : "Legbord_metal"
-                      } Legbord_clickable__uTn2b ${
-                                                selectedShelf ===
-                                                `${sectionKey}-${shelfkey}`
-                                                  ? "Legboard_isHighlighted"
-                                                  : ""
-                                              }`}
+                                                        ${
+                                                          executionValues.color ===
+                                                          "black"
+                                                            ? "Legbord_black"
+                                                            : "Legbord_metal"
+                                                        } Legbord_clickable__uTn2b
+                                                        ${
+                                                          selectedShelf ===
+                                                          `${sectionKey}-${shelfkey}`
+                                                            ? "Legboard_isHighlighted"
+                                                            : ""
+                                                        }`}
                                               key={shelfkey}
                                               onClick={(e) =>
                                                 handleSelectedShelfClick(
@@ -457,6 +488,8 @@ const ImageConfigurator = () => {
                                                   `${shelf.position.top}`
                                                 )
                                               }
+                                              compartments={shelf?.compartments}
+                                              type="compartment_divider_set"
                                             >
                                               <div className="Legbord_inner__eOg0b">
                                                 <div className="Legbord_left__ERgV5"></div>
@@ -467,6 +500,20 @@ const ImageConfigurator = () => {
                                           </div>
                                         )}
                                     </React.Fragment>
+                                  );
+                                }
+                              )}
+                            {section?.revolvingDoor &&
+                              Object.entries(section.revolvingDoor).map(
+                                ([key, door], index) => {
+                                  return (
+                                    <RevolvingDoor
+                                      doorKey={key}
+                                      type={door.type}
+                                      position={door.position}
+                                      width={section.width}
+                                      section={sectionKey}
+                                    />
                                   );
                                 }
                               )}

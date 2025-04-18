@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  deleteShelf,
+  removeRevolvingDoor,
+  removeSectionDoors,
   setConfiguration,
   updateBackwall,
   updateLastShelvePostion,
@@ -8,6 +11,7 @@ import {
   updateSideWall,
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
+import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 
 const DimensionsComponent = () => {
   const dispatch = useDispatch();
@@ -18,6 +22,7 @@ const DimensionsComponent = () => {
   );
   const activeSection = sections[activeSectionId];
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
+  const revDoor = activeSection.revolvingDoor;
 
   // Predefined values for each dimension
   const dimensionOptions = {
@@ -71,12 +76,38 @@ const DimensionsComponent = () => {
     return positions;
   };
 
+  const shelves = activeSection?.shelves;
+  const shelvesKeys = Object.keys(shelves) || [];
   const handleDimensionChange = (dimension, value) => {
     const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
     const isRightSidewall = sections[activeSectionId].sideWall["right"].isRight;
     const isBackwall = sections[activeSectionId].backWall.type;
     const backWall = sections[activeSectionId].backWall;
 
+    if (dimension == "height") {
+      const items = [];
+      shelvesKeys.map((item) => {
+        const top = parseFloat(
+          shelves[item]?.drawer?.position?.top ||
+            shelves[item]?.compartments?.position?.top ||
+            shelves[item]?.position?.top
+        );
+        items.push({
+          key: item,
+          top: top,
+        });
+      });
+      items.map((item, index) => {
+        if (index === items?.length - 1) return null;
+        const maxTop = parseFloat(shelfCountsAccHeight[value]?.maxTop);
+        if (item?.top > maxTop && items?.length >= 3) {
+          console.log(item?.top, maxTop);
+          dispatch(
+            deleteShelf({ sectionId: activeSectionId, shelfId: item?.key })
+          );
+        }
+      });
+    }
     // checking if active section is having left ,right
     if (isLeftSidewall || isRightSidewall) {
       //checking weather there are multiple sections
@@ -186,8 +217,9 @@ const DimensionsComponent = () => {
       }
     }
 
-    if(isBackwall  && dimension == "height" && backWall.height > value){
-        dispatch(updateBackwall({
+    if (isBackwall && dimension == "height" && backWall.height > value) {
+      dispatch(
+        updateBackwall({
           sectionId: activeSectionId,
           type: sections[activeSectionId].backWall.type,
           height: value,
@@ -201,9 +233,52 @@ const DimensionsComponent = () => {
         type: "",
         height: "",
       }))
-  }
+    }
 
+    // delete revolving door from the selected section when width > 100
+    if(dimension == "width" && value > 100 && revDoor && Object.keys(revDoor).length>0){
+      dispatch(removeSectionDoors({sectionId:activeSectionId}))
+    }
+    // delete revolving door according to the height change (if doors exixts) 
+    if (dimension === "height" && revDoor && Object.keys(revDoor).length > 0) {
+      const oldHeight = activeSection.height;
+      const newHeight = value;
+      let usedHeight = 0;
+      let space = 0;
+    
+      const doorList = Object.entries(revDoor).map(([key, door]) => {
+        const height = parseInt(door.type.split('_')[3]);
+        usedHeight += height;
+        return { key, ...door, height };
+      });
+    
+      if (oldHeight > usedHeight) {
+        space = oldHeight - usedHeight;
+      }
+    
+      const sortedByPosition = doorList.sort((a, b) => b.position - a.position);
+      let currentHeight = usedHeight;
+    
+      for (let i = 0; i < sortedByPosition.length; i++) {
+        const door = sortedByPosition[i];
+    
+        const isOverflowing = door.position + door.height > newHeight/2;
+        
+          if(newHeight < usedHeight){
+          if (isOverflowing || currentHeight > newHeight) {
+            dispatch(removeRevolvingDoor({
+              sectionId: activeSectionId,
+              doorKey: door.key
+            }));
 
+            currentHeight -= door.height;
+      
+            if (currentHeight <= newHeight) break;
+          }
+        }
+      }
+    }
+    
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };

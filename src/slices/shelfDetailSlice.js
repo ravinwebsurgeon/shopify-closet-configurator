@@ -15,6 +15,8 @@ const initialState = {
   selectedSideWall: "",
   selectedBackwall: "",
   racks: {},
+  deletedRevDoors: {},
+  hideDoor: false,
 };
 
 const executionObject = {
@@ -434,8 +436,53 @@ const shelfDetailSlice = createSlice({
 
       state.racks.sections[sectionId].shelves = updatedShelves;
     },
+    updateDrawerPosition: (state, action) => {
+      const { sectionId, shelfKey, top, jump } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+      if (shelves && shelves[shelfKey] && shelves[shelfKey].drawer) {
+        shelves[shelfKey].drawer.position.top = top + "em";
+      }
+      if (jump) {
+        const newArray = [];
+        shelfKeys.map((item) => {
+          const top =
+            shelves[item]?.drawer?.position.top ||
+            shelves[item]?.compartments?.position?.top ||
+            shelves[item].position.top;
+          newArray.push({
+            item: { ...shelves[item] },
+            top: parseFloat(top),
+          });
+        });
+        let current = { shelfKey: shelfKey, top: top };
+        const sortedArray = newArray.sort((a, b) => a.top - b.top);
+        sortedArray.map((item, index) => {
+          console.log(item);
+          let key = `shelves_${index + 1}`;
+          if (item?.item?.drawer) {
+            key = `drawer_${index + 1}`;
+          }
+          if (item?.item?.compartments) {
+            key = `compartment_${index + 1}`;
+          }
+          if (item?.top == top) {
+            if (current) {
+              current.shelfKey = key;
+            }
+          }
+          updatedShelves[key] = item?.item;
+        });
+        state.racks.sections[sectionId].shelves = updatedShelves;
+        state.highlightedDrawer = {
+          shelfkey: current.shelfKey,
+          top: current.top,
+        };        
+      }
+    },
     removeDrawer: (state, action) => {
-      const { sectionId, shelfKey, drawer } = action.payload;
+      const { sectionId, shelfKey } = action.payload;
       const shelves = state.racks.sections?.[sectionId]?.shelves;
       delete shelves[shelfKey];
     },
@@ -447,6 +494,88 @@ const shelfDetailSlice = createSlice({
     },
     setOpenModal: (state, action) => {
       state.isModalOpen = action.payload;
+    },
+    setWardrobeRod: (state, action) => {
+      const { sectionId, shelfKey, position } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves).sort((a, b) => {
+        return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+      });
+
+      if (shelfKeys.includes(shelfKey)) {
+        shelves[shelfKey] = {
+          ...shelves[shelfKey],
+          wardrobeRod: {
+            position,
+          },
+        };
+      }
+    },
+    addRevolvingDoor: (state, action) => {
+      const { sectionId, doorKey, type, position, height } = action.payload;
+
+      if (!state.racks.sections[sectionId]) return;
+
+      if (!state.racks.sections[sectionId].revolvingDoor) {
+        state.racks.sections[sectionId].revolvingDoor = {};
+      }
+
+      state.racks.sections[sectionId].revolvingDoor[doorKey] = {
+        type,
+        position,
+        height,
+      };
+    },
+    updateRevolvingDoor: (state, action) => {
+      const { sectionId, doorKey, position } = action.payload;
+
+      if (!state.racks.sections[sectionId]) return;
+
+      if (!state.racks.sections[sectionId].revolvingDoor) {
+        state.racks.sections[sectionId].revolvingDoor = {};
+      }
+
+      if (state.racks.sections[sectionId].revolvingDoor[doorKey]) {
+        state.racks.sections[sectionId].revolvingDoor[doorKey].position =
+          position;
+      }
+    },
+    removeRevolvingDoor: (state, action) => {
+      const { sectionId, doorKey } = action.payload;
+
+      if (
+        state.racks.sections[sectionId] &&
+        state.racks.sections[sectionId].revolvingDoor &&
+        state.racks.sections[sectionId].revolvingDoor[doorKey]
+      ) {
+        delete state.racks.sections[sectionId].revolvingDoor[doorKey];
+      }
+    },
+    setisRevolvingDoorHighlighted: (state, action) => {
+      state.isRevolvingDoorHighlighted = action.payload;
+    },
+    storeDeletedRevDoor: (state, action) => {
+      const { sectionId, doorKey, position, height } = action.payload;
+      if (!state.deletedRevDoors[sectionId]) {
+        state.deletedRevDoors[sectionId] = {};
+      }
+      state.deletedRevDoors[sectionId][doorKey] = { position, height };
+    },
+    removeDeletedDoor: (state, action) => {
+      const { sectionId, doorKey } = action.payload;
+      if (state.deletedRevDoors[sectionId]) {
+        delete state.deletedRevDoors[sectionId][doorKey];
+      }
+    },
+    setHideDoor:(state,action) =>{
+      state.hideDoor = action.payload; 
+    },
+    removeSectionDoors:(state,action) =>{
+      const {sectionId} = action.payload;
+      const section = state.racks.sections[sectionId];
+      if (section?.revolvingDoor && Object.keys(section.revolvingDoor).length > 0) {
+        section.revolvingDoor = {};
+      }
     },
   },
 });
@@ -484,6 +613,16 @@ export const {
   addDrawer,
   setDrawerHighlighted,
   removeDrawer,
+  updateDrawerPosition,
+  setWardrobeRod,
+  addRevolvingDoor,
+  setisRevolvingDoorHighlighted,
+  removeRevolvingDoor,
+  storeDeletedRevDoor,
+  removeDeletedDoor,
+  setHideDoor,
+  updateRevolvingDoor,
+  removeSectionDoors,
 } = shelfDetailSlice.actions;
 
 // export default reducer

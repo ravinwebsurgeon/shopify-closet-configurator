@@ -3,9 +3,6 @@ import shelfDetailReducer from '../slices/shelfDetailSlice'
 
 export const store = configureStore({
     reducer: {
-      
-    //   clientDetails: clientDetailsReducer,
     shelfDetail : shelfDetailReducer
-      
     }
   });

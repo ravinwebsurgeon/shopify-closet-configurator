@@ -40,6 +40,7 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
     bottomLeft: { active: false },
     bottomRight: { active: false },
   });
+  
   const activeDeactiveBtns = () => {
     const topPosition = parseFloat(getCurrentShelvePosition?.top);
     const maxBottom = getBottomShelfPostionMax;

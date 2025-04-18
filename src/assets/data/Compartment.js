@@ -2,6 +2,7 @@ export const compartmentData = [
   {
     id: "compartment_divider_set",
     image: "/compartment/vakverdeelset-metal-medium.png",
+    black_image:"/compartment/compartment-divider-set-black.png",
     title: "Compartment divider set",
     dimention: "98x30 cm",
     price: 46.11,
@@ -14,6 +15,7 @@ export const compartmentData = [
   {
     id: "sliding_partition",
     image: "/compartment/schuifschot-metal.png",
+    black_image:"/compartment/sliding-partition-black.png",
     title: "Sliding screen 20cm high",
     dimention: "30 cm",
     price: 8.69,
@@ -27,7 +29,7 @@ export const compartmentData = [
 
 export const revolvingDoors = [
   {
-    id: "door_set_oak_natural_50cm_high",
+    id: "door_set_oak_50",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-50x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-50x70.png",
@@ -43,7 +45,7 @@ export const revolvingDoors = [
     },
   },
   {
-    id: "door_set_oak_natural_100cm_high",
+    id: "door_set_oak_100",
     image: {
       55: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-100x55.png",
       70: "/revolving-doors/ProductImage-Draaideur-Hout-Eiken-100x70.png",
@@ -60,38 +62,46 @@ export const revolvingDoors = [
     },
   },
   {
-    id: "door_set_white_50cm_high",
+    id: "door_set_white_50",
     image: {
-      55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x55.png",
-      70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x70.png",
-      85: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x85.png",
-      100: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x100.png",
-    },
+      55: "/revolving-doors/ProductImage-Draaideur-Wit-50x55.png",
+      70: "/revolving-doors/ProductImage-Draaideur-Wit-50x70.png",
+      85: "/revolving-doors/ProductImage-Draaideur-Wit-50x85.png",
+      100: "/revolving-doors/ProductImage-Draaideur-Wit-50x100.png",
+    }
+    ,
     title: "Deurenset Wit 50cm hoog",
     dimention: "98x30 cm",
     price: 8.69,
     productInformation: false,
   },
   {
-    id: "door_set_white_100cm_high",
+    id: "door_set_white_100",
     image: {
-      55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x55.png",
-      70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x70.png",
-      85: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x85.png",
-      100: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x100.png",
-    },
+      55: "/revolving-doors/ProductImage-Draaideur-Wit-100x55.png",
+      70: "/revolving-doors/ProductImage-Draaideur-Wit-100x70.png",
+      85: "/revolving-doors/ProductImage-Draaideur-Wit-100x85.png",
+      100: "/revolving-doors/ProductImage-Draaideur-Wit-100x100.png",
+    }
+   ,
     title: "Deurenset Wit 100cm hoog",
     dimention: "98x30 cm",
     price: 8.69,
     productInformation: false,
   },
   {
-    id: "door_set_metal_50cm_high",
+    id: "door_set_metal_50",
     image: {
-      55: "/revolving-doors/ProductImage-Draaideur-Wit-50x55.png",
-      70: "/revolving-doors/ProductImage-Draaideur-Wit-50x70.png",
-      85: "/revolving-doors/ProductImage-Draaideur-Wit-50x85.png",
-      100: "/revolving-doors/ProductImage-Draaideur-Wit-50x100.png",
+      55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x55.png",
+      70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x70.png",
+      85: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x85.png",
+      100: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-50x100.png",
+    },
+    black_image:{
+      55:"/revolving-doors/doorset-metal-black-50x55.png",
+      70:"/revolving-doors/doorset-metal-black-50x70.png",
+      85:"/revolving-doors/doorset-metal-black-50x85.png",
+      100:"/revolving-doors/doorset-metal-black-50x100.png",
     },
     title: "Deurenset Metaal 50cm hoog",
     dimention: "98x30 cm",
@@ -99,12 +109,18 @@ export const revolvingDoors = [
     productInformation: false,
   },
   {
-    id: "door_set_metal_100cm_high",
+    id: "door_set_metal_100",
     image: {
-      55: "/revolving-doors/ProductImage-Draaideur-Wit-100x55.png",
-      70: "/revolving-doors/ProductImage-Draaideur-Wit-100x70.png",
-      85: "/revolving-doors/ProductImage-Draaideur-Wit-100x85.png",
-      100: "/revolving-doors/ProductImage-Draaideur-Wit-100x100.png",
+      55: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x55.png",
+      70: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x70.png",
+      85: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x85.png",
+      100: "/revolving-doors/ProductImage-Draaideur-Metaal-Zilver-100x100.png",
+    },
+    black_image:{
+      55:"/revolving-doors/doorset-metal-black-100x55.png",
+      70:"/revolving-doors/doorset-metal-black-100x70.png",
+      85:"/revolving-doors/doorset-metal-black-100x85.png",
+      100:"/revolving-doors/doorset-metal-black-100x100.png",
     },
     title: "Deurenset Metaal 100cm hoog",
     dimention: "98x30 cm",
@@ -115,7 +131,7 @@ export const revolvingDoors = [
 
 export const slidingDoors = [
   {
-    id: "sliding_door_set_white_98cm",
+    id: "sliding_door_white",
     image: "/sliding-doors/schuifdeur-wit.png",
     title: "Schuifdeurset Wit glans 98cm",
     dimention: "98x30 cm",
@@ -124,7 +140,7 @@ export const slidingDoors = [
     notActiveWidth:85
   },
   {
-    id: "sliding_door_aluminium_panel",
+    id: "sliding_door_Alu",
     image: "/sliding-doors/schuifdeur-metal.png",
     title: "Schuifdeurset (Alupanel)",
     dimention: "98x30 cm",
@@ -140,7 +156,7 @@ export const slidingDoors = [
     },
   },  
   {
-    id: "sliding_door_black_alupanel",
+    id: "sliding_door_black",
     image: "/sliding-doors/schuifdeur-zwart.png",
     title: "Schuifdeurset Zwart (Alupanel)",
     dimention: "98x30 cm",
@@ -157,7 +173,7 @@ export const slidingDoors = [
     }
   },
   {
-    id: "sliding_door_set_transparent_98cm",
+    id: "sliding_door_transparent",
     image: "/sliding-doors/schuifdeur-wit.png",
     title: "Schuifdeurset Transparant 98cm",
     dimention: "98x30 cm",

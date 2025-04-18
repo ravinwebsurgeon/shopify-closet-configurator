@@ -5,6 +5,7 @@ import "./index.css";
 import "./App.css";
 import { setOpenModal } from "./slices/shelfDetailSlice";
 import Modal from "./components/Shared/Modal/Modal";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function App() {
           closeModal={() => dispatch(setOpenModal(false))}
         />
       )}
+      <ToastContainer/>
     </>
   );
 }
