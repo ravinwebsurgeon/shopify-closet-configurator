@@ -57,7 +57,6 @@ const DrawerChangePosition = ({ selected }) => {
           shelves[selected.shelfkey]?.drawer?.position?.top
         );
         const prevTop = parseFloat(shelves[topLeft?.prevKey]?.position?.top);
-
         let newPostion = type.includes("top")
           ? currentPostion - 1.25
           : currentPostion + 1.25;
@@ -68,7 +67,6 @@ const DrawerChangePosition = ({ selected }) => {
           gapBtwnPrevAndCur = 3.75;
           newPostion = newPostion - topLeft?.space;
         }
-
         if (gapBtwnPrevAndCur >= 3.75) {
           dispatch(
             updateDrawerPosition({
