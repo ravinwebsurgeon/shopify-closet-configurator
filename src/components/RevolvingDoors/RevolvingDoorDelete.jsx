@@ -31,7 +31,7 @@ const RevolvingDoorDelete = ({section,door}) => {
 
   return (
     <DeleteAndConfirm
-      top={`${door.position}em`}
+      top={`${door.position + 12.5}em`}
       onDelete={() => deleteRevDoor({sectionId:selectedSection,doorKey:door?.id})}
       onConfirm={closeRevDoor}
       section={section}

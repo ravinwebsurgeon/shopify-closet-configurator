@@ -265,10 +265,22 @@ const ImageConfigurator = () => {
               Add Section
             </button>
           </div>
-          <div className=" hidden flex items-center gap-4 justify-center w-[30%] cursor-pointer select-none 
-            text-[12px] font-inter text-[#0665C5]" onClick={()=>dispatch(setHideDoor(!hideDoor))}>
-            {!hideDoor ? (<><FontAwesomeIcon icon={faEyeSlash}/><p>Verberg deuren</p></>) :
-            (<><FontAwesomeIcon icon={faEye}/><p>Toon deuren</p></>)}
+          <div
+            className=" hidden flex items-center gap-4 justify-center w-[30%] cursor-pointer select-none 
+            text-[12px] font-inter text-[#0665C5]"
+            onClick={() => dispatch(setHideDoor(!hideDoor))}
+          >
+            {!hideDoor ? (
+              <>
+                <FontAwesomeIcon icon={faEyeSlash} />
+                <p>Verberg deuren</p>
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faEye} />
+                <p>Toon deuren</p>
+              </>
+            )}
           </div>
         </div>
         <div className="demo-config" id="shelf-capture-area">
@@ -467,16 +479,49 @@ const ImageConfigurator = () => {
                                                   `${shelf.position.top}`
                                                 )
                                               }
-                                            >
-                                              <div className="Legbord_inner__eOg0b">
-                                                <div className="Legbord_left__ERgV5"></div>
-                                                <div className="Legbord_middle__D8U0x"></div>
-                                                <div className="Legbord_right__HB8+U"></div>
-                                              </div>
-                                            </button>
+                                              compartments={shelf?.compartments}
+                                              type="compartment_divider_set"
+                                            />
                                           </div>
                                         )}
+                                      {shelf?.compartments?.type ==
+                                        "sliding_partition" &&
+                                        Array.from(
+                                          {
+                                            length: shelf?.compartments?.count,
+                                          },
+                                          (_, i) => i + 1
+                                        ).map((index) => (
+                                          <CompartmentsButton
+                                            shelfkey={shelfkey}
+                                            index={index}
+                                            selectedSection={
+                                              selectedSection === sectionKey
+                                            }
+                                            compartments={shelf?.compartments}
+                                            type="sliding_partition"
+                                          />
+                                        ))}
+                                      <div className="Legbord_inner__eOg0b">
+                                        <div className="Legbord_left__ERgV5"></div>
+                                        <div className="Legbord_middle__D8U0x"></div>
+                                        <div className="Legbord_right__HB8+U"></div>
+                                      </div>
                                     </React.Fragment>
+                                  );
+                                }
+                              )}
+                            {section?.revolvingDoor &&
+                              Object.entries(section.revolvingDoor).map(
+                                ([key, door], index) => {
+                                  return (
+                                    <RevolvingDoor
+                                      doorKey={key}
+                                      type={door.type}
+                                      position={door.position}
+                                      width={section.width}
+                                      section={sectionKey}
+                                    />
                                   );
                                 }
                               )}

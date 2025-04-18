@@ -1,11 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRevolvingDoor } from "../../slices/shelfDetailSlice";
+import {
+  setisRevolvingDoorHighlighted,
+  updateRevolvingDoor,
+} from "../../slices/shelfDetailSlice";
 
-const RevolvingDoorMoveButton = ({ selected }) => {
+const RevolvingDoorMoveButton = () => {
   const dispatch = useDispatch();
-
+  const isRevolvingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isRevolvingDoorHighlighted
+  );
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
 
   const selectedSectionKey = useSelector(
@@ -23,11 +28,14 @@ const RevolvingDoorMoveButton = ({ selected }) => {
   });
   useEffect(() => {
     handlePositionChange();
-  }, [selected]);
+    console.log(isRevolvingDoorHighlighted, revolvingDoorsAll);
+  }, [isRevolvingDoorHighlighted, revolvingDoorsAll]);
   const handlePositionChange = (type) => {
-    if (!selected || !revolvingDoorsAll) return;
-    // console.log(selected);
-    const doorTypeHeight = selected?.type.includes("50") ? 25 : 50;
+    if (!isRevolvingDoorHighlighted || !revolvingDoorsAll) return;
+    // console.log(isRevolvingDoorHighlighted);
+    const doorTypeHeight = isRevolvingDoorHighlighted?.type.includes("50")
+      ? 25
+      : 50;
     const sectionHeight = sections[selectedSectionKey].height;
     const revolvingDoorsKeys = [
       {
@@ -49,12 +57,12 @@ const RevolvingDoorMoveButton = ({ selected }) => {
         height: sectionHeight / 2 + (doorTypeHeight == 50 ? 25 : 25),
       },
     ];
-
+    console.log(revolvingDoorsKeys);
     const sortedDoors = revolvingDoorsKeys.sort(
       (a, b) => a.position - b.position
     );
     const selectedIndex = sortedDoors.findIndex(
-      (item) => item.key === selected?.id
+      (item) => item.key === isRevolvingDoorHighlighted?.id
     );
     if (selectedIndex === -1) return;
     const spaces = sortedDoors
@@ -63,62 +71,225 @@ const RevolvingDoorMoveButton = ({ selected }) => {
         const fromKey = arr[index - 1];
         const fromTop = fromKey?.position + arr[index - 1]?.height;
         const top = item?.position;
-
+        console.log(top, item?.key);
         return {
-          type: top <= selected?.position ? "prev" : "next",
+          type:
+            fromTop <= isRevolvingDoorHighlighted?.position ? "prev" : "next",
           from: fromKey?.key,
           to: item?.key,
+          doorType: item?.type,
           space: top - fromTop,
           shelfTop: top,
         };
       })
       .filter(Boolean);
+
     const filterPrev = spaces
       .filter((item) => item.type === "prev")
       .sort((a, b) => b.shelfTop - a.shelfTop);
-    const filterNext = spaces.filter((item) => item.type === "next");
-    const findPrev = spaces.find(
-      (item) => item.type === "prev" && item?.space > 1
+
+    const filterNext = spaces
+      .filter((item) => item.type === "next")
+      .sort((a, b) => a.shelfTop - b.shelfTop);
+    const findNext = filterNext.find(
+      (item) => item.type === "next" && item?.space > 0
+    );
+    const findPrev = filterPrev.find(
+      (item) => item.type === "prev" && item?.space > 0
+    );
+    const findACPrev = filterPrev.find(
+      (item) =>
+        item.type === "prev" && item?.to == isRevolvingDoorHighlighted?.id
+    );
+    const findACNext = filterNext.find(
+      (item) =>
+        item.type === "next" && item?.from == isRevolvingDoorHighlighted?.id
     );
 
-    const findNext = spaces.find(
-      (item) => item.type === "next" && item?.space > 1
-    );
     setButtons({
-      topLeft: { active: findPrev?.space > 0 },
-      topRight: { active: findPrev?.space > 0 },
-      bottomLeft: { active: findNext?.space > 0 },
-      bottomRight: { active: findNext?.space > 0 },
+      topLeft: {
+        active: findACPrev?.space > 0 || findPrev?.space >= doorTypeHeight,
+      },
+      topRight: {
+        active: findACPrev?.space > 0 || findPrev?.space >= doorTypeHeight,
+      },
+      bottomLeft: {
+        active: findACNext?.space > 0 || findNext?.space >= doorTypeHeight,
+      },
+      bottomRight: {
+        active: findACNext?.space > 0 || findNext?.space >= doorTypeHeight,
+      },
     });
-    const selectedDoor = sortedDoors.find((item) => item.key == selected?.id);
-
+    const selectedDoor = sortedDoors.find(
+      (item) => item.key == isRevolvingDoorHighlighted?.id
+    );
+    const moveingDoorType = selectedDoor?.type.includes("50") ? 25 : 50;
     if (type) {
       if (type.includes("Left")) {
         const gap = type == "topLeft" ? 1.25 : -1.25;
         const newPosition = selectedDoor?.position - gap;
-        console.log(newPosition);
-        dispatch(
-          updateRevolvingDoor({
-            sectionId: selectedSectionKey,
-            doorKey: selected?.id,
-            position: newPosition,
-          })
-        );
+        if (
+          newPosition >= 0 &&
+          newPosition <= sectionHeight / 2 - moveingDoorType &&
+          (type == "topLeft" && findACPrev ? findACPrev?.space > 0 : true) &&
+          (type == "bottomLeft" && findACNext ? findACNext?.space > 0 : true)
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: newPosition,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: newPosition,
+            })
+          );
+        }
+        const findPrevHeight = findPrev
+          ? findPrev?.doorType?.includes("50")
+            ? 25
+            : 50
+          : 0;
+        if (
+          type == "topLeft" &&
+          findPrev?.space >= findPrevHeight &&
+          findACPrev?.space <= 0
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: findPrev?.shelfTop - findPrevHeight,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: findPrev?.shelfTop - findPrevHeight,
+            })
+          );
+        }
+        const findNextHeight = isRevolvingDoorHighlighted
+          ? isRevolvingDoorHighlighted?.type?.includes("50")
+            ? 25
+            : isRevolvingDoorHighlighted?.type?.includes("100")
+            ? 50
+            : 0
+          : 0;
+        if (
+          type == "bottomLeft" &&
+          findNext?.space >= findNextHeight &&
+          findACNext?.space <= 0
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: findNext?.shelfTop - findNextHeight,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: findNext?.shelfTop - findNextHeight,
+            })
+          );
+        }
       }
       if (type.includes("Right")) {
         const gap = type == "bottomRight" ? -5 : 5;
-        const newPosition = selectedDoor?.position - gap;
-        console.log(newPosition);
-        dispatch(
-          updateRevolvingDoor({
-            sectionId: selectedSectionKey,
-            doorKey: selected?.id,
-            position: newPosition,
-          })
-        );
+        let newPosition = selectedDoor?.position - gap;
+        if (type == "topRight" && findACPrev && findACPrev?.space <= 6.25) {
+          newPosition = newPosition - (findACPrev?.space - gap);
+        }
+        if (type == "bottomRight" && findACNext && findACNext?.space <= 6.25) {
+          newPosition = newPosition + (findACNext?.space + gap);
+        }
+        if (
+          newPosition >= 0 &&
+          newPosition <= sectionHeight / 2 - moveingDoorType &&
+          (type == "topRight" && findACPrev ? findACPrev?.space >= 0 : true) &&
+          (type == "bottomRight" && findACNext ? findACNext?.space >= 0 : true)
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: newPosition,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: newPosition,
+            })
+          );
+        }
+        const findPrevHeight = findPrev
+          ? findPrev?.doorType?.includes("50")
+            ? 25
+            : 50
+          : 0;
+        if (
+          type == "topRight" &&
+          findPrev?.space >= findPrevHeight &&
+          findACPrev?.space <= 0
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: findPrev?.shelfTop - findPrevHeight,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: findPrev?.shelfTop - findPrevHeight,
+            })
+          );
+        }
+        const findNextHeight = isRevolvingDoorHighlighted
+          ? isRevolvingDoorHighlighted?.type?.includes("50")
+            ? 25
+            : isRevolvingDoorHighlighted?.type?.includes("100")
+            ? 50
+            : 0
+          : 0;
+        if (
+          type == "bottomRight" &&
+          findNext?.space >= findNextHeight &&
+          findACNext?.space <= 0
+        ) {
+          dispatch(
+            updateRevolvingDoor({
+              sectionId: selectedSectionKey,
+              doorKey: isRevolvingDoorHighlighted?.id,
+              position: findNext?.shelfTop - findNextHeight,
+            })
+          );
+          dispatch(
+            setisRevolvingDoorHighlighted({
+              id: isRevolvingDoorHighlighted?.id,
+              type: isRevolvingDoorHighlighted?.type,
+              position: findNext?.shelfTop - findNextHeight,
+            })
+          );
+        }
       }
     }
-    console.log(findPrev, findNext, filterNext, filterPrev);
+    // console.log("findPrev", findPrev);
+    // console.log("findNext", findNext);
+    // console.log("filterNext", filterNext);
+    // console.log("filterPrev", filterPrev);
   };
 
   const buttonStyle =

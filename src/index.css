@@ -115,3 +115,10 @@ button.compartments_wrapper__slide {
   height: 100%;
   width: calc(100% - 12.875em);
 }
+.revolving__doors_set .rightArrow::before {
+  right: 98%;
+  top: 9px;
+}
+.revolving__doors_set .rightArrow::after{
+  top: 8px;
+}
