@@ -478,7 +478,7 @@ const shelfDetailSlice = createSlice({
         state.highlightedDrawer = {
           shelfkey: current.shelfKey,
           top: current.top,
-        };        
+        };
       }
     },
     removeDrawer: (state, action) => {
@@ -567,15 +567,22 @@ const shelfDetailSlice = createSlice({
         delete state.deletedRevDoors[sectionId][doorKey];
       }
     },
-    setHideDoor:(state,action) =>{
-      state.hideDoor = action.payload; 
+    setHideDoor: (state, action) => {
+      state.hideDoor = action.payload;
     },
-    removeSectionDoors:(state,action) =>{
-      const {sectionId} = action.payload;
+    removeSectionDoors: (state, action) => {
+      const { sectionId } = action.payload;
       const section = state.racks.sections[sectionId];
-      if (section?.revolvingDoor && Object.keys(section.revolvingDoor).length > 0) {
+      if (
+        section?.revolvingDoor &&
+        Object.keys(section.revolvingDoor).length > 0
+      ) {
         section.revolvingDoor = {};
       }
+    },
+    addShelve: (state, action) => {
+      const { sectionId, shelves } = action.payload;
+      state.racks.sections[sectionId].shelves = shelves;      
     },
   },
 });
@@ -623,6 +630,7 @@ export const {
   setHideDoor,
   updateRevolvingDoor,
   removeSectionDoors,
+  addShelve
 } = shelfDetailSlice.actions;
 
 // export default reducer
