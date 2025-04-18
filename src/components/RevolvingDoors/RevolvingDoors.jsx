@@ -116,11 +116,12 @@ const RevolvingDoors = () => {
         const findSpace = spaces.reduce((max, curr) => {
           return !max || curr.space > max.space ? curr : max;
         }, null);
-        if (
-          (findSpace?.space < 50 && doorTypeHeight === 50) ||
-          (findSpace?.space < 25 && doorTypeHeight === 25)
-        ) {
-          alert("No more doors can be added to this section");
+        if (findSpace?.space < 50 && doorTypeHeight === 50 || findSpace?.space < 25 && doorTypeHeight === 25) {
+          toast.info("Er passen geen deuren meer in deze sectie.",{
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+          })
           return null;
         }
         dispatch(
@@ -160,8 +161,10 @@ const RevolvingDoors = () => {
       }
     } else {
       //alert("No more doors can be added to this section");
-      toast("No more doors can be added to this section",{
+      toast.info("Er passen geen deuren meer in deze sectie.",{
         position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
       })
     }
   };
