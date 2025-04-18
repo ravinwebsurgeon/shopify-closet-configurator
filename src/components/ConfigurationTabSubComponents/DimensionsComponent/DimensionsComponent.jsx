@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  removeRevolvingDoor,
+  removeSectionDoors,
   setConfiguration,
   updateBackwall,
   updateLastShelvePostion,
@@ -19,6 +21,7 @@ const DimensionsComponent = () => {
   );
   const activeSection = sections[activeSectionId];
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
+  const revDoor = activeSection.revolvingDoor;
 
   // Predefined values for each dimension
   const dimensionOptions = {
@@ -192,8 +195,52 @@ const DimensionsComponent = () => {
         type: "",
         height: "",
       }))
+    }
 
-  }
+    // delete revolving door from the selected section when width > 100
+    if(dimension == "width" && value > 100 && revDoor && Object.keys(revDoor).length>0){
+      dispatch(removeSectionDoors({sectionId:activeSectionId}))
+    }
+    // delete revolving door according to the height change (if doors exixts) 
+    if (dimension === "height" && revDoor && Object.keys(revDoor).length > 0) {
+      const oldHeight = activeSection.height;
+      const newHeight = value;
+      let usedHeight = 0;
+      let space = 0;
+    
+      const doorList = Object.entries(revDoor).map(([key, door]) => {
+        const height = parseInt(door.type.split('_')[3]);
+        usedHeight += height;
+        return { key, ...door, height };
+      });
+    
+      if (oldHeight > usedHeight) {
+        space = oldHeight - usedHeight;
+      }
+    
+      const sortedByPosition = doorList.sort((a, b) => b.position - a.position);
+      let currentHeight = usedHeight;
+    
+      for (let i = 0; i < sortedByPosition.length; i++) {
+        const door = sortedByPosition[i];
+    
+        const isOverflowing = door.position + door.height > newHeight/2;
+        
+          if(newHeight < usedHeight){
+          if (isOverflowing || currentHeight > newHeight) {
+            dispatch(removeRevolvingDoor({
+              sectionId: activeSectionId,
+              doorKey: door.key
+            }));
+
+            currentHeight -= door.height;
+      
+            if (currentHeight <= newHeight) break;
+          }
+        }
+      }
+    }
+    
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };

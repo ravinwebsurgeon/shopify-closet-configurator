@@ -390,7 +390,14 @@ const shelfDetailSlice = createSlice({
     },
     setHideDoor:(state,action) =>{
       state.hideDoor = action.payload; 
-    }
+    },
+    removeSectionDoors:(state,action) =>{
+      const {sectionId} = action.payload;
+      const section = state.racks.sections[sectionId];
+      if (section?.revolvingDoor && Object.keys(section.revolvingDoor).length > 0) {
+        section.revolvingDoor = {};
+      }
+    },
   },
 });
 
@@ -430,6 +437,7 @@ export const {
   storeDeletedRevDoor,
   removeDeletedDoor,
   setHideDoor,
+  removeSectionDoors,
 } = shelfDetailSlice.actions;
 
 // export default reducer

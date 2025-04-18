@@ -79,6 +79,7 @@ const ImageConfigurator = () => {
   );
 
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
+  
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -175,6 +176,8 @@ const ImageConfigurator = () => {
         dispatch(setEditingBackwall(false));
         setBackWallSelectedSection("");
         dispatch(setCompartmentHighlighted(""));
+        dispatch(setHideDoor(false));
+       
       }
     };
 
@@ -211,6 +214,9 @@ const ImageConfigurator = () => {
     setSelectedShelf(value);
     handleSectionClick(e, sectionkey);
     setTopPosition(position);
+    dispatch(setHideDoor(true));
+    
+    
   };
   const sectionItems = Object.keys(sections);
   const maxHeight = sectionItems
