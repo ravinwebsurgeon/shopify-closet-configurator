@@ -29,6 +29,7 @@ import DrawersButton from "../Drawers/DrawersButton";
 import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import CompartmentsButton from "../Compartments/CompartmentsButton";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -459,16 +460,18 @@ const ImageConfigurator = () => {
                                           >
                                             <button
                                               className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
-                      ${
-                        executionValues.color === "black"
-                          ? "Legbord_black"
-                          : "Legbord_metal"
-                      } Legbord_clickable__uTn2b ${
-                                                selectedShelf ===
-                                                `${sectionKey}-${shelfkey}`
-                                                  ? "Legboard_isHighlighted"
-                                                  : ""
-                                              }`}
+                                                        ${
+                                                          executionValues.color ===
+                                                          "black"
+                                                            ? "Legbord_black"
+                                                            : "Legbord_metal"
+                                                        } Legbord_clickable__uTn2b
+                                                        ${
+                                                          selectedShelf ===
+                                                          `${sectionKey}-${shelfkey}`
+                                                            ? "Legboard_isHighlighted"
+                                                            : ""
+                                                        }`}
                                               key={shelfkey}
                                               onClick={(e) =>
                                                 handleSelectedShelfClick(
@@ -481,32 +484,15 @@ const ImageConfigurator = () => {
                                               }
                                               compartments={shelf?.compartments}
                                               type="compartment_divider_set"
-                                            />
+                                            >
+                                              <div className="Legbord_inner__eOg0b">
+                                                <div className="Legbord_left__ERgV5"></div>
+                                                <div className="Legbord_middle__D8U0x"></div>
+                                                <div className="Legbord_right__HB8+U"></div>
+                                              </div>
+                                            </button>
                                           </div>
                                         )}
-                                      {shelf?.compartments?.type ==
-                                        "sliding_partition" &&
-                                        Array.from(
-                                          {
-                                            length: shelf?.compartments?.count,
-                                          },
-                                          (_, i) => i + 1
-                                        ).map((index) => (
-                                          <CompartmentsButton
-                                            shelfkey={shelfkey}
-                                            index={index}
-                                            selectedSection={
-                                              selectedSection === sectionKey
-                                            }
-                                            compartments={shelf?.compartments}
-                                            type="sliding_partition"
-                                          />
-                                        ))}
-                                      <div className="Legbord_inner__eOg0b">
-                                        <div className="Legbord_left__ERgV5"></div>
-                                        <div className="Legbord_middle__D8U0x"></div>
-                                        <div className="Legbord_right__HB8+U"></div>
-                                      </div>
                                     </React.Fragment>
                                   );
                                 }
