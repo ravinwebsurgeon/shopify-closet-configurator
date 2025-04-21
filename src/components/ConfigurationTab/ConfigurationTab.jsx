@@ -12,10 +12,12 @@ import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
 import SlidingDoors from "../SlidingDoors/SlidingDoors";
 import Drawers from "../Drawers/Drawers";
 import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
+import { calculateTotalPrice } from "../../utils/calculateTotalPrice";
 
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
+  const details = useSelector((state) => state.shelfDetail);
 
   const dispatch = useDispatch();
 
@@ -105,7 +107,7 @@ const ConfigurationTab = () => {
             <div className="total-price-col-container">
               <div className="total-price-row-conatiner">
                 <span className="total-pricing font-inter text-base text-black block tracking-[-2%] leading-[150%] font-semibold text-right">
-                  €99.26
+                  {calculateTotalPrice(details)}
                 </span>
               </div>
               <span className="total-vat-text  font-inter text-xs text-black hidden tracking-[-2%] leading-[150%] font-medium text-right">

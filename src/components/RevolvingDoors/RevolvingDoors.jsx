@@ -160,7 +160,6 @@ const RevolvingDoors = () => {
         );
       }
     } else {
-      //alert("No more doors can be added to this section");
       toast.info("Er passen geen deuren meer in deze sectie.",{
         position: "top-center",
         autoClose: 2000,

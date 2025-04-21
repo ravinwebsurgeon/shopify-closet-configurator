@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import { addDrawer } from "../../slices/shelfDetailSlice";
 import getComponentPrice from "../../utils/getPrice";
+import { toast } from "react-toastify";
 const Drawers = () => {
   const dispatch = useDispatch();
   const [shelvesKeys, setShelvesKeys] = useState([]);
@@ -30,7 +31,14 @@ const Drawers = () => {
         })
       );
     } else {
-      alert("No more divider sets fit in this section.");
+      toast.info(
+        "Er kunnen geen lades meer worden toegevoegd in deze sectie.",
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+        }
+      );
     }
   };
   const openModal = () => {};
@@ -44,7 +52,11 @@ const Drawers = () => {
             dimention={`${dimension.sections[selectedSectionKey].width - 2} x ${
               dimension.depth
             } cm`}
-            image={color=="black"?`/drawers/drawer-metal-black-${dimension.sections[selectedSectionKey].width}.png`:`/drawers/Lades-Metaal-Zilver-${dimension.sections[selectedSectionKey].width}.png`}
+            image={
+              color == "black"
+                ? `/drawers/drawer-metal-black-${dimension.sections[selectedSectionKey].width}.png`
+                : `/drawers/Lades-Metaal-Zilver-${dimension.sections[selectedSectionKey].width}.png`
+            }
             itemAction={() => handleCardClick("lade_met_dragers")}
             openModal={() => openModal()}
             price={getComponentPrice({

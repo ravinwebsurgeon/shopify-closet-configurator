@@ -79,6 +79,7 @@ const shelfDetailSlice = createSlice({
         action.payload;
       const newSection = {};
       const shelves = {};
+
       positions.forEach((positions, index) => {
         shelves[`shelves_${index + 1}`] = {
           position: positions,
@@ -105,6 +106,8 @@ const shelfDetailSlice = createSlice({
           createInitialSection(width, currShelfHeight, shelves);
       });
 
+      const newSectionKey = Object.keys(newSection);
+
       state.racks = {
         sections: {
           ...state.racks.sections,
@@ -115,7 +118,7 @@ const shelfDetailSlice = createSlice({
           ...executionObject,
           ...(state.racks.execution || {}),
         },
-        selectedSection,
+        selectedSection:newSectionKey[0],
         activeTab,
         showCounter,
         isEditingSides,
@@ -577,6 +580,16 @@ const shelfDetailSlice = createSlice({
         section.revolvingDoor = {};
       }
     },
+    removeDrawersFromSection : (state,action) =>{
+      const {sectionId} = action.payload;
+      const shelves = state.racks.sections?.[sectionId]?.shelves;
+      if(!shelves)  return;
+      Object.keys(shelves).forEach((key)=>{
+        if(key.startsWith("drawer_")){
+          delete shelves[key];
+        }
+      })
+    },
   },
 });
 
@@ -623,6 +636,7 @@ export const {
   setHideDoor,
   updateRevolvingDoor,
   removeSectionDoors,
+  removeDrawersFromSection,
 } = shelfDetailSlice.actions;
 
 // export default reducer
