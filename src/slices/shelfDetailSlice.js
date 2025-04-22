@@ -153,6 +153,25 @@ const shelfDetailSlice = createSlice({
           });
 
           shelfKeys.forEach((key) => {
+            const item = shelves[key];
+
+            if (key.startsWith("compartment_") && 
+                item?.compartments?.type == "compartment_divider_set") {
+              delete shelves[key];
+            }
+          });
+        }
+        else if (value > 60){
+          const shelves = state.racks.sections[sectionId].shelves;
+          const shelfKeys = Object.keys(shelves).sort((a, b) => {
+            return (
+              parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10)
+            );
+          });
+
+          shelfKeys.forEach((key) => {
+            const item = shelves[key];
+
             if (key.startsWith("compartment_")) {
               delete shelves[key];
             }

@@ -13,6 +13,9 @@ import SlidingDoors from "../SlidingDoors/SlidingDoors";
 import Drawers from "../Drawers/Drawers";
 import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
 import { calculateTotalPrice } from "../../utils/calculateTotalPrice";
+import { generateBOM } from "../../utils/generateBOM";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 
 const ConfigurationTab = () => {
@@ -99,16 +102,19 @@ const ConfigurationTab = () => {
       </div>
       <div className="leftsec-comp-3">
         <div className="left-comp3-row-container p-[25px] flex justify-between items-end border-t border-[#E5E5E5]">
-          <button className="add-to-cart bg-[#EB6200] py-[7px] rounded-[5px] text-white font-inter text-xs tracking-[-2%] leading-[150%] font-semibold w-full max-w-[178px]">
+          <button className="add-to-cart bg-[#EB6200] py-[7px] rounded-[5px] text-white font-inter text-xs tracking-[-2%] leading-[150%] font-semibold w-full max-w-[178px]"
+            onClick={()=>generateBOM(details)}
+          >
             Afrekenen
           </button>
 
           <button className="total-price-container">
             <div className="total-price-col-container">
-              <div className="total-price-row-conatiner">
+              <div className="total-price-row-conatiner flex gap-2 items-center">
                 <span className="total-pricing font-inter text-base text-black block tracking-[-2%] leading-[150%] font-semibold text-right">
                   {calculateTotalPrice(details)}
                 </span>
+                <FontAwesomeIcon icon={faCircleInfo} onClick={()=>alert("Info Icon Clicked...")} />
               </div>
               <span className="total-vat-text  font-inter text-xs text-black hidden tracking-[-2%] leading-[150%] font-medium text-right">
                 Excluding VAT

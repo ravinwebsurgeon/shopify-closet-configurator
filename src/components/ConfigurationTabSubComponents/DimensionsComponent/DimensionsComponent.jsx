@@ -296,7 +296,6 @@ const DimensionsComponent = () => {
       }
 
     }
-    
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
