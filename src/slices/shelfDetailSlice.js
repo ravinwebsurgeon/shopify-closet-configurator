@@ -79,6 +79,7 @@ const shelfDetailSlice = createSlice({
         action.payload;
       const newSection = {};
       const shelves = {};
+
       positions.forEach((positions, index) => {
         shelves[`shelves_${index + 1}`] = {
           position: positions,
@@ -104,7 +105,9 @@ const shelfDetailSlice = createSlice({
         newSection[`section_${highestSectionNumber + index + 1}`] =
           createInitialSection(width, currShelfHeight, shelves);
       });
-      const sectionKey = Object.keys(newSection);
+
+      const newSectionKey = Object.keys(newSection);
+
       state.racks = {
         sections: {
           ...state.racks.sections,
@@ -115,7 +118,7 @@ const shelfDetailSlice = createSlice({
           ...executionObject,
           ...(state.racks.execution || {}),
         },
-        selectedSection: sectionKey[0],
+        selectedSection:newSectionKey[0],
         activeTab,
         showCounter,
         isEditingSides,
@@ -150,6 +153,25 @@ const shelfDetailSlice = createSlice({
           });
 
           shelfKeys.forEach((key) => {
+            const item = shelves[key];
+
+            if (key.startsWith("compartment_") && 
+                item?.compartments?.type == "compartment_divider_set") {
+              delete shelves[key];
+            }
+          });
+        }
+        else if (value > 60){
+          const shelves = state.racks.sections[sectionId].shelves;
+          const shelfKeys = Object.keys(shelves).sort((a, b) => {
+            return (
+              parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10)
+            );
+          });
+
+          shelfKeys.forEach((key) => {
+            const item = shelves[key];
+
             if (key.startsWith("compartment_")) {
               delete shelves[key];
             }
@@ -625,6 +647,16 @@ const shelfDetailSlice = createSlice({
         delete shelves[doorKey];
       }
     },
+    removeDrawersFromSection : (state,action) =>{
+      const {sectionId} = action.payload;
+      const shelves = state.racks.sections?.[sectionId]?.shelves;
+      if(!shelves)  return;
+      Object.keys(shelves).forEach((key)=>{
+        if(key.startsWith("drawer_")){
+          delete shelves[key];
+        }
+      })
+    },
   },
 });
 
@@ -675,6 +707,7 @@ export const {
   setSlidingDoorHighlighted,
   addSlidingDoor,
   removeSlidingDoor,
+  removeDrawersFromSection,
 } = shelfDetailSlice.actions;
 
 // export default reducer

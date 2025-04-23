@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCompartmentHighlighted } from "../../slices/shelfDetailSlice";
+//import { color } from "html2canvas/dist/types/css/types/color";
 
 const CompartmentsButton = ({
   shelfkey,
@@ -14,6 +15,9 @@ const CompartmentsButton = ({
   const isCompartmentHighlighted = useSelector(
     (state) => state.shelfDetail.isCompartmentHighlighted
   );
+
+  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
+
   return type === "compartment_divider_set" ? (
     <button
       onClick={() => {
@@ -63,6 +67,7 @@ const CompartmentsButton = ({
         ? "isHighlighted"
         : ""
     }
+    ${color == "black"?"slider_black":""}
     `}
     >
       <div className="compartments_wrapper_inner_slide">
