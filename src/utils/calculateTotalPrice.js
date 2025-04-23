@@ -8,8 +8,6 @@ export function calculateTotalPrice(details) {
   let sections = details.racks.sections;
   let depth = details.racks.depth;
 
-  console.log("Details -->", details);
-
   // calculate shelf price
   Object.values(sections).forEach((section) => {
     const width = section.width;
@@ -80,37 +78,39 @@ export function calculateTotalPrice(details) {
       let height = section.height;
       if (section.sideWall.left.isLeft) {
         let subType = section.sideWall.left.type;
+        let leftRevDoorHeight = section.sideWall.left.height;
         const price = getComponentPrice({
           material: color,
           component: "sidewall",
           subtype: subType,
-          height,
+          height: leftRevDoorHeight == "50" ? leftRevDoorHeight : height,
           depth,
         });
 
         let leftSideWallPrice = calculateFormattedTotalPrice(price, 1);
-        if (section.sideWall.left.height == "50") {
-          total += Math.floor(leftSideWallPrice / 2);
-        } else {
+        // if (section.sideWall.left.height == "50") {
+        //   total += Math.floor(leftSideWallPrice / 2);
+        // } else {
           total += leftSideWallPrice;
-        }
+        // }
       }
       if (section.sideWall.right.isRight) {
         let subType = section.sideWall.right.type;
+        let rightRevDoorHeight = section.sideWall.right.height;
         const price = getComponentPrice({
           material: color,
           component: "sidewall",
           subtype: subType,
-          height,
+          height: rightRevDoorHeight == "50" ? rightRevDoorHeight : height,
           depth,
         });
 
         let rightSideWallPrice = calculateFormattedTotalPrice(price, 1);
-        if (section.sideWall.right.height == "50") {
-          total += Math.floor(rightSideWallPrice / 2);
-        } else {
+        // if (section.sideWall.right.height == "50") {
+        //   total += Math.floor(rightSideWallPrice / 2);
+        // } else {
           total += rightSideWallPrice;
-        }
+        //}
       }
     }
 

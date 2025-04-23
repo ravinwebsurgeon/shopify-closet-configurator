@@ -9,6 +9,7 @@ import {
 } from "../../slices/shelfDetailSlice";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import getComponentPrice from "../../utils/getPrice";
+import { toast } from "react-toastify";
 
 const CompartmentsMain = () => {
   const dispatch = useDispatch();
@@ -123,7 +124,16 @@ const CompartmentsMain = () => {
         setCount(nextCount);
       }
     } else {
-      alert("No more divider sets fit in this section.");
+      //alert("No more sliding partions/divider sets fit in this section.");
+      toast.info(
+        "Er passen geen extra schuifwanden of verdelersets meer in deze sectie",
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          className: "!font-inter !text-[13px] ",
+        }
+      );
     }
   };
 
@@ -139,7 +149,7 @@ const CompartmentsMain = () => {
                 productInfo={item}
                 key={item.id}
                 dimention={item.dimention}
-                image={color=="black"?item.black_image:item.image}
+                image={color == "black" ? item.black_image : item.image}
                 price={getComponentPrice({
                   material: color,
                   component: "compartment",
@@ -147,7 +157,7 @@ const CompartmentsMain = () => {
                   width: dimension.sections[selectedSectionKey].width,
                   depth: dimension.depth,
                 })}
-                title={item.title}
+                title={`${item.title} ${color === "black" ? "(zwart)" : ""}`}
                 itemAction={() => addCompartmentToShelve({ id: item.id })}
                 openModal={(e) => openModal(e)}
               />

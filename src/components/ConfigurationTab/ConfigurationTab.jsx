@@ -16,11 +16,15 @@ import { calculateTotalPrice } from "../../utils/calculateTotalPrice";
 import { generateBOM } from "../../utils/generateBOM";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../Shared/Modal/Modal";
+import BOM from "../ModalChildComponents/BOMComponent/BOM";
 
 
 const ConfigurationTab = () => {
   const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
   const details = useSelector((state) => state.shelfDetail);
+  const[isModalOpen,setIsModalOpen] = useState(false);
+  const[bomData,setBomData] = useState('');
 
   const dispatch = useDispatch();
 
@@ -35,40 +39,28 @@ const ConfigurationTab = () => {
     dispatch(setActiveTab(sectionKey));
     if (sectionKey == "shelves") dispatch(setShowCounter(true));
   };
+
+  const handleInfoClick = () =>{
+    setIsModalOpen(true);
+    const data = generateBOM(details);
+    setBomData(data);
+  }
+
   const configTabs = [
-    {
-      id: "dimensions",
-      label: "Afmetingen",
-      component: <DimensionsComponent />,
-    },
+    { id: "dimensions", label: "Afmetingen", component: <DimensionsComponent /> },
     { id: "execution", label: "Voeten", component: <ExecutionComponent /> },
     { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
     { id: "sides", label: "Zijwanden", component: <SidesComponent /> },
-    {
-      id: "backwalls",
-      label: "Achterwanden",
-      component: <BackwallComponent />,
-    },
-    {
-      id: "compartments",
-      label: "Vakverdeling",
-      component: <CompartmentsMain />,
-    },
-    {
-      id: "revolvingdoors",
-      label: "Draaideuren",
-      component: <RevolvingDoors />,
-    },
+    { id: "backwalls", label: "Achterwanden", component: <BackwallComponent /> },
+    { id: "compartments", label: "Vakverdeling", component: <CompartmentsMain /> },
+    { id: "revolvingdoors", label: "Draaideuren",component: <RevolvingDoors /> },
     { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
     { id: "drawers", label: "Lades", component: <Drawers /> },
-    {
-      id: "wardroberods",
-      label: "Garderobestangen",
-      component: <WardrobeComponent />,
-    },
+    { id: "wardroberods", label: "Garderobestangen", component: <WardrobeComponent /> },
   ];
   const selectedTab = configTabs.find((tab) => tab.id === activeTab);
   return (
+    <>
     <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden">
       <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
         <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
@@ -114,7 +106,7 @@ const ConfigurationTab = () => {
                 <span className="total-pricing font-inter text-base text-black block tracking-[-2%] leading-[150%] font-semibold text-right">
                   {calculateTotalPrice(details)}
                 </span>
-                <FontAwesomeIcon icon={faCircleInfo} onClick={()=>alert("Info Icon Clicked...")} />
+                <FontAwesomeIcon icon={faCircleInfo} onClick={handleInfoClick} />
               </div>
               <span className="total-vat-text  font-inter text-xs text-black hidden tracking-[-2%] leading-[150%] font-medium text-right">
                 Excluding VAT
@@ -124,6 +116,16 @@ const ConfigurationTab = () => {
         </div>
       </div>
     </div>
+    {isModalOpen && (
+      <Modal
+      isModalOpen={isModalOpen}
+      mainHeading={"Prijsoverzicht"}
+      closeModal={()=>setIsModalOpen(prev => !prev)}
+      >
+      <BOM data={bomData} totalPrice={calculateTotalPrice(details)}/>
+      </Modal>
+    )}
+    </>
   );
 };
 

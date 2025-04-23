@@ -99,35 +99,35 @@ const AddSection = ({ children, onClose }) => {
         dimensions={dimensions}
         setDimensions={setDimensions}
       />
-      <div className="dimension-note">
-        The depth indicated above applies to the entire cabinet. It is possible
-        that parts may be removed as a result of the resizing.
+      <div className="dimension-note font-inter !text-[12px]">
+        De diepte die hierboven is aangegeven geldt voor de gehele kast. 
+        Het is mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen van de afmetingen.
       </div>
       <div className="counter-button-div">
-        <span className="add-shevles-label">Shelves</span>
+        <span className="add-shevles-label !font-inter">Legborden</span>
         <div className="counter-container-div">
           <button
-            className="counter-decreament-btn"
+            className="counter-decreament-btn !font-inter"
             disabled={shelfCount === initialShelfCount}
             onClick={handleSubShelfCount}
           >
             <FontAwesomeIcon icon={faMinus} />
           </button>
-          <span className="counter-span">{shelfCount}</span>
+          <span className="counter-span !font-inter">{shelfCount}</span>
           <button
-            className="counter-increament-btn"
+            className="counter-increament-btn !font-inter"
             onClick={handleAddShelfCount}
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
       </div>
-      <div className="button-div">
-        <button className="close-button" onClick={onClose}>
-          Cancel
+      <div className="button-div ">
+        <button className="close-button !font-inter" onClick={onClose}>
+          Annuleren
         </button>
-        <button className="add-button" onClick={handleAddSection}>
-          Add
+        <button className="add-button !font-inter" onClick={handleAddSection}>
+          Toevoegen
         </button>
       </div>
     </>

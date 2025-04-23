@@ -22,37 +22,37 @@ const ExecutionComponent = () => {
   const [selectedColor, setSelectedColor] = useState(null);
 
   const footOptions = [
-    { type: "Plastic", image: plasticFoot, label: "Foot (Plastic)" },
+    { type: "Plastic", image: plasticFoot, label: "Voetje (plastic)" },
     {
       type: "SteelBasePlate",
       image: steelPlate,
-      label: "Steel base plate can be anchored",
+      label: "Voetplaat staal verankerbaar",
     },
     {
       type: "SteelBasePlateSnap",
       image: steelPlateSnap,
-      label: "Base plate steel (snap-in)",
+      label: "Voetplaat staal (inklik)",
     },
-    { type: "Adjustable", image: Adjustable, label: "Adjustable Foot" },
+    { type: "Adjustable", image: Adjustable, label: "Verstelbaar voetje" },
   ];
 
   const sustainOptions = [
-    { type: "X-braces", label: "X-braces" },
-    { type: "H-braces", label: "H-braces" },
+    { type: "X-braces", label: "X-schoren" },
+    { type: "H-braces", label: "H-schoren" },
   ];
 
   const topCapsOptions = [
-    { type: "topCaps", label: "With top caps" },
-    { type: "noTopCaps", label: "Without top caps" },
+    { type: "topCaps", label: "Met topdoppen" },
+    { type: "noTopCaps", label: "Zonder topdoppen" },
   ];
 
   const materialOptions = [
-    { type: "metal", label: "Metal" },
-    { type: "wood", label: "Wood" },
+    { type: "metal", label: "Metaal" },
+    { type: "wood", label: "Hout" },
   ];
   const colorOptions = [
-    { type: "metal", label: "Metal" },
-    { type: "black", label: "Black" },
+    { type: "metal", label: "Metaal" },
+    { type: "black", label: "Zwart" },
   ];
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const ExecutionComponent = () => {
     <>
       <div className="execution-content">
         <div className="feet-container">
-          <span className="feet-label execution-label">Feet</span>
+          <span className="feet-label execution-label">Voetjes</span>
           <div className="grid grid-cols-2 gap-2">
             {footOptions.map((foot) => (
               <div
@@ -143,7 +143,7 @@ const ExecutionComponent = () => {
         </div>
         {/* sustain component */}
         <div className="sustain-container">
-          <span className="sustain-label execution-label">Sustain</span>
+          <span className="sustain-label execution-label">Schoren</span>
           <div className="sustain-label-div !gap-0  mt-2">
             <div className="border border-[#EB6200] rounded-[5px] flex">
               {sustainOptions.map((sustain) => (
@@ -164,7 +164,7 @@ const ExecutionComponent = () => {
         </div>
         {/* top caps component */}
         <div className="topcaps-container">
-          <span className="topcaps-label execution-label">Top Caps</span>
+          <span className="topcaps-label execution-label">Topdoppen</span>
           <div className="topcaps-label-div mt-2">
             <div className="border border-[#EB6200] rounded-[5px] flex">
               {topCapsOptions.map((item) => (
@@ -185,7 +185,7 @@ const ExecutionComponent = () => {
         </div>
         {/* Material Select Component */}
         <div className="material-cotainer execution-select-container">
-          <span className="material-label execution-label">Material</span>
+          <span className="material-label execution-label">Materiaal</span>
           <select
             className="execution-select"
             value={selectedMaterial?.type || ""}
@@ -193,7 +193,7 @@ const ExecutionComponent = () => {
             required
           >
             <option value="" disabled>
-              Select
+              Selecteer
             </option>
             {materialOptions.map((val) => (
               <option key={val.type} value={val.type}>
@@ -204,7 +204,7 @@ const ExecutionComponent = () => {
         </div>
         {/* Color select component */}
         <div className="color-cotainer execution-select-container">
-          <span className="color-label execution-label">Color</span>
+          <span className="color-label execution-label">Kleur</span>
           <select
             className="execution-select"
             value={selectedColor?.type || ""}
@@ -212,7 +212,7 @@ const ExecutionComponent = () => {
             required
           >
             <option value="" disabled>
-              Select
+            Selecteer
             </option>
             {colorOptions.map((val) => (
               <option key={val.type} value={val.type}>

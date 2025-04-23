@@ -1,4 +1,5 @@
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
+import { getRevDoorLabel } from "./getDoorLabel";
 import getComponentPrice from "./getPrice";
 
 export function generateBOM(details) {
@@ -13,7 +14,10 @@ export function generateBOM(details) {
   const color = details.racks.execution.color;
   const depth = details.racks.depth;
   const sections = details.racks.sections;
+  let leftRevDoorHeight = '';
+  let rightRevDoorHeight = '';
 
+ 
   // Process each section
   Object.entries(sections).forEach(([sectionId, section]) => {
     const width = section.width;
@@ -73,8 +77,8 @@ export function generateBOM(details) {
     });
 
     bomList.push({
-      component: "Shelf",
-      dimensions: `${width}cm x ${depth}cm`,
+      component: `${`Legbord met dragers ${color == "black" ? "(zwart)":""}`}`,
+      dimensions: `${width-2} x ${depth} cm`,
       quantity: quantity,
       unitPrice: price,
       totalPrice: calculateFormattedTotalPrice(price, quantity),
@@ -92,8 +96,8 @@ export function generateBOM(details) {
     });
 
     bomList.push({
-      component: "Top Support Shelf",
-      dimensions: `${width}cm x ${depth}cm`,
+      component: `${`Legbord met topdragers ${color == "black" ? "(zwart)":""}`}`,
+      dimensions: `${width-2} x ${depth} cm`,
       quantity: quantity,
       unitPrice: price,
       totalPrice: calculateFormattedTotalPrice(price, quantity),
@@ -106,13 +110,17 @@ export function generateBOM(details) {
       const height = section.height;
       if (section.sideWall.left.isLeft) {
         const subType = section.sideWall.left.type;
-        const dimensionKey = `${height}x${depth}-${subType}`;
+        leftRevDoorHeight = section.sideWall.left.height;
+        const heightToUse = (leftRevDoorHeight == "50") ? 50 : section.height;
+        const dimensionKey = `${heightToUse}x${depth}-${subType}`;
         const count = sidewallMap.get(dimensionKey) || 0;
         sidewallMap.set(dimensionKey, count + 1);
       }
       if (section.sideWall.right.isRight) {
         const subType = section.sideWall.right.type;
-        const dimensionKey = `${height}x${depth}-${subType}`;
+        rightRevDoorHeight = section.sideWall.right.height;
+        const heightToUse = (rightRevDoorHeight == "50") ? 50 : section.height;
+        const dimensionKey = `${heightToUse}x${depth}-${subType}`;
         const count = sidewallMap.get(dimensionKey) || 0;
         sidewallMap.set(dimensionKey, count + 1);
       }
@@ -130,13 +138,13 @@ export function generateBOM(details) {
       height,
       depth,
     });
-
+    
     bomList.push({
-      component: `Sidewall (${subType})`,
-      dimensions: `${height}cm x ${depth}cm`,
+      component: `${subType == "perfo" ?`Open zijwand ${color == "black" ? "(zwart)":""}`:`Dichte zijwand ${color == "black" ? "(zwart)":""}`}`,
+      dimensions: `${height} x ${depth} cm`,
       quantity: quantity,
-      unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      unitPrice:  price,
+      totalPrice: calculateFormattedTotalPrice(price,quantity)
     });
   });
 
@@ -167,8 +175,8 @@ export function generateBOM(details) {
     });
 
     bomList.push({
-      component: `Backwall (${subType})`,
-      dimensions: `${height}cm x ${width}cm`,
+      component: `Achterwand (${subType}) ${color=="black"? "(zwart)" :""}`,
+      dimensions: `${height} x ${width-2} cm`,
       quantity: quantity,
       unitPrice: price,
       totalPrice: calculateFormattedTotalPrice(price, quantity),
@@ -182,7 +190,7 @@ export function generateBOM(details) {
 
     if (type === "sliding_partition") {
       component = "Sliding Partition";
-      displayDimensions = `${sizePart}cm`;
+      displayDimensions = `${sizePart} cm`;
       price = getComponentPrice({
         material: color,
         component: "compartment",
@@ -192,7 +200,7 @@ export function generateBOM(details) {
     } else if (type === "compartment_divider_set") {
       const [width, depth] = sizePart.split("x").map(Number);
       component = "Compartment Divider Set";
-      displayDimensions = `${width}cm x ${depth}cm`;
+      displayDimensions = `${width-2} x ${depth} cm`;
       price = getComponentPrice({
         material: color,
         component: "compartment",
@@ -203,7 +211,8 @@ export function generateBOM(details) {
     }
 
     bomList.push({
-      component,
+      component:`${component == "Sliding Partition"?`Schuifschot hoog ${color == "black" ? "(zwart)":""}` :
+       `Vakverdeelset ${color == "black" ? "(zwart)":""}` }`,
       dimensions: displayDimensions,
       quantity,
       unitPrice: price,
@@ -219,7 +228,6 @@ export function generateBOM(details) {
     ) {
       const width = section.width;
       Object.values(section.revolvingDoor).forEach((door) => {
-        console.log("revolving door detail-->", door);
         const { type } = door;
         const dimensionKey = `${width}-${type}`;
         const count = revolvingDoorMap.get(dimensionKey) || 0;
@@ -241,8 +249,10 @@ export function generateBOM(details) {
     });
 
     bomList.push({
-      component: `Revolving Door (${type.split("_").slice(1).join(" ")})`,
-      dimensions: `${doorHeight}cm x ${width}cm`,
+      component: `${getRevDoorLabel(type.split("_").slice(1).join(" "))}
+      ${(color === "black" && 
+        type.split("_").slice(1).join(" ").includes("set metal"))? "(zwart)" : ""}`,
+      dimensions: `${width-2} x ${depth} cm`,
       quantity,
       unitPrice: price,
       totalPrice: calculateFormattedTotalPrice(price, quantity),
@@ -259,8 +269,8 @@ export function generateBOM(details) {
     });
 
     bomList.push({
-      component: "Drawer",
-      dimensions: `${width}cm x ${depth}cm`,
+      component: `Lade met dragers ${color=="black"?"(zwart)":""}`,
+      dimensions: `${width-2} x ${depth} cm`,
       quantity,
       unitPrice: price,
       totalPrice: calculateFormattedTotalPrice(price, quantity),
@@ -269,7 +279,5 @@ export function generateBOM(details) {
 
   // Sort BOM list by dimensions
   //bomList.sort((a, b) => a.dimensions.localeCompare(b.dimensions));
-
-  console.log("Bill Of Material-->", bomList);
   return bomList;
 }

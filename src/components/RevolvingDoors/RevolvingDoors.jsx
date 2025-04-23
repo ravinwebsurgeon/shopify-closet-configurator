@@ -121,6 +121,7 @@ const RevolvingDoors = () => {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: true,
+            className: "!font-inter !text-[13px] ",
           })
           return null;
         }
@@ -164,6 +165,7 @@ const RevolvingDoors = () => {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
+        className: "!font-inter !text-[13px] ",
       })
     }
   };

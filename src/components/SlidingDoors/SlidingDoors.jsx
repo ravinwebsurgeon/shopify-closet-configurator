@@ -52,7 +52,7 @@ const SlidingDoors = () => {
           )}
         </div>
       ) : (
-        <div className="backwall-warning">
+        <div className="backwall-warning font-inter font-medium">
           <strong>Geen shuifdeuren beschikbaar bij deze afmeting</strong>
           <br />
           <p>Schuifdeuren zijn alleen beschikbaar bij een breedte van:</p>
