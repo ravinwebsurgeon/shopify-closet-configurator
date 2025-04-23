@@ -39,7 +39,7 @@ const CompartmentsButton = ({
       <div
         className={`compartments_wrapper_outer compartment_type_${compartments?.type}`}
       >
-        <div className={`compartments_wrapper_inner`}>
+        <div className={`compartments_wrapper_inner ${color == "black"?"compartment_black":""}`}>
           <span></span>
           <span></span>
           <span></span>

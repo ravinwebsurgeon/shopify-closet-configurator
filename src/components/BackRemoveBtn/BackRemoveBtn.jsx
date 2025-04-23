@@ -8,7 +8,6 @@ const BackRemoveBtn = ({width ,id}) => {
 
     const handleDelete = (e) =>{
         e.preventDefault();
-        alert(`backwall delete Btn Clicked for id :${id}`);
         dispatch(deleteBackwall({sectionId:id}));
     }
 

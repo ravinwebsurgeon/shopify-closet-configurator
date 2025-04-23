@@ -31,7 +31,7 @@ const SidesComponent = () => {
     {
       id: "perfo",
       imgSrc: sidewallPerfo,
-      label: "Sidewall Perfo",
+      label: "Zijwand Perfo",
       productInformation: {
         title: "Zijwand Metaal (perfo)",
         description: `<ul><li>
@@ -44,7 +44,7 @@ stellingcode aan te geven.
     {
       id: "closed",
       imgSrc: sidewallClosed,
-      label: "Sidewall Closed ",
+      label: "Zijwand Dicht ",
       productInformation: {
         title: "Zijwand Metaal (dicht)",
         description: `<p>Zijwanden geven steun aan opslag (voorraad), daarnaast ziet het er ook netjes uit met de mogelijkheid middels bijvoorbeeld magneetband een stellingcode aan te geven.<br></p>`,
@@ -82,7 +82,7 @@ stellingcode aan te geven.
             depth,
           })}
           productInfo={data?.productInformation}
-          title={data.label}
+          title={`${data.label} ${color === "black" ? "(zwart)" : ""}`}
         />
       ))}
     </div>
