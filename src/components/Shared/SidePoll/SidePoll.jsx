@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import DrawersDelete from "../../Drawers/DrawersDelete";
 import RevolvingDoorDelete from "../../RevolvingDoors/RevolvingDoorDelete";
 import RevolvingDoorSetShelves from "../../RevolvingDoors/RevolvingDoorSetShelves";
+import SlidingDoorDelete from "../../SlidingDoors/SlidingDoorDelete";
 
 const SidePoll = ({
   isShelfSelected,
@@ -25,7 +26,10 @@ const SidePoll = ({
   const isRevolvingDoorHighlighted = useSelector(
     (state) => state.shelfDetail.isRevolvingDoorHighlighted
   );
-
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
+console.log("isSlidingDoorHighlighted", isSlidingDoorHighlighted);
   return (
     <div>
       {isCompartmentHighlighted && sectionKey == selectedSection && (
@@ -43,6 +47,9 @@ const SidePoll = ({
           section={section}
           door={isRevolvingDoorHighlighted}
         />
+      )}
+      {isSlidingDoorHighlighted && sectionKey == selectedSection && (
+        <SlidingDoorDelete door={isSlidingDoorHighlighted} section={section} />
       )}
       {!isRevolvingDoorHighlighted && sectionKey == selectedSection && (
         <RevolvingDoorSetShelves section={section} />

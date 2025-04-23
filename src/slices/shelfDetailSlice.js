@@ -104,7 +104,7 @@ const shelfDetailSlice = createSlice({
         newSection[`section_${highestSectionNumber + index + 1}`] =
           createInitialSection(width, currShelfHeight, shelves);
       });
-
+      const sectionKey = Object.keys(newSection);
       state.racks = {
         sections: {
           ...state.racks.sections,
@@ -115,7 +115,7 @@ const shelfDetailSlice = createSlice({
           ...executionObject,
           ...(state.racks.execution || {}),
         },
-        selectedSection,
+        selectedSection: sectionKey[0],
         activeTab,
         showCounter,
         isEditingSides,
@@ -582,7 +582,48 @@ const shelfDetailSlice = createSlice({
     },
     addShelve: (state, action) => {
       const { sectionId, shelves } = action.payload;
-      state.racks.sections[sectionId].shelves = shelves;      
+      state.racks.sections[sectionId].shelves = shelves;
+    },
+    addSlidingDoor: (state, action) => {
+      const { sectionId, type, position, shelfKey } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+      if (!state.racks.sections[sectionId]) return;
+
+      if (!state.racks.sections[sectionId].slidingDoors) {
+        state.racks.sections[sectionId].slidingDoors = {};
+      }
+      for (let i = 0; i < shelfKeys.length; i++) {
+        const key = shelfKeys[i];
+        const shelf = shelves[key];
+
+        if (key === shelfKey) {
+          state.isSlidingDoorHighlighted = {
+            id: `slidingDoors_${i + 1}`,
+            type: type,
+            position: position,
+          };
+          updatedShelves[`slidingDoors_${i + 1}`] = {
+            type: type,
+            position: position,
+          };
+        }
+
+        updatedShelves[key] = shelf;
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
+    setSlidingDoorHighlighted: (state, action) => {
+      state.isSlidingDoorHighlighted = action.payload;
+    },
+    removeSlidingDoor: (state, action) => {
+      const { sectionId, doorKey } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves && shelves[doorKey]) {
+        delete shelves[doorKey];
+      }
     },
   },
 });
@@ -630,7 +671,10 @@ export const {
   setHideDoor,
   updateRevolvingDoor,
   removeSectionDoors,
-  addShelve
+  addShelve,
+  setSlidingDoorHighlighted,
+  addSlidingDoor,
+  removeSlidingDoor,
 } = shelfDetailSlice.actions;
 
 // export default reducer

@@ -174,7 +174,7 @@ export const slidingDoors = [
   },
   {
     id: "sliding_door_transparent",
-    image: "/sliding-doors/schuifdeur-wit.png",
+    image: "/sliding-doors/schuifdeur-transparant.png",
     title: "Schuifdeurset Transparant 98cm",
     dimention: "98x30 cm",
     price: 46.11,

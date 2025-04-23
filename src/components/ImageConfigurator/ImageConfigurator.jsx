@@ -30,6 +30,7 @@ import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
+import SlidingDoorViewer from "../SlidingDoors/SlidingDoorViewer";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -82,7 +83,6 @@ const ImageConfigurator = () => {
   );
 
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
-  
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
@@ -181,7 +181,6 @@ const ImageConfigurator = () => {
         dispatch(setCompartmentHighlighted(""));
         dispatch(setDrawerHighlighted(""));
         dispatch(setHideDoor(false));
-       
       }
     };
 
@@ -219,8 +218,6 @@ const ImageConfigurator = () => {
     handleSectionClick(e, sectionkey);
     setTopPosition(position);
     dispatch(setHideDoor(true));
-    
-    
   };
   const sectionItems = Object.keys(sections);
   const maxHeight = sectionItems
@@ -453,7 +450,19 @@ const ImageConfigurator = () => {
                                           shelfkey={shelfkey}
                                         />
                                       )}
-                                      {!shelfkey.includes("compartment") &&
+                                      {shelfkey.includes("slidingDoors") && (
+                                        <SlidingDoorViewer
+                                          key={shelfkey}
+                                          doorKey={shelfkey}
+                                          type={shelf.type}
+                                          position={shelf.position}
+                                          width={section.width}
+                                          section={sectionKey}
+                                        />
+                                      )}
+
+                                      {!shelfkey.includes("slidingDoors") &&
+                                        !shelfkey.includes("compartment") &&
                                         !shelfkey.includes("drawer_") && (
                                           <div
                                             className={`Legbord_Legbord__Outer`}
@@ -508,6 +517,7 @@ const ImageConfigurator = () => {
                                 ([key, door], index) => {
                                   return (
                                     <RevolvingDoor
+                                      key={key}
                                       doorKey={key}
                                       type={door.type}
                                       position={door.position}

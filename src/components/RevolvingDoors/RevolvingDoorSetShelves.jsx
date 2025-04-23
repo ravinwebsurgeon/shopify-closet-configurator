@@ -36,17 +36,17 @@ const RevolvingDoorSetShelves = ({ section }) => {
           position: parseFloat(value?.position?.top),
         })
       );
-      const shelfPositions = shelfDetail.map((item) => item?.position);      
+      const shelfPositions = shelfDetail.map((item) => item?.position);
       setShelfData({
         positions: shelfPositions,
         data: shelfDetail,
       });
     }
-    console.log(sections);
+    // console.log(sections);
   }, [sections]);
-  const addOrUpdateShelve = ({ revolvingDoor }) => {
-    const prevShelfMoveRange = revolvingDoor?.position - 10;
-    const newShelfMoveRange = revolvingDoor?.position + 10;
+  const addOrUpdateShelve = ({ revolvingDoor, position }) => {
+    const prevShelfMoveRange = position - 10;
+    const newShelfMoveRange = position + 10;
     const findSutiableShelf = shelfsData?.data?.filter(
       (item) =>
         item?.position > prevShelfMoveRange &&
@@ -57,7 +57,7 @@ const RevolvingDoorSetShelves = ({ section }) => {
       dispatch(
         updateShelvePostion({
           sectionId: selectedSectionKey,
-          position: revolvingDoor?.position,
+          position: position,
           shelfKey: key,
         })
       );
@@ -72,31 +72,36 @@ const RevolvingDoorSetShelves = ({ section }) => {
       });
     } else if (findSutiableShelf?.length == 1) {
       const key = findSutiableShelf[0]?.key;
+      // console.log(key, position);
       dispatch(
         updateShelvePostion({
           sectionId: selectedSectionKey,
-          position: revolvingDoor?.position,
+          position: position,
           shelfKey: key,
         })
       );
-    } else if (findSutiableShelf?.length == 0) {      
+    } else if (findSutiableShelf?.length == 0) {
       const shelfDetail = Object.entries(sections?.shelves).map(
         ([key, value]) => ({
           key,
           position: parseFloat(value?.position?.top),
         })
       );
-      const getShelf = shelfDetail?.find(
-        (item) => item?.position > revolvingDoor?.position
-      );
-      console.log(getShelf);
+      let getShelf = shelfDetail?.find((item) => item?.position > position);
 
       const shelfKeys = Object.keys(sections?.shelves);
       const shelves = sections?.shelves;
       const updatedShelves = {};
+      if (!getShelf) {
+        getShelf = {
+          key: "shelves_" + shelfKeys.length,
+        };
+      }
+      // console.log(getShelf);
+      // console.log(shelfKeys.length);
       for (let i = 0; i < shelfKeys.length; i++) {
         const key = shelfKeys[i];
-        const shelf = sections?.shelves[key];   
+        const shelf = sections?.shelves[key];
         if (key === getShelf?.key) {
           let drawerIndex = 1;
           let newKey = `shelves_${drawerIndex}`;
@@ -106,21 +111,20 @@ const RevolvingDoorSetShelves = ({ section }) => {
           }
 
           updatedShelves[newKey] = {
-            position: { top: revolvingDoor?.position + "em" },
+            position: { top: position + "em" },
           };
         }
-
         updatedShelves[key] = shelf;
-      }      
+      }
       dispatch(
         addShelve({
           sectionId: selectedSectionKey,
-          shelves: updatedShelves
+          shelves: updatedShelves,
         })
       );
     }
   };
-  console.log(section?.height / 2 - 2.5);
+
   return (
     <div
       className={`shelfRemoveBtnOver scale-90 shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
@@ -157,7 +161,9 @@ const RevolvingDoorSetShelves = ({ section }) => {
                 </button>
               </div>
             )}
-            {(!shelfsData?.positions.includes(section?.height / 2 - 2.5) && !shelfsData?.positions.includes(item?.position + item?.height)) && (
+            {!shelfsData?.positions.includes(
+              item?.position + item?.height - 2.5
+            ) && (
               <div
                 className="absolute right-[-10px] revolving__doors_set "
                 style={{ top: item?.position + item?.height + 4 + "em" }}

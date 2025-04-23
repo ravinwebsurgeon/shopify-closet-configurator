@@ -11,6 +11,7 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
+// import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 
 const SectionInterface = ({
   selectedSection,
@@ -62,6 +63,9 @@ const SectionInterface = ({
   const highlightedDrawer = useSelector(
     (state) => state.shelfDetail.highlightedDrawer
   );
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
   return (
     <div className="Section_sectionInterface">
       <div className="Section_sectionNumberContainer sk_hide_on_print">
@@ -96,6 +100,10 @@ const SectionInterface = ({
           </button>
         )}
       </div>
+
+      {/* {isSlidingDoorHighlighted && selectedSection == sectionKey && (
+        <SlidingDoorMoveButton selected={isSlidingDoorHighlighted} />
+      )} */}
       {isCompartmentHighlighted && selectedSection == sectionKey && (
         <CompartmentsMoveButton selected={isCompartmentHighlighted} />
       )}
