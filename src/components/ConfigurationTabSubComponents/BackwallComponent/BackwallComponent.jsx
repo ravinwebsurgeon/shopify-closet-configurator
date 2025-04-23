@@ -33,7 +33,7 @@ const BackwallComponent = () => {
     {
       id: "perfo",
       imgSrc: backPerfo,
-      label: "BackWall Perfo",
+      label: "Achterwand Perfo",
       productInformation: {
         title: "Achterwand Metaal (perfo)",
         description: `<p>De metaal verzinkte achterwanden passen middels diverse zettingen perfect in het systeem en kunnen eenvoudig worden vastgezet met bijgeleverde parkers welke weer precies in het profiel van de staanders passen, dit geeft enorme stevigheid (X- en H-schoren zijn dan niet nodig). In de geperforeerde achterwanden kunnen diverse <a href="#" target="_blank" rel="noreferrer noopener">inhanghaken</a> worden geplaats voor bijvoorbeeld gereedschap.<br>Achterwanden zijn in hoogtes van 50, 100 en 120 cm beschikbaar en kunnen boven elkaar geplaatst worden. Een achterwand van 250 cm hoog is bijvoorbeeld een combinatie van 2x100cm&nbsp; plus 1x50 cm hoog.</p>`,
@@ -42,7 +42,7 @@ const BackwallComponent = () => {
     {
       id: "closed",
       imgSrc: backSolid,
-      label: "Backwall Closed ",
+      label: "Achterwand Dicht ",
       productInformation: {
         title: "Achterwand Metaal (dicht)",
         description: `<ul><li>De metaal verzinkte achterwanden passen middels diverse zettingen perfect in het systeem en kunnen eenvoudig worden vastgezet met bijgeleverde parkers welke weer precies in het profiel van de staanders passen, 
@@ -83,15 +83,15 @@ const BackwallComponent = () => {
                 width,
               })}
               productInfo={data?.productInformation}
-              title={data.label}
+              title={`${data.label} ${color === "black" ? "(zwart)" : ""}`}
             />
           ))}
         </div>
       ) : (
-        <div className="backwall-warning">
-          <strong>No back walls available with this size</strong>
+        <div className="backwall-warning font-inter font-medium">
+          <strong>Geen achterwanden beschikbaar bij deze afmeting</strong>
           <br />
-          <p>Back walls are only available with a width of:</p>
+          <p>Achterwanden zijn alleen beschikbaar bij een breedte van:</p>
           <br />
           <strong>55cm - 70cm - 85cm - 100cm</strong>
         </div>

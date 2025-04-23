@@ -3,7 +3,7 @@ export const compartmentData = [
     id: "compartment_divider_set",
     image: "/compartment/vakverdeelset-metal-medium.png",
     black_image:"/compartment/compartment-divider-set-black.png",
-    title: "Compartment divider set",
+    title: "Vakverdeelset",
     dimention: "98x30 cm",
     price: 46.11,
     productInformation: {
@@ -16,7 +16,7 @@ export const compartmentData = [
     id: "sliding_partition",
     image: "/compartment/schuifschot-metal.png",
     black_image:"/compartment/sliding-partition-black.png",
-    title: "Sliding screen 20cm high",
+    title: "Schuifschot 20cm hoog",
     dimention: "30 cm",
     price: 8.69,
     productInformation: {

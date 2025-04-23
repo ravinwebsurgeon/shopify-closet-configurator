@@ -23,7 +23,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions }) => {
     <div className="dimensions-content flex flex-col gap-4">
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-          Width
+        Breedte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.width} cm
           </span>
@@ -53,7 +53,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions }) => {
 
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-          Height
+        Hoogte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.height} cm
           </span>
@@ -83,7 +83,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions }) => {
 
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-          Depth
+        Diepte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.depth} cm
           </span>

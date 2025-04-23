@@ -21,8 +21,8 @@ const ShelvesComponent = () => {
   const dimention = useSelector((state) => state.shelfDetail.racks);
 
   const cardData = [
-    { id: "metal", imgSrc: legboard, title: "Shelf with support" },
-    { id: "black", imgSrc: legboardBlack, title: "Shelf with support (black)" },
+    { id: "metal", imgSrc: legboard, title: "Legbord met dragers" },
+    { id: "black", imgSrc: legboardBlack, title: "Legbord met dragers (zwart)" },
   ];
 
   const getData = (color) => {

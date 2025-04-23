@@ -25,7 +25,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
     : 3;
   const shelfHeight = currentSection["height"];
   const [shelfCount, setShelfCount] = useState(shelf_count);
-  const [isUserAction,setIsUserAction] = useState(false);
+  //const [isUserAction,setIsUserAction] = useState(false);
 
   const heightArr = [
     { 100: "57" },
@@ -58,17 +58,16 @@ const ShelfCounter = ({ onClick, showCounter }) => {
   };
 
  
-  useEffect(() => {
-    setShelfCount(shelf_count);
-  }, [shelf_count, sectionId]);
+  // useEffect(() => {
+  //   setShelfCount(shelf_count);
+  // }, [shelf_count, sectionId]);
 
   useEffect(() => {
-    if(isUserAction){
       positionArray = GeneratePosArr(shelfHeight, shelfCount);
       dispatch(updateShelvesPosition({ sectionId, positionArray }));
-      setIsUserAction(false);
-    }
-  }, [shelfCount,isUserAction]);
+     // setIsUserAction(false);
+    
+  }, [shelfCount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -93,14 +92,14 @@ const ShelfCounter = ({ onClick, showCounter }) => {
       return;
     } else {
       setShelfCount((prevData) => prevData + 1);
-      setIsUserAction(true);
+      //setIsUserAction(true);
     }
   };
 
   const handleRemoveShelf = (e) => {
     e.preventDefault();
     setShelfCount((prevData) => prevData - 1);    
-    setIsUserAction(true);
+   // setIsUserAction(true);
   };
 
   return (

@@ -84,6 +84,7 @@ const Drawers = () => {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: true,
+          className: "!font-inter !text-[13px] ",
         }
       );
     }
@@ -113,11 +114,11 @@ const Drawers = () => {
               width: dimension.sections[selectedSectionKey].width,
             })}
             productInfo={false}
-            title={"Lade met dragers"}
+            title={color == "black"?"Lade met dragers (zwart)": "Lade met dragers"}
           />
         </div>
       ) : (
-        <div className="backwall-warning">
+        <div className="backwall-warning font-inter font-medium">
           <strong>Geen lades beschikbaar bij deze afmetingen</strong>
           <br />
           <p>Lades zijn alleen beschikbaar bij een breedte van:</p>
