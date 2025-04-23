@@ -11,6 +11,7 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
+import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 // import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 
 const SectionInterface = ({
@@ -101,9 +102,9 @@ const SectionInterface = ({
         )}
       </div>
 
-      {/* {isSlidingDoorHighlighted && selectedSection == sectionKey && (
+      {isSlidingDoorHighlighted && selectedSection == sectionKey && (
         <SlidingDoorMoveButton selected={isSlidingDoorHighlighted} />
-      )} */}
+      )}
       {isCompartmentHighlighted && selectedSection == sectionKey && (
         <CompartmentsMoveButton selected={isCompartmentHighlighted} />
       )}

@@ -28,7 +28,7 @@ const RevolvingDoorMoveButton = () => {
   });
   useEffect(() => {
     handlePositionChange();
-    console.log(isRevolvingDoorHighlighted, revolvingDoorsAll);
+
   }, [isRevolvingDoorHighlighted, revolvingDoorsAll]);
   const handlePositionChange = (type) => {
     if (!isRevolvingDoorHighlighted || !revolvingDoorsAll) return;
@@ -57,7 +57,7 @@ const RevolvingDoorMoveButton = () => {
         height: sectionHeight / 2 + (doorTypeHeight == 50 ? 25 : 25),
       },
     ];
-    console.log(revolvingDoorsKeys);
+
     const sortedDoors = revolvingDoorsKeys.sort(
       (a, b) => a.position - b.position
     );

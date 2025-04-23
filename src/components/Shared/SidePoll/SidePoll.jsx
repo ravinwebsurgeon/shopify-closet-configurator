@@ -8,6 +8,7 @@ import DrawersDelete from "../../Drawers/DrawersDelete";
 import RevolvingDoorDelete from "../../RevolvingDoors/RevolvingDoorDelete";
 import RevolvingDoorSetShelves from "../../RevolvingDoors/RevolvingDoorSetShelves";
 import SlidingDoorDelete from "../../SlidingDoors/SlidingDoorDelete";
+import SlidingDoorSetShelves from "../../SlidingDoors/SlidingDoorSetShelves";
 
 const SidePoll = ({
   isShelfSelected,
@@ -29,7 +30,7 @@ const SidePoll = ({
   const isSlidingDoorHighlighted = useSelector(
     (state) => state.shelfDetail.isSlidingDoorHighlighted
   );
-console.log("isSlidingDoorHighlighted", isSlidingDoorHighlighted);
+
   return (
     <div>
       {isCompartmentHighlighted && sectionKey == selectedSection && (
@@ -53,6 +54,9 @@ console.log("isSlidingDoorHighlighted", isSlidingDoorHighlighted);
       )}
       {!isRevolvingDoorHighlighted && sectionKey == selectedSection && (
         <RevolvingDoorSetShelves section={section} />
+      )}
+      {!isSlidingDoorHighlighted && sectionKey == selectedSection && (
+        <SlidingDoorSetShelves section={section} />
       )}
       {isShelfSelected?.key != "" && sectionKey == selectedSection ? (
         <div

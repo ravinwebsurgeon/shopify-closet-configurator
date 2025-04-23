@@ -8,7 +8,6 @@ export function calculateTotalPrice(details) {
   let sections = details.racks.sections;
   let depth = details.racks.depth;
 
-  console.log("Details -->", details);
 
   // calculate shelf price
   Object.values(sections).forEach((section) => {

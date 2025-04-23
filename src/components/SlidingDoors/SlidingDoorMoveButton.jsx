@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setisSlidingDoorHighlighted,
-  updateRevolvingDoor,
+  setSlidingDoorHighlighted,
+  updateSlidingDoor,
 } from "../../slices/shelfDetailSlice";
 
 const SlidingDoorMoveButton = () => {
@@ -16,10 +16,7 @@ const SlidingDoorMoveButton = () => {
   const selectedSectionKey = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
-  const revolvingDoorsAll = useSelector(
-    (state) =>
-      state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
-  );
+  const shelves = sections[selectedSectionKey].shelves;
   const [buttons, setButtons] = useState({
     topLeft: { active: false },
     topRight: { active: false },
@@ -28,268 +25,105 @@ const SlidingDoorMoveButton = () => {
   });
   useEffect(() => {
     handlePositionChange();
-    console.log(isSlidingDoorHighlighted, revolvingDoorsAll);
-  }, [isSlidingDoorHighlighted, revolvingDoorsAll]);
+  }, [isSlidingDoorHighlighted, shelves]);
   const handlePositionChange = (type) => {
-    if (!isSlidingDoorHighlighted || !revolvingDoorsAll) return;
-    // console.log(isSlidingDoorHighlighted);
-    const doorTypeHeight = isSlidingDoorHighlighted?.type.includes("50")
-      ? 25
-      : 50;
-    const sectionHeight = sections[selectedSectionKey].height;
-    const revolvingDoorsKeys = [
-      {
-        position: 0,
-        key: "initial",
-        height: 0,
-      },
-      ...(revolvingDoorsAll
-        ? Object.entries(revolvingDoorsAll).map(([key, value]) => ({
-            key,
-            type: value?.type,
-            position: value?.position,
-            height: value?.height,
-          }))
-        : []),
-      {
-        position: sectionHeight / 2,
-        key: "last",
-        height: sectionHeight / 2 + (doorTypeHeight == 50 ? 25 : 25),
-      },
-    ];
-    console.log(revolvingDoorsKeys);
-    const sortedDoors = revolvingDoorsKeys.sort(
-      (a, b) => a.position - b.position
+    const shelfs = Object.entries(shelves).map(([key, value]) => ({
+      key,
+      position: key?.includes("slidingDoors")
+        ? value?.position
+        : parseFloat(value?.position?.top),
+    }));
+    const filteredShelfs = shelfs.filter(
+      (item) =>
+        !item?.key.includes("drawer_") && !item?.key.includes("compartment")
     );
-    const selectedIndex = sortedDoors.findIndex(
-      (item) => item.key === isSlidingDoorHighlighted?.id
-    );
-    if (selectedIndex === -1) return;
-    const spaces = sortedDoors
-      ?.map((item, index, arr) => {
+    const spaceBetweenShelves = filteredShelfs
+      .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        const fromTop = fromKey?.position + arr[index - 1]?.height;
-        const top = item?.position;
-        console.log(top, item?.key);
+        const h = fromKey && fromKey?.key.includes("slidingDoors") ? 22.5 : 0;
         return {
-          type:
-            fromTop <= isSlidingDoorHighlighted?.position ? "prev" : "next",
           from: fromKey?.key,
           to: item?.key,
-          doorType: item?.type,
-          space: top - fromTop,
-          shelfTop: top,
+          type:
+            item?.position <= isSlidingDoorHighlighted?.position
+              ? "prev"
+              : "next",
+          fromPosition: fromKey?.position,
+          toPosition: item?.position,
+          nextDoorPosition:
+            item && item?.key.includes("slidingDoors")
+              ? item?.position - 22.5
+              : 0,
+          space: item?.position - fromKey?.position - h,
         };
       })
-      .filter(Boolean);
-
-    const filterPrev = spaces
-      .filter((item) => item.type === "prev")
-      .sort((a, b) => b.shelfTop - a.shelfTop);
-
-    const filterNext = spaces
-      .filter((item) => item.type === "next")
-      .sort((a, b) => a.shelfTop - b.shelfTop);
-    const findNext = filterNext.find(
-      (item) => item.type === "next" && item?.space > 0
+      .filter(Boolean)
+      .sort((a, b) => b.toPosition - a.toPosition);
+    const findPrev = spaceBetweenShelves?.filter(
+      (item) => item.type === "prev"
     );
-    const findPrev = filterPrev.find(
-      (item) => item.type === "prev" && item?.space > 0
-    );
-    const findACPrev = filterPrev.find(
-      (item) =>
-        item.type === "prev" && item?.to == isSlidingDoorHighlighted?.id
-    );
-    const findACNext = filterNext.find(
-      (item) =>
-        item.type === "next" && item?.from == isSlidingDoorHighlighted?.id
-    );
-
+    const findNext = spaceBetweenShelves
+      ?.filter((item) => item.type === "next")
+      .sort((a, b) => a.toPosition - b.toPosition);
     setButtons({
-      topLeft: {
-        active: findACPrev?.space > 0 || findPrev?.space >= doorTypeHeight,
-      },
-      topRight: {
-        active: findACPrev?.space > 0 || findPrev?.space >= doorTypeHeight,
-      },
-      bottomLeft: {
-        active: findACNext?.space > 0 || findNext?.space >= doorTypeHeight,
-      },
-      bottomRight: {
-        active: findACNext?.space > 0 || findNext?.space >= doorTypeHeight,
-      },
+      topLeft: { active: findPrev[0]?.space > 1.25 },
+      topRight: { active: findPrev[0]?.space > 1.25 },
+      bottomLeft: { active: findNext[0]?.space >= 1.25 },
+      bottomRight: { active: findNext[0]?.space >= 1.25 },
     });
-    const selectedDoor = sortedDoors.find(
-      (item) => item.key == isSlidingDoorHighlighted?.id
-    );
-    const moveingDoorType = selectedDoor?.type.includes("50") ? 25 : 50;
     if (type) {
       if (type.includes("Left")) {
         const gap = type == "topLeft" ? 1.25 : -1.25;
-        const newPosition = selectedDoor?.position - gap;
-        if (
-          newPosition >= 0 &&
-          newPosition <= sectionHeight / 2 - moveingDoorType &&
-          (type == "topLeft" && findACPrev ? findACPrev?.space > 0 : true) &&
-          (type == "bottomLeft" && findACNext ? findACNext?.space > 0 : true)
-        ) {
+        const newPosition = isSlidingDoorHighlighted?.position - gap;
+        if (newPosition >= 0 && findNext[0].toPosition - 22.5 >= newPosition) {
           dispatch(
-            updateRevolvingDoor({
+            updateSlidingDoor({
               sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
               position: newPosition,
+              doorKey: isSlidingDoorHighlighted?.id,
             })
           );
           dispatch(
-            setisSlidingDoorHighlighted({
+            setSlidingDoorHighlighted({
               id: isSlidingDoorHighlighted?.id,
-              type: isSlidingDoorHighlighted?.type,
               position: newPosition,
-            })
-          );
-        }
-        const findPrevHeight = findPrev
-          ? findPrev?.doorType?.includes("50")
-            ? 25
-            : 50
-          : 0;
-        if (
-          type == "topLeft" &&
-          findPrev?.space >= findPrevHeight &&
-          findACPrev?.space <= 0
-        ) {
-          dispatch(
-            updateRevolvingDoor({
-              sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
-              position: findPrev?.shelfTop - findPrevHeight,
-            })
-          );
-          dispatch(
-            setisSlidingDoorHighlighted({
-              id: isSlidingDoorHighlighted?.id,
               type: isSlidingDoorHighlighted?.type,
-              position: findPrev?.shelfTop - findPrevHeight,
-            })
-          );
-        }
-        const findNextHeight = isSlidingDoorHighlighted
-          ? isSlidingDoorHighlighted?.type?.includes("50")
-            ? 25
-            : isSlidingDoorHighlighted?.type?.includes("100")
-            ? 50
-            : 0
-          : 0;
-        if (
-          type == "bottomLeft" &&
-          findNext?.space >= findNextHeight &&
-          findACNext?.space <= 0
-        ) {
-          dispatch(
-            updateRevolvingDoor({
-              sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
-              position: findNext?.shelfTop - findNextHeight,
-            })
-          );
-          dispatch(
-            setisSlidingDoorHighlighted({
-              id: isSlidingDoorHighlighted?.id,
-              type: isSlidingDoorHighlighted?.type,
-              position: findNext?.shelfTop - findNextHeight,
             })
           );
         }
       }
       if (type.includes("Right")) {
-        const gap = type == "bottomRight" ? -5 : 5;
-        let newPosition = selectedDoor?.position - gap;
-        if (type == "topRight" && findACPrev && findACPrev?.space <= 6.25) {
-          newPosition = newPosition - (findACPrev?.space - gap);
-        }
-        if (type == "bottomRight" && findACNext && findACNext?.space <= 6.25) {
-          newPosition = newPosition + (findACNext?.space + gap);
-        }
+        const gap = type == "topRight" ? 5 : -5;
+        let newPosition = isSlidingDoorHighlighted?.position - gap;
+        if (newPosition <= findPrev[0].fromPosition && type == "topRight") {
+          newPosition = findPrev[0].fromPosition + 1.25;
+        }        
         if (
-          newPosition >= 0 &&
-          newPosition <= sectionHeight / 2 - moveingDoorType &&
-          (type == "topRight" && findACPrev ? findACPrev?.space >= 0 : true) &&
-          (type == "bottomRight" && findACNext ? findACNext?.space >= 0 : true)
+          newPosition >= findNext[0].toPosition - 22.5 &&
+          type == "bottomRight"
         ) {
+          newPosition = findNext[0].toPosition - 22.5;
+        }
+
+        if (newPosition >= 0 && findNext[0].toPosition - 22.5 >= newPosition) {
           dispatch(
-            updateRevolvingDoor({
+            updateSlidingDoor({
               sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
               position: newPosition,
+              doorKey: isSlidingDoorHighlighted?.id,
             })
           );
           dispatch(
-            setisSlidingDoorHighlighted({
+            setSlidingDoorHighlighted({
               id: isSlidingDoorHighlighted?.id,
-              type: isSlidingDoorHighlighted?.type,
               position: newPosition,
-            })
-          );
-        }
-        const findPrevHeight = findPrev
-          ? findPrev?.doorType?.includes("50")
-            ? 25
-            : 50
-          : 0;
-        if (
-          type == "topRight" &&
-          findPrev?.space >= findPrevHeight &&
-          findACPrev?.space <= 0
-        ) {
-          dispatch(
-            updateRevolvingDoor({
-              sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
-              position: findPrev?.shelfTop - findPrevHeight,
-            })
-          );
-          dispatch(
-            setisSlidingDoorHighlighted({
-              id: isSlidingDoorHighlighted?.id,
               type: isSlidingDoorHighlighted?.type,
-              position: findPrev?.shelfTop - findPrevHeight,
-            })
-          );
-        }
-        const findNextHeight = isSlidingDoorHighlighted
-          ? isSlidingDoorHighlighted?.type?.includes("50")
-            ? 25
-            : isSlidingDoorHighlighted?.type?.includes("100")
-            ? 50
-            : 0
-          : 0;
-        if (
-          type == "bottomRight" &&
-          findNext?.space >= findNextHeight &&
-          findACNext?.space <= 0
-        ) {
-          dispatch(
-            updateRevolvingDoor({
-              sectionId: selectedSectionKey,
-              doorKey: isSlidingDoorHighlighted?.id,
-              position: findNext?.shelfTop - findNextHeight,
-            })
-          );
-          dispatch(
-            setisSlidingDoorHighlighted({
-              id: isSlidingDoorHighlighted?.id,
-              type: isSlidingDoorHighlighted?.type,
-              position: findNext?.shelfTop - findNextHeight,
             })
           );
         }
       }
     }
-    // console.log("findPrev", findPrev);
-    // console.log("findNext", findNext);
-    // console.log("filterNext", filterNext);
-    // console.log("filterPrev", filterPrev);
   };
 
   const buttonStyle =
@@ -330,7 +164,9 @@ const SlidingDoorMoveButton = () => {
         {["bottomLeft", "bottomRight"].map((type, index) => (
           <button
             key={type}
-            onClick={() => handlePositionChange(type)}
+            onClick={() =>
+              buttons[type].active ? handlePositionChange(type) : ""
+            }
             className={`${buttonStyle} ${
               buttons[type].active
                 ? "bg-blue-1000 text-white"

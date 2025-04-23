@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import cryptoRandomString from "crypto-random-string";
 
 const initialState = {
   configuration: null,
@@ -118,7 +119,7 @@ const shelfDetailSlice = createSlice({
           ...executionObject,
           ...(state.racks.execution || {}),
         },
-        selectedSection:newSectionKey[0],
+        selectedSection: newSectionKey[0],
         activeTab,
         showCounter,
         isEditingSides,
@@ -155,13 +156,14 @@ const shelfDetailSlice = createSlice({
           shelfKeys.forEach((key) => {
             const item = shelves[key];
 
-            if (key.startsWith("compartment_") && 
-                item?.compartments?.type == "compartment_divider_set") {
+            if (
+              key.startsWith("compartment_") &&
+              item?.compartments?.type == "compartment_divider_set"
+            ) {
               delete shelves[key];
             }
           });
-        }
-        else if (value > 60){
+        } else if (value > 60) {
           const shelves = state.racks.sections[sectionId].shelves;
           const shelfKeys = Object.keys(shelves).sort((a, b) => {
             return (
@@ -606,27 +608,30 @@ const shelfDetailSlice = createSlice({
       const { sectionId, shelves } = action.payload;
       state.racks.sections[sectionId].shelves = shelves;
     },
+    updateSlidingDoor: (state, action) => {
+      const { sectionId, position, doorKey } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves && shelves[doorKey] && shelves[doorKey]?.position) {
+        shelves[doorKey].position = position;
+      }
+    },
     addSlidingDoor: (state, action) => {
+      const randomstr = cryptoRandomString({ length: 7, type: "alphanumeric" });
       const { sectionId, type, position, shelfKey } = action.payload;
       const shelves = state.racks.sections[sectionId].shelves;
       const shelfKeys = Object.keys(shelves);
       const updatedShelves = {};
       if (!state.racks.sections[sectionId]) return;
-
-      if (!state.racks.sections[sectionId].slidingDoors) {
-        state.racks.sections[sectionId].slidingDoors = {};
-      }
       for (let i = 0; i < shelfKeys.length; i++) {
         const key = shelfKeys[i];
         const shelf = shelves[key];
-
         if (key === shelfKey) {
           state.isSlidingDoorHighlighted = {
-            id: `slidingDoors_${i + 1}`,
+            id: `slidingDoors_${randomstr}`,
             type: type,
             position: position,
           };
-          updatedShelves[`slidingDoors_${i + 1}`] = {
+          updatedShelves[`slidingDoors_${randomstr}`] = {
             type: type,
             position: position,
           };
@@ -647,15 +652,15 @@ const shelfDetailSlice = createSlice({
         delete shelves[doorKey];
       }
     },
-    removeDrawersFromSection : (state,action) =>{
-      const {sectionId} = action.payload;
+    removeDrawersFromSection: (state, action) => {
+      const { sectionId } = action.payload;
       const shelves = state.racks.sections?.[sectionId]?.shelves;
-      if(!shelves)  return;
-      Object.keys(shelves).forEach((key)=>{
-        if(key.startsWith("drawer_")){
+      if (!shelves) return;
+      Object.keys(shelves).forEach((key) => {
+        if (key.startsWith("drawer_")) {
           delete shelves[key];
         }
-      })
+      });
     },
   },
 });
@@ -708,6 +713,7 @@ export const {
   addSlidingDoor,
   removeSlidingDoor,
   removeDrawersFromSection,
+  updateSlidingDoor
 } = shelfDetailSlice.actions;
 
 // export default reducer
