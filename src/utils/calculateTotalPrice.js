@@ -90,7 +90,7 @@ export function calculateTotalPrice(details) {
         // if (section.sideWall.left.height == "50") {
         //   total += Math.floor(leftSideWallPrice / 2);
         // } else {
-        total += leftSideWallPrice;
+          total += leftSideWallPrice;
         // }
       }
       if (section.sideWall.right.isRight) {
@@ -108,7 +108,7 @@ export function calculateTotalPrice(details) {
         // if (section.sideWall.right.height == "50") {
         //   total += Math.floor(rightSideWallPrice / 2);
         // } else {
-        total += rightSideWallPrice;
+          total += rightSideWallPrice;
         //}
       }
     }

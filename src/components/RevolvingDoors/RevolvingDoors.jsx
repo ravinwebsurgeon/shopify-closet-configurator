@@ -169,81 +169,80 @@ const RevolvingDoors = () => {
       (item) => item.space >= 25
     );
 
-    const doorsHeight = filteredDoors?.reduce(
-      (acc, item) => acc + (item?.height || 0),
-      0
-    );
-    if (section.height / 2 <= doorsHeight) {
-      toast.info("Er passen geen deuren meer in deze sectie.", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-      });
-      return;
-    }
-    if (
-      findSpaceBetweenDoors?.space >= doorHeight &&
-      filteredDoors?.length > 0
-    ) {
-      // Handle space between doors
-      handleAddDoorInSpace(findSpaceBetweenDoors, doorHeight, id);
-    } else if (
-      findSpaceBetweenShelves?.space >= doorHeight &&
-      filteredDoors?.length == 0
-    ) {
-      dispatch(
-        addRevloDoor({
-          sectionId: selectedSectionKey,
-          type: id,
-          position: findSpaceBetweenShelves.toPosition - doorHeight + 2.5,
-          shelfKey: findSpaceBetweenShelves.to,
-          height: doorHeight,
-        })
+      const revolvingDoorsKeysSorted = revolvingDoorsKeys.sort(
+        (a, b) => a.position - b?.position
       );
+      const spaces = revolvingDoorsKeysSorted
+        ?.map((item, index, arr) => {
+          if (index === 0) return null;
+          const fromKey = arr[index - 1];
+          const fromTop = fromKey?.position + arr[index - 1]?.height;
+          const top = item?.position;
+
+          return {
+            from: fromKey?.key,
+            to: item?.key,
+            space: top - fromTop,
+            shelfTop: top,
+          };
+        })
+        .filter(Boolean);
+      console.log(spaces);
+      if (spaces) {
+        const findSpace = spaces.reduce((max, curr) => {
+          return !max || curr.space > max.space ? curr : max;
+        }, null);
+        if (findSpace?.space < 50 && doorTypeHeight === 50 || findSpace?.space < 25 && doorTypeHeight === 25) {
+          toast.info("Er passen geen deuren meer in deze sectie.",{
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            className: "!font-inter !text-[13px] ",
+          })
+          return null;
+        }
+        dispatch(
+          addRevolvingDoor({
+            sectionId,
+            doorKey,
+            type: id,
+            position: findSpace?.shelfTop - doorTypeHeight,
+            height: doorTypeHeight,
+          })
+        );
+        dispatch(
+          setisRevolvingDoorHighlighted({
+            id: doorKey,
+            type: id,
+            position,
+          })
+        );
+      } else {
+        dispatch(
+          addRevolvingDoor({
+            sectionId,
+            doorKey,
+            type: id,
+            position,
+            height: doorHeight === 100 ? 50 : 25,
+          })
+        );
+
+        dispatch(
+          setisRevolvingDoorHighlighted({
+            id: doorKey,
+            type: id,
+            position,
+          })
+        );
+      }
     } else {
-      toast.info("Er passen geen deuren meer in deze sectie.", {
+      toast.info("Er passen geen deuren meer in deze sectie.",{
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
-      });
-    }
-  };
-
-  const handleAddDoorInSpace = (spaceInfo, doorHeight, doorId) => {
-    if (spaceInfo.space > 0) {
-      const isLastSection = spaceInfo.to === "last";
-      const position = isLastSection
-        ? spaceInfo.toPosition -
-          doorHeight +
-          (section.height / 2 - 2.5 !== spaceInfo.space ? 0 : 2.5)
-        : spaceInfo.toPosition -
-          doorHeight +
-          (section.height / 2 - 2.5 !== spaceInfo.space ? 0 : 2.5);
-
-      dispatch(
-        addRevloDoor({
-          sectionId: selectedSectionKey,
-          type: doorId,
-          position,
-          shelfKey: isLastSection ? spaceInfo.from : spaceInfo.to,
-          height: doorHeight,
-          shelfType: isLastSection
-            ? section.height / 2 - 2.5 !== spaceInfo.space
-              ? "last"
-              : "notItem"
-            : "",
-        })
-      );
-    } else if (spaceInfo.space === 0) {
-      dispatch(
-        addRevloDoor({
-          sectionId: selectedSectionKey,
-          type: doorId,
-          position: spaceInfo.fromPosition - doorHeight,
-          shelfKey: spaceInfo.from,
-          height: doorHeight,
-        })
-      );
+        className: "!font-inter !text-[13px] ",
+      })
     }
   };
 
