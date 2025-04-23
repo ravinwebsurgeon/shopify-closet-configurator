@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteShelf,
+  removeDrawersFromSection,
   removeRevolvingDoor,
   removeSectionDoors,
   setConfiguration,
@@ -264,7 +265,7 @@ const DimensionsComponent = () => {
     
         const isOverflowing = door.position + door.height > newHeight/2;
         
-          if(newHeight < usedHeight){
+          
           if (isOverflowing || currentHeight > newHeight) {
             dispatch(removeRevolvingDoor({
               sectionId: activeSectionId,
@@ -275,10 +276,26 @@ const DimensionsComponent = () => {
       
             if (currentHeight <= newHeight) break;
           }
-        }
+        
       }
     }
-    
+
+    // delete drawers from section when width > 100
+    if((dimension == "width" && value > 100)||
+        (dimension == "depth" && (value < 40 || value > 50))
+      ){
+      let currSection = activeSectionId;
+      let shelvesObject = activeSection.shelves
+      
+      const hasDrawers = Object.keys(shelvesObject).some((key) =>
+        key.includes("drawer")
+      );
+
+      if(hasDrawers){
+        dispatch(removeDrawersFromSection({sectionId:currSection}))
+      }
+
+    }
 
     const newValue = parseInt(value);
     const newDimensions = { ...dimensions, [dimension]: newValue };
