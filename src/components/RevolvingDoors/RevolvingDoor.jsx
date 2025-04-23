@@ -3,7 +3,7 @@ import'./RevolvingDoor.css'
 import { useDispatch, useSelector } from "react-redux";
 import { setisRevolvingDoorHighlighted } from "../../slices/shelfDetailSlice";
 
-const RevolvingDoor = ({doorKey,type,position,width,section}) => {
+const RevolvingDoor = ({doorKey,type,position,width,section, height}) => {
   
  const dispatch = useDispatch();
  const color = useSelector((state)=>state.shelfDetail.racks.execution.color);
@@ -15,7 +15,8 @@ const RevolvingDoor = ({doorKey,type,position,width,section}) => {
     dispatch(setisRevolvingDoorHighlighted({
       id,
       position,
-      type
+      type,
+      height:height
     }))
     
   }

@@ -552,27 +552,18 @@ const shelfDetailSlice = createSlice({
     },
     updateRevolvingDoor: (state, action) => {
       const { sectionId, doorKey, position } = action.payload;
-
       if (!state.racks.sections[sectionId]) return;
 
-      if (!state.racks.sections[sectionId].revolvingDoor) {
-        state.racks.sections[sectionId].revolvingDoor = {};
-      }
-
-      if (state.racks.sections[sectionId].revolvingDoor[doorKey]) {
-        state.racks.sections[sectionId].revolvingDoor[doorKey].position =
-          position;
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves && shelves[doorKey] && shelves[doorKey]?.position) {
+        shelves[doorKey].position = position;
       }
     },
     removeRevolvingDoor: (state, action) => {
       const { sectionId, doorKey } = action.payload;
-
-      if (
-        state.racks.sections[sectionId] &&
-        state.racks.sections[sectionId].revolvingDoor &&
-        state.racks.sections[sectionId].revolvingDoor[doorKey]
-      ) {
-        delete state.racks.sections[sectionId].revolvingDoor[doorKey];
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves && shelves[doorKey]) {
+        delete shelves[doorKey];
       }
     },
     setisRevolvingDoorHighlighted: (state, action) => {
@@ -662,6 +653,54 @@ const shelfDetailSlice = createSlice({
         }
       });
     },
+    addRevloDoor: (state, action) => {
+      const randomstr = cryptoRandomString({ length: 7, type: "alphanumeric" });
+      const { sectionId, type, position, shelfKey, height, shelfType } =
+        action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const c = shelfType != "notItem" ? 0 : 1;
+      const updatedShelves = {};
+      if (!state.racks.sections[sectionId]) return;
+      for (let i = 0; i < shelfKeys.length + c; i++) {
+        const key = shelfKeys[i];
+        const shelf = shelves[key];
+        if (shelfType != "notItem") {
+          if (key === shelfKey) {
+            state.isRevolvingDoorHighlighted = {
+              id: `revolvingDoors_${randomstr}`,
+              type: type,
+              position: position,
+              height: height,
+            };
+            updatedShelves[`revolvingDoors_${randomstr}`] = {
+              type: type,
+              position: position,
+              height: height,
+            };
+          }
+          updatedShelves[key] = shelf;
+        } else {
+          if (!key) {
+            state.isRevolvingDoorHighlighted = {
+              id: `revolvingDoors_${randomstr}`,
+              type: type,
+              position: position,
+              height: height,
+            };
+            updatedShelves[`revolvingDoors_${randomstr}`] = {
+              type: type,
+              position: position,
+              height: height,
+            };
+          } else {
+            updatedShelves[key] = shelf;
+          }
+        }
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
   },
 });
 
@@ -713,7 +752,8 @@ export const {
   addSlidingDoor,
   removeSlidingDoor,
   removeDrawersFromSection,
-  updateSlidingDoor
+  updateSlidingDoor,
+  addRevloDoor,
 } = shelfDetailSlice.actions;
 
 // export default reducer

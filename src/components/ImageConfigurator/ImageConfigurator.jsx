@@ -460,8 +460,19 @@ const ImageConfigurator = () => {
                                           section={sectionKey}
                                         />
                                       )}
-
+                                      {shelfkey.includes("revolvingDoors_") && (
+                                        <RevolvingDoor
+                                          key={shelfkey}
+                                          doorKey={shelfkey}
+                                          type={shelf.type}
+                                          position={shelf.position}
+                                          width={section.width}
+                                          section={sectionKey}
+                                          height={shelf.height}
+                                        />
+                                      )}
                                       {!shelfkey.includes("slidingDoors") &&
+                                        !shelfkey.includes("revolvingDoors_") &&
                                         !shelfkey.includes("compartment") &&
                                         !shelfkey.includes("drawer_") && (
                                           <div
