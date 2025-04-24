@@ -6,7 +6,7 @@ const DrawersButton = ({ shelfkey, arr, index, shelf }) => {
   const highlightedDrawer = useSelector(
     (state) => state.shelfDetail.highlightedDrawer
   );
-  const color = useSelector((state)=>state.shelfDetail.racks.execution.color)
+  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
   return (
     <div
       key={shelfkey}
@@ -22,12 +22,12 @@ const DrawersButton = ({ shelfkey, arr, index, shelf }) => {
         className={`lade_inner ${
           highlightedDrawer?.shelfkey === shelfkey ? "isHighlighted" : ""
         } 
-        ${color == "black"?"lade_black":""}`}
+        ${color == "black" ? "lade_black" : ""}`}
         onClick={() =>
           dispatch(
             setDrawerHighlighted({
               shelfkey,
-              top:shelf?.drawer.position.top
+              top: shelf?.drawer.position.top,
             })
           )
         }

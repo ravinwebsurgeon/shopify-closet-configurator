@@ -423,7 +423,7 @@ const ImageConfigurator = () => {
                                 </span>
                               </div>
                             )}
-                          <div className="Section_accessoires__+se2+">
+                          <div className={`Section_accessoires__+se2+ ${section.width > 70 ? 'Garderobe_Garderobe__active' : ''}`}>
                             {section.shelves &&
                               Object.entries(section.shelves).map(
                                 ([shelfkey, shelf], index, arr) => {
@@ -471,7 +471,20 @@ const ImageConfigurator = () => {
                                           height={shelf.height}
                                         />
                                       )}
+                                      {shelfkey.includes("wardrobe_") && (
+                                        <WardrobeRods
+                                          key={shelfkey}
+                                          doorKey={shelfkey}
+                                          type={shelf.type}
+                                          top={shelf.position.top}
+                                          index={arr.length - index}
+                                          width={section.width}
+                                          section={sectionKey}
+                                          height={shelf.height}
+                                        />
+                                      )}
                                       {!shelfkey.includes("slidingDoors") &&
+                                        !shelfkey.includes("wardrobe_") &&
                                         !shelfkey.includes("revolvingDoors_") &&
                                         !shelfkey.includes("compartment") &&
                                         !shelfkey.includes("drawer_") && (

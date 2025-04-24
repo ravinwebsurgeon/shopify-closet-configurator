@@ -49,7 +49,11 @@ const Drawers = () => {
       .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        const changePoitsion = item?.key?.includes("compartment") ? 15 : 0;
+        const changePoitsion = item?.key?.includes("compartment")
+          ? 15
+          : fromKey?.key?.includes("wardrobe")
+          ? 25
+          : 0;
         return {
           from: fromKey?.key,
           to: item?.key,
@@ -60,11 +64,11 @@ const Drawers = () => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
+    console.log("spaceBetweenShelves", spaceBetweenShelves);
     const findSuitable = spaceBetweenShelves?.find(
       (item) => item?.space >= 12.5
     );
-    console.log(findSuitable, spaceBetweenShelves);
-    const space = getAvailbleShelve({ shelvesKeys, shelves });
+    console.log("findSuitable", findSuitable);
     if (findSuitable) {
       dispatch(
         addDrawer({

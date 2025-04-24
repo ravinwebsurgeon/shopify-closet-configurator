@@ -439,7 +439,6 @@ const shelfDetailSlice = createSlice({
       for (let i = 0; i < shelfKeys.length; i++) {
         const key = shelfKeys[i];
         const shelf = shelves[key];
-        console.log(top);
         if (key === shelfKey) {
           let drawerIndex = 1;
           let newKey = `drawer_${drawerIndex}`;
@@ -701,6 +700,84 @@ const shelfDetailSlice = createSlice({
 
       state.racks.sections[sectionId].shelves = updatedShelves;
     },
+    addWardrobe: (state, action) => {
+      const { sectionId, shelfKey, top } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+
+      for (let i = 0; i < shelfKeys.length; i++) {
+        const key = shelfKeys[i];
+        const shelf = shelves[key];
+        if (key === shelfKey) {
+          let wardrobeIndex = 1;
+          let newKey = `wardrobe_${wardrobeIndex}`;
+          while (shelves[newKey] || updatedShelves[newKey]) {
+            wardrobeIndex++;
+            newKey = `wardrobe_${wardrobeIndex}`;
+          }
+          state.isWardrobeHighlighted = {
+            key: newKey,
+            position: top,
+          };
+          updatedShelves[newKey] = {
+            position: { top: top + "em" },
+          };
+        }
+
+        updatedShelves[key] = shelf;
+      }
+
+      state.racks.sections[sectionId].shelves = updatedShelves;
+    },
+    setIsWardrobeHighlighted: (state, action) => {
+      state.isWardrobeHighlighted = action.payload;
+    },
+    updateWardrobePosition: (state, action) => {
+      const { sectionId, shelfKey, top, jump } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      const shelfKeys = Object.keys(shelves);
+      const updatedShelves = {};
+      if (shelves && shelves[shelfKey]) {
+        shelves[shelfKey].position.top = top + "em";
+      }
+      // if (jump) {
+      //   const newArray = [];
+      //   shelfKeys.map((item) => {
+      //     const top =
+      //       shelves[item]?.drawer?.position.top ||
+      //       shelves[item]?.compartments?.position?.top ||
+      //       shelves[item].position.top;
+      //     newArray.push({
+      //       item: { ...shelves[item] },
+      //       top: parseFloat(top),
+      //     });
+      //   });
+      //   let current = { shelfKey: shelfKey, top: top };
+      //   const sortedArray = newArray.sort((a, b) => a.top - b.top);
+      //   sortedArray.map((item, index) => {
+      //     console.log(item);
+      //     let key = `shelves_${index + 1}`;
+      //     if (item?.item?.drawer) {
+      //       key = `drawer_${index + 1}`;
+      //     }
+      //     if (item?.item?.compartments) {
+      //       key = `compartment_${index + 1}`;
+      //     }
+      //     if (item?.top == top) {
+      //       if (current) {
+      //         current.shelfKey = key;
+      //       }
+      //     }
+      //     updatedShelves[key] = item?.item;
+      //   });
+      //   state.racks.sections[sectionId].shelves = updatedShelves;
+      //   state.highlightedDrawer = {
+      //     shelfkey: current.shelfKey,
+      //     top: current.top,
+      //   };
+      // }
+    },
   },
 });
 
@@ -754,6 +831,9 @@ export const {
   removeDrawersFromSection,
   updateSlidingDoor,
   addRevloDoor,
+  addWardrobe,
+  setIsWardrobeHighlighted,
+  updateWardrobePosition
 } = shelfDetailSlice.actions;
 
 // export default reducer

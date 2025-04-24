@@ -87,7 +87,9 @@ const CompartmentsMain = () => {
           : item?.compartments.type == "compartment_divider_set"
           ? false
           : item?.compartments.count < 4;
-      return item.space >= gap && compartments;
+      return (
+        item.space >= gap && compartments && !item?.to?.includes("wardrobe_")
+      );
     });
     return findAvailble || null;
   };
@@ -139,7 +141,7 @@ const CompartmentsMain = () => {
                 productInfo={item}
                 key={item.id}
                 dimention={item.dimention}
-                image={color=="black"?item.black_image:item.image}
+                image={color == "black" ? item.black_image : item.image}
                 price={getComponentPrice({
                   material: color,
                   component: "compartment",

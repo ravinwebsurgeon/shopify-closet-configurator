@@ -12,6 +12,7 @@ import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
 import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
+import WardrobeRodsChangePosition from "../WardrobeRods/WardrobeRodsChangePosition";
 // import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 
 const SectionInterface = ({
@@ -66,6 +67,9 @@ const SectionInterface = ({
   );
   const isSlidingDoorHighlighted = useSelector(
     (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
+  const isWardrobeHighlighted = useSelector(
+    (state) => state.shelfDetail.isWardrobeHighlighted
   );
   return (
     <div className="Section_sectionInterface">
@@ -122,6 +126,9 @@ const SectionInterface = ({
           sectionId={selectedSection}
           selected={highlightedDrawer}
         />
+      )}
+      {selectedSection == sectionKey && isWardrobeHighlighted && (
+        <WardrobeRodsChangePosition selected={isWardrobeHighlighted} />
       )}
       <ShelfCounter
         showCounter={
