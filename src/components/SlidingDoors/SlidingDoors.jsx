@@ -2,7 +2,7 @@ import React from "react";
 import {
   addSlidingDoor,
   setOpenModal,
-  setProductInfoModalContent,  
+  setProductInfoModalContent,
 } from "../../slices/shelfDetailSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
@@ -28,9 +28,11 @@ const SlidingDoors = () => {
     const shelfs = Object.entries(sections[sectionId].shelves).map(
       ([key, value]) => ({
         key,
-        position: key?.includes("slidingDoors")
-          ? value?.position
-          : parseFloat(value?.position?.top),
+        height: value?.height || 0,
+        position:
+          key?.includes("slidingDoors") || key?.includes("revolvingDoors_")
+            ? value?.position
+            : parseFloat(value?.position?.top),
       })
     );
     const filteredShelfs = shelfs.filter(
@@ -41,7 +43,13 @@ const SlidingDoors = () => {
       .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        const h = fromKey && fromKey?.key.includes("slidingDoors") ? 22.5 : 0;
+        console.log(fromKey);
+        const h =
+          fromKey && fromKey?.key.includes("slidingDoors")
+            ? 22.5
+            : fromKey && fromKey?.key.includes("revolvingDoors_")
+            ? fromKey?.height
+            : 0;
         return {
           from: fromKey?.key,
           to: item?.key,
@@ -60,11 +68,12 @@ const SlidingDoors = () => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
+    console.log(spaceBetweenShelves);
     const findSpaceBetweenShelves = spaceBetweenShelves?.find(
       (item) => item.space >= 22.5
     );
+    console.log(findSpaceBetweenShelves);
     if (findSpaceBetweenShelves) {
-
       dispatch(
         addSlidingDoor({
           sectionId,

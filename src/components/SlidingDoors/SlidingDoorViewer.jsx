@@ -40,7 +40,7 @@ const SlidingDoorViewer = ({ doorKey, type, position, width, section }) => {
     >
       <div className="Deuren_inner__dJXD6">
         <div className="Deuren_container__Pk33j">
-          <span className="ssdf">{doorKey}</span>
+          {/* <span className="ssdf">{doorKey}</span> */}
         </div>
       </div>
     </button>

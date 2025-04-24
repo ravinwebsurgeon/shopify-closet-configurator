@@ -93,7 +93,7 @@ const RevolvingDoors = () => {
         };
       })
       .filter(Boolean)
-      .sort((a, b) => b.toPosition - a.toPosition);
+      .sort((a, b) => b.fromPosition - a.fromPosition);
 
     const revolvingDoorsKeys = [
       {
@@ -146,7 +146,6 @@ const RevolvingDoors = () => {
   const handleCardClick = (id) => {
     if (feet !== "Adjustable" && !contWithout) {
       setIsModalOpen(true);
-      return;
     }
 
     if (!section) {
@@ -164,17 +163,16 @@ const RevolvingDoors = () => {
     );
 
     const findSpaceBetweenShelves = spaceBetweenShelves?.find(
-      (item) => item.space > 0
+      (item) => item.space >= 25
     );
     const findSpaceBetweenDoors = spaceBetweenDoors?.find(
-      (item) => item.space >= 0
+      (item) => item.space >= 25
     );
 
     const doorsHeight = filteredDoors?.reduce(
       (acc, item) => acc + (item?.height || 0),
       0
     );
-
     if (section.height / 2 <= doorsHeight) {
       toast.info("Er passen geen deuren meer in deze sectie.", {
         position: "top-center",
@@ -183,19 +181,21 @@ const RevolvingDoors = () => {
       });
       return;
     }
-
-    if (findSpaceBetweenDoors?.space >= doorHeight) {
+    if (
+      findSpaceBetweenDoors?.space >= doorHeight &&
+      filteredDoors?.length > 0
+    ) {
       // Handle space between doors
       handleAddDoorInSpace(findSpaceBetweenDoors, doorHeight, id);
     } else if (
       findSpaceBetweenShelves?.space >= doorHeight &&
-      !findSpaceBetweenDoors
+      filteredDoors?.length == 0
     ) {
       dispatch(
         addRevloDoor({
           sectionId: selectedSectionKey,
           type: id,
-          position: findSpaceBetweenShelves.toPosition - doorHeight,
+          position: findSpaceBetweenShelves.toPosition - doorHeight + 2.5,
           shelfKey: findSpaceBetweenShelves.to,
           height: doorHeight,
         })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import { addDrawer } from "../../slices/shelfDetailSlice";
@@ -19,15 +19,58 @@ const Drawers = () => {
     const shelveKeys = Object.keys(shelves) || [];
     setShelvesKeys(shelveKeys);
   }, [shelves]);
+
+  const { filteredShelfs } = useMemo(() => {
+    if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
+    console.log(sections[selectedSectionKey]?.shelves);
+    const shelfs = Object.entries(
+      sections[selectedSectionKey]?.shelves || {}
+    ).map(([key, value]) => ({
+      key,
+      height: value?.height || 0,
+      type: value?.type || null,
+      position: key?.includes("compartment")
+        ? parseFloat(value?.compartments?.position?.top || 0)
+        : key?.includes("drawer")
+        ? parseFloat(value?.drawer?.position?.top || 0)
+        : parseFloat(value?.position?.top || 0),
+    }));
+    const filteredShelfs = shelfs.filter(
+      (item) =>
+        !item?.key.includes("slidingDoors") ||
+        !item?.key.includes("revolvingDoors_")
+    );
+
+    return { filteredShelfs };
+  }, [sections, selectedSectionKey]);
+
   const handleCardClick = () => {
+    const spaceBetweenShelves = filteredShelfs
+      .map((item, index, arr) => {
+        if (index === 0) return null;
+        const fromKey = arr[index - 1];
+        const changePoitsion = item?.key?.includes("compartment") ? 15 : 0;
+        return {
+          from: fromKey?.key,
+          to: item?.key,
+          fromPosition: fromKey?.position,
+          toPosition: item?.position - changePoitsion,
+          space: item?.position - fromKey?.position - changePoitsion,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.toPosition - a.toPosition);
+    const findSuitable = spaceBetweenShelves?.find(
+      (item) => item?.space >= 12.5
+    );
+    console.log(findSuitable, spaceBetweenShelves);
     const space = getAvailbleShelve({ shelvesKeys, shelves });
-    if (space) {
-      const _space = space?.shelfTop - 7.5;
+    if (findSuitable) {
       dispatch(
         addDrawer({
           sectionId: selectedSectionKey,
-          shelfKey: space?.to,
-          top: space?.to?.includes("compartment_") ? _space - 11.25 : _space,
+          shelfKey: findSuitable?.to,
+          top: findSuitable?.toPosition - 6.25,
         })
       );
     } else {

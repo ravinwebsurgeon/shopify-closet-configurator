@@ -32,9 +32,9 @@ const DrawersButton = ({ shelfkey, arr, index, shelf }) => {
           )
         }
       >
-        <span className="ssdf">
-          {shelf?.drawer.position.top}
-        </span>
+        {/* <span className="ssdf">
+          {shelfkey}
+        </span> */}
         <div className="lade_leff"></div>
         <div className="lade_middle"></div>
         <div className="lade_right"></div>

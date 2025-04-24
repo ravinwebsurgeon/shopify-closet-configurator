@@ -462,12 +462,12 @@ const RevolvingDoorMoveButton = () => {
           findNext?.space >= isRevolvingDoorHighlighted?.height
         ) {
           newPosition =
-            findNext?.fromPosition + isRevolvingDoorHighlighted?.height;
+            findNext?.fromPosition + isRevolvingDoorHighlighted?.height - 2.5;
         }
 
         if (
           newPosition >= 0 &&
-          newPosition <= section.height / 2 - isRevolvingDoorHighlighted?.height
+          newPosition <= section.height / 2 - isRevolvingDoorHighlighted?.height 
         ) {
           dispatch(
             updateRevolvingDoor({

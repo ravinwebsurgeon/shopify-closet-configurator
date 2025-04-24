@@ -29,9 +29,12 @@ const SlidingDoorMoveButton = () => {
   const handlePositionChange = (type) => {
     const shelfs = Object.entries(shelves).map(([key, value]) => ({
       key,
-      position: key?.includes("slidingDoors")
-        ? value?.position
-        : parseFloat(value?.position?.top),
+      height: value?.height || 0,
+      type: value?.type || null,
+      position:
+        key?.includes("slidingDoors") || key?.includes("revolvingDoors_")
+          ? value?.position
+          : parseFloat(value?.position?.top),
     }));
     const filteredShelfs = shelfs.filter(
       (item) =>
@@ -41,7 +44,13 @@ const SlidingDoorMoveButton = () => {
       .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        const h = fromKey && fromKey?.key.includes("slidingDoors") ? 22.5 : 0;
+        const h =
+          fromKey && fromKey?.key.includes("slidingDoors")
+            ? 22.5
+            : fromKey && fromKey?.key.includes("revolvingDoors_")
+            ? fromKey?.height
+            : 0;
+            console.log(item?.position - fromKey?.position - h)
         return {
           from: fromKey?.key,
           to: item?.key,
@@ -51,15 +60,12 @@ const SlidingDoorMoveButton = () => {
               : "next",
           fromPosition: fromKey?.position,
           toPosition: item?.position,
-          nextDoorPosition:
-            item && item?.key.includes("slidingDoors")
-              ? item?.position - 22.5
-              : 0,
           space: item?.position - fromKey?.position - h,
         };
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
+      console.log(spaceBetweenShelves)
     const findPrev = spaceBetweenShelves?.filter(
       (item) => item.type === "prev"
     );
@@ -98,7 +104,7 @@ const SlidingDoorMoveButton = () => {
         let newPosition = isSlidingDoorHighlighted?.position - gap;
         if (newPosition <= findPrev[0].fromPosition && type == "topRight") {
           newPosition = findPrev[0].fromPosition + 1.25;
-        }        
+        }
         if (
           newPosition >= findNext[0].toPosition - 22.5 &&
           type == "bottomRight"

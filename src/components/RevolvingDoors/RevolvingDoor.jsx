@@ -31,9 +31,9 @@ const RevolvingDoor = ({doorKey,type,position,width,section, height}) => {
     >
       <div className="Deuren_inner__dJXD6">
         <div className="Deuren_container__Pk33j">
-          <span className="ssdf">
+          {/* <span className="ssdf">
             {doorKey}
-          </span>
+          </span> */}
         </div>
       </div>
     </button>
