@@ -14,6 +14,7 @@ import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
 import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 import WardrobeRodsChangePosition from "../WardrobeRods/WardrobeRodsChangePosition";
 // import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
+import { deleteWoodSection, setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
 
 const SectionInterface = ({
   selectedSection,
@@ -26,7 +27,11 @@ const SectionInterface = ({
   isShelfSelected,
 }) => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
+  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  const activeTab = material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.activeTab):
+  useSelector((state) => state.woodShelfDetail.racks.activeTab);
+  
   const isCompartmentHighlighted = useSelector(
     (state) => state.shelfDetail.isCompartmentHighlighted
   );
@@ -60,7 +65,15 @@ const SectionInterface = ({
       );
     }
     dispatch(setCurrSelectedSection(prevSectionId));
-    dispatch(deleteSection(sectionKey));
+
+    if(material == "metal"){
+      dispatch(deleteSection(sectionKey));
+    }
+    else{
+      dispatch(setCurrSelectedWoodSection(prevSectionId))
+      dispatch(deleteWoodSection(sectionKey));
+    }
+
   };
   const highlightedDrawer = useSelector(
     (state) => state.shelfDetail.highlightedDrawer

@@ -1,12 +1,18 @@
 import React from "react";
 
-const AddSectionDimensions = ({ dimensions, setDimensions }) => {
+const AddSectionDimensions = ({ dimensions, setDimensions, material }) => {
   // Predefined values for each dimension
   const dimensionOptions = {
-    width: [55, 70, 85, 100, 115, 130],
-    height: [100, 120, 150, 200, 220, 250, 300],
-    depth: [20, 30, 40, 50, 60, 70, 80],
+    width: material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
+    height:  material == "metal" ? [100, 120, 150, 200, 220, 250, 300] : [90, 150, 180, 210, 240, 300],
+    depth: material == "metal" ? [20, 30, 40, 50, 60, 70, 80] : [30, 40, 50, 60],
   };
+
+  // const dimensionOptions = useMemo(() => ({
+  //   width: material === "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
+  //   height: material === "metal" ? [100, 120, 150, 200, 220, 250, 300] : [90, 150, 180, 210, 240, 300],
+  //   depth: material === "metal" ? [20, 30, 40, 50, 60, 70, 80] : [30, 40, 50, 60],
+  // }), [material]);
 
   const handleDimensionChange = (dimension, value) => {
     const newValue = parseInt(value);
