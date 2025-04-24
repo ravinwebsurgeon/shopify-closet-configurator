@@ -15,10 +15,14 @@ const ShelfCounter = ({ onClick, showCounter }) => {
   const dispatch = useDispatch();
   let positionArray = [];
 
-  const sectionData = useSelector((state) => state.shelfDetail.racks.sections);
-  const sectionId = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
+  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
+
+  const sectionData = material == "metal" ?  useSelector((state) => state.shelfDetail.racks.sections):
+  useSelector((state) => state.woodShelfDetail.racks.sections);
+
+  const sectionId =  material == "metal" ? useSelector((state) => state.shelfDetail.racks.selectedSection):
+  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+
   const currentSection = sectionData[sectionId];
   let shelf_count = currentSection
     ? Object.keys(currentSection.shelves).length
@@ -28,6 +32,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
   //const [isUserAction,setIsUserAction] = useState(false);
 
   const heightArr = [
+    {90:"52"},
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },

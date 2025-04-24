@@ -7,6 +7,8 @@ import steelPlateSnap from "../../../assets/foot-steel-snapin.png";
 import Adjustable from "../../../assets/foot-adujustable-legs.png";
 import { useDispatch, useSelector } from "react-redux";
 import { updateExecution } from "../../../slices/shelfDetailSlice";
+import { setWoodSection } from "../../../slices/WoodShelfDetailSlice";
+import { getWoodShelfPostions } from "../../../utils/getShelfPositions";
 
 const ExecutionComponent = () => {
   const executionDetails = useSelector(
@@ -20,6 +22,8 @@ const ExecutionComponent = () => {
   const [selectedTopCaps, setSelectedTopCaps] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
+
+  const woodConfigurations = useSelector((state) => state.woodShelfDetail.configuration);
 
   const footOptions = [
     { type: "Plastic", image: plasticFoot, label: "Voetje (plastic)" },
@@ -101,12 +105,23 @@ const ExecutionComponent = () => {
 
   const handleMaterialClick = (e) => {
     e.preventDefault();
+
     const selectedType = e.target.value;
     const selectedMaterial = materialOptions.find(
       (mat) => mat.type === selectedType
     );
     setSelectedMaterial(selectedMaterial);
     dispatch(updateExecution({ material: selectedType }));
+
+    if(selectedType == "wood"){
+      dispatch(setWoodSection({
+        racksCount:[woodConfigurations.width],
+        currShelfHeight: woodConfigurations.height,
+          shelfDepth: woodConfigurations.depth,
+          positions:getWoodShelfPostions(woodConfigurations.height, woodConfigurations.shelves),
+          fromSelect : true,
+      }))
+    }
   };
 
   const handleColorClick = (e) => {
@@ -122,25 +137,28 @@ const ExecutionComponent = () => {
   return (
     <>
       <div className="execution-content">
-        <div className="feet-container">
-          <span className="feet-label execution-label">Voetjes</span>
-          <div className="grid grid-cols-2 gap-2">
-            {footOptions.map((foot) => (
-              <div
-                key={foot.type}
-                className={`foot-selection foot-container-div !w-full ${
-                  selectedFoot?.type === foot.type ? "selected" : ""
-                }`}
-                onClick={(e) => handleFeetClick(e, foot)}
-              >
-                <div className="foot-img-div">
-                  <img src={foot.image} alt={foot.label} />
+        {executionDetails.material == "metal" && (
+                  <div className="feet-container">
+                  <span className="feet-label execution-label">Voetjes</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {footOptions.map((foot) => (
+                      <div
+                        key={foot.type}
+                        className={`foot-selection foot-container-div !w-full ${
+                          selectedFoot?.type === foot.type ? "selected" : ""
+                        }`}
+                        onClick={(e) => handleFeetClick(e, foot)}
+                      >
+                        <div className="foot-img-div">
+                          <img src={foot.image} alt={foot.label} />
+                        </div>
+                        <span className="foot-selector-text">{foot.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span className="foot-selector-text">{foot.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        ) }
+
         {/* sustain component */}
         <div className="sustain-container">
           <span className="sustain-label execution-label">Schoren</span>
@@ -163,33 +181,36 @@ const ExecutionComponent = () => {
           </div>
         </div>
         {/* top caps component */}
-        <div className="topcaps-container">
-          <span className="topcaps-label execution-label">Topdoppen</span>
-          <div className="topcaps-label-div mt-2">
-            <div className="border border-[#EB6200] rounded-[5px] flex">
-              {topCapsOptions.map((item) => (
-                <div
-                  className={` cursor-pointer py-[7px]  font-inter text-xs tracking-[-2%] leading-[150%] font-semibold px-6 transition-all duration-300 ${
-                    selectedTopCaps?.type === item.type
-                      ? "bg-[#EB6200] text-white"
-                      : "text-black"
-                  }`}
-                  key={item.type}
-                  onClick={(e) => handleTopCapsClick(e, item)}
-                >
-                  {item.label}
+        {executionDetails.material == "metal" && (
+                  <div className="topcaps-container">
+                  <span className="topcaps-label execution-label">Topdoppen</span>
+                  <div className="topcaps-label-div mt-2">
+                    <div className="border border-[#EB6200] rounded-[5px] flex">
+                      {topCapsOptions.map((item) => (
+                        <div
+                          className={` cursor-pointer py-[7px]  font-inter text-xs tracking-[-2%] leading-[150%] font-semibold px-6 transition-all duration-300 ${
+                            selectedTopCaps?.type === item.type
+                              ? "bg-[#EB6200] text-white"
+                              : "text-black"
+                          }`}
+                          key={item.type}
+                          onClick={(e) => handleTopCapsClick(e, item)}
+                        >
+                          {item.label}
+                        </div>
+                      ))}{" "}
+                    </div>
+                  </div>
                 </div>
-              ))}{" "}
-            </div>
-          </div>
-        </div>
+        )}
+
         {/* Material Select Component */}
         <div className="material-cotainer execution-select-container">
           <span className="material-label execution-label">Materiaal</span>
           <select
             className="execution-select"
-            value={selectedMaterial?.type || ""}
-            onChange={handleMaterialClick}
+            
+            onChange={(e)=>handleMaterialClick(e)}
             required
           >
             <option value="" disabled>
@@ -203,24 +224,26 @@ const ExecutionComponent = () => {
           </select>
         </div>
         {/* Color select component */}
-        <div className="color-cotainer execution-select-container">
-          <span className="color-label execution-label">Kleur</span>
-          <select
-            className="execution-select"
-            value={selectedColor?.type || ""}
-            onChange={handleColorClick}
-            required
-          >
-            <option value="" disabled>
-            Selecteer
-            </option>
-            {colorOptions.map((val) => (
-              <option key={val.type} value={val.type}>
-                {val.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        {executionDetails.material == "metal" && (
+                  <div className="color-cotainer execution-select-container">
+                  <span className="color-label execution-label">Kleur</span>
+                  <select
+                    className="execution-select"
+                    value={selectedColor?.type || ""}
+                    onChange={handleColorClick}
+                    required
+                  >
+                    <option value="" disabled>
+                    Selecteer
+                    </option>
+                    {colorOptions.map((val) => (
+                      <option key={val.type} value={val.type}>
+                        {val.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+        )}
       </div>
     </>
   );

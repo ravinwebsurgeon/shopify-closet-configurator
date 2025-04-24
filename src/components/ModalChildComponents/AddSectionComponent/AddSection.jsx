@@ -7,16 +7,26 @@ import {
   setSection,
   updateSectionDimensions,
 } from "../../../slices/shelfDetailSlice";
+
 import AddSectionDimensions from "./AddSectionDimensions";
+import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
 
 const AddSection = ({ children, onClose }) => {
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
-  const dimension = useSelector((state) => state.shelfDetail.racks);
+  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
+  const sections = material == "metal"? 
+  useSelector((state) => state.shelfDetail.racks.sections) :
+  useSelector((state)=>state.woodShelfDetail.racks.sections);
+
+  const dimension =  material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks):
+  useSelector((state) => state.woodShelfDetail.racks);
+
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
 
   const heightArr = [
+    {90:"52"},
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },
@@ -30,9 +40,9 @@ const AddSection = ({ children, onClose }) => {
   ];
 
   const [dimensions, setDimensions] = useState({
-    width: 55,
-    height: 100,
-    depth: 20,
+    width: material == "metal" ? 55 : 60,
+    height: material == "metal" ? 100 : 90,
+    depth: material == "metal" ? 20 : 30,
   });
   useEffect(() => {
     setDimensions((prev) => ({ ...prev, depth: dimension?.depth }));
@@ -57,22 +67,42 @@ const AddSection = ({ children, onClose }) => {
     const lastSectionKey = sectionsCount[sectionsCount.length - 1];
     const lastSection = sections[lastSectionKey];
     if (dimensions.height > lastSection.height) {
-      dispatch(
-        updateSectionDimensions({
-          sectionId: lastSectionKey,
-          dimension: "standHeight",
-          value: dimensions.height,
-        })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateSectionDimensions({
+            sectionId: lastSectionKey,
+            dimension: "standHeight",
+            value: dimensions.height,
+          })
+        );
+      }else{
+        dispatch(
+          updateWoodSectionDimensions({
+            sectionId: lastSectionKey,
+            dimension: "standHeight",
+            value: dimensions.height,
+          })
+        );
+      }
     }
-    dispatch(
-      setSection({
+
+    if(material == "metal"){
+      dispatch(setSection({
         racksCount,
-        currShelfHeight: dimensions.height,
-        shelfDepth,
-        positions,
-      })
-    );
+          currShelfHeight: dimensions.height,
+          shelfDepth,
+          positions
+      }))
+    }else{
+      dispatch(setWoodSection({
+        racksCount,
+          currShelfHeight: dimensions.height,
+          shelfDepth,
+          positions,
+          fromSelect:false
+      }))
+    }
+    
     onClose();
   };
 
@@ -98,6 +128,7 @@ const AddSection = ({ children, onClose }) => {
       <AddSectionDimensions
         dimensions={dimensions}
         setDimensions={setDimensions}
+        material = {material}
       />
       <div className="dimension-note font-inter !text-[12px]">
         De diepte die hierboven is aangegeven geldt voor de gehele kast. 

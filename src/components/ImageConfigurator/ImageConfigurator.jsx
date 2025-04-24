@@ -30,6 +30,7 @@ import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
+import { setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
@@ -58,10 +59,13 @@ const ImageConfigurator = () => {
   const initialShelfValue = useSelector(
     (state) => state.shelfDetail.configuration
   );
-
-  const currentSelectedSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
+  const executionValues = useSelector(
+    (state) => state.shelfDetail.racks.execution
   );
+
+  const currentSelectedSection = executionValues.material == "metal" ?
+  useSelector((state) => state.shelfDetail.racks.selectedSection) :
+  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
 
   const [selectedSection, setSelectedSection] = useState("");
   useEffect(() => {
@@ -69,10 +73,11 @@ const ImageConfigurator = () => {
   }, [currentSelectedSection]);
   const [selectedShelf, setSelectedShelf] = useState(null);
 
-  const newInitialValue = useSelector((state) => state.shelfDetail.racks);
-  const executionValues = useSelector(
-    (state) => state.shelfDetail.racks.execution
-  );
+
+  const newInitialValue =  executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks):
+  useSelector((state) => state.woodShelfDetail.racks);
+
+
 
   const editingSides = useSelector(
     (state) => state.shelfDetail.racks.isEditingSides
@@ -82,11 +87,10 @@ const ImageConfigurator = () => {
   );
 
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
-  
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const sections = executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks.sections) : useSelector((state) => state.woodShelfDetail.racks.sections);
   const sectionKeys = Object.keys(sections);
   const heightArr = [
     { 100: "57" },
@@ -164,7 +168,8 @@ const ImageConfigurator = () => {
         !event.target.closest(".mv_btns") &&
         !event.target.closest(".AddRemove_button") &&
         !event.target.closest(".modal-content") &&
-        !event.target.closest(".glb-remove-confirm")
+        !event.target.closest(".glb-remove-confirm")&&
+        !event.target.closest(".configuration-options")
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
@@ -181,7 +186,6 @@ const ImageConfigurator = () => {
         dispatch(setCompartmentHighlighted(""));
         dispatch(setDrawerHighlighted(""));
         dispatch(setHideDoor(false));
-       
       }
     };
 
@@ -194,7 +198,12 @@ const ImageConfigurator = () => {
   const handleSectionClick = (e, sectionKey) => {
     e.preventDefault();
     setSelectedSection(sectionKey);
-    dispatch(setCurrSelectedSection(sectionKey));
+    if(executionValues.material == "metal"){
+      dispatch(setCurrSelectedSection(sectionKey));
+    }else{
+      dispatch(setCurrSelectedWoodSection(sectionKey));
+    }
+    
   };
 
   const closeShelfDeleteModal = () => {
@@ -219,14 +228,16 @@ const ImageConfigurator = () => {
     handleSectionClick(e, sectionkey);
     setTopPosition(position);
     dispatch(setHideDoor(true));
-    
-    
   };
   const sectionItems = Object.keys(sections);
+
   const maxHeight = sectionItems
     .map((item) => parseInt(sections[item].height, 10))
     .sort((a, b) => b - a)[0];
-  const depth = useSelector((state) => state.shelfDetail.racks.depth);
+
+  const depth = executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks.depth):
+  useSelector((state) => state.woodShelfDetail.racks.depth);
+
   useEffect(() => {
     setIsShelfSelected((prev) => ({
       ...prev,
@@ -313,20 +324,22 @@ const ImageConfigurator = () => {
                       {/* first two poles section */}
 
                       <div
-                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_metal
-                ${executionValues.color === "black" ? "Staander_black" : ""} 
-                ${
-                  executionValues.topCaps === "topCaps"
-                    ? "Staander_hasTopdoppen"
-                    : ""
-                } 
-                Staander_${executionValues.feet}_Feet  
-                Staander_height${section?.height || 100} ${
-                          index > 0 ? "hidden" : ""
-                        }`}
-                        style={{ zIndex: index }}
-                        key={index}
+                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU 
+                                    ${executionValues.color === "black" && executionValues.material == "metal" ? "Staander_black" : ""} 
+                                    ${
+                                      executionValues.topCaps === "topCaps" && executionValues.material == "metal"
+                                        ? "Staander_hasTopdoppen"
+                                        : ""
+                                    } 
+                                    ${executionValues.material == "metal" ? "Staander_metal " : "Staander_wood"}
+                                    Staander_${executionValues.feet}_Feet  
+                                    Staander_height${section?.height || 100} ${
+                                              index > 0 ? "hidden" : ""
+                                            }   `}
+                                            style={{ zIndex: index }}
+                                            key={index}
                       >
+                        
                         <div className="Staander_achter__8cpuX">
                           <div className="Staander_achterTop__nQ0aW"></div>
                           <div className="Staander_achterMiddle__XrxPJ"></div>
@@ -401,12 +414,13 @@ const ImageConfigurator = () => {
                       <div>
                         <div
                           data-indicator-index={index + 1}
-                          className={`Section_Section__3MCIu Visual_animating__a8ZaU Section_metal__c
+                          className={`Section_Section__3MCIu Visual_animating__a8ZaU 
                             ${
                               executionValues.color === "black"
                                 ? "Section_black"
                                 : ""
                             } 
+                            ${executionValues.material == "metal" ? "Section_metal__c " : "Section_wood"}
                             Section_height${
                               section.height || 100
                             } Section_width${section.width || 55}`}
@@ -415,9 +429,7 @@ const ImageConfigurator = () => {
                           {selectedSection === sectionKey &&
                             isShelfSelected?.key == "" && (
                               <div
-                                className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
-          bg-[#3c9cea] w-[2px]
-          `}
+                                className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width bg-[#3c9cea] w-[2px]`}
                               >
                                 <span
                                   className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-inter`}
@@ -466,9 +478,10 @@ const ImageConfigurator = () => {
                                           >
                                             <button
                                               className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                                                        ${executionValues.material == "wood" ? "Legboard_wood" : ""}
                                                         ${
                                                           executionValues.color ===
-                                                          "black"
+                                                          "black" && executionValues.material == "metal"
                                                             ? "Legbord_black"
                                                             : "Legbord_metal"
                                                         } Legbord_clickable__uTn2b
@@ -580,13 +593,14 @@ const ImageConfigurator = () => {
                       )}
                       {/* next two poles */}
                       <div
-                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  Staander_metal  
+                        className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  
                 ${executionValues.color === "black" ? "Staander_black" : ""} 
                 ${
                   executionValues.topCaps === "topCaps"
                     ? "Staander_hasTopdoppen"
                     : ""
-                }  
+                }
+                ${executionValues.material == "metal" ? "Staander_metal " : "Staander_wood"} 
                 Staander_${executionValues.feet}_Feet 
                 Staander_height${section?.standHeight || 100}
                 
@@ -600,6 +614,7 @@ const ImageConfigurator = () => {
                             highlighted={isHighlighted.right === sectionKey}
                           />
                         )}
+      
                         <div className="Staander_achter__8cpuX">
                           <div className="Staander_achterTop__nQ0aW"></div>
                           <div className="Staander_achterMiddle__XrxPJ"></div>

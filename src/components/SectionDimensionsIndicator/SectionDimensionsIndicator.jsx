@@ -13,12 +13,19 @@ const SectionDimensionsIndicator = () => {
     120: "53.5em",
     130: "60em",
   };
-  const selectedSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
 
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
+
+  const selectedSection = material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.selectedSection):
+  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+
+  const sections =  material == "metal" ?
+  useSelector((state) => state.shelfDetail.racks.sections):
+  useSelector((state) => state.woodShelfDetail.racks.sections);
+
   const sectionItems = Object.keys(sections);
+  
   const totalWidth = sectionItems.reduce((acc, item) => {
     return acc + sections[item].width;
   }, 0); 
