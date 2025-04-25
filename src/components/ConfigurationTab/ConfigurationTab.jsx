@@ -18,11 +18,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Shared/Modal/Modal";
 import BOM from "../ModalChildComponents/BOMComponent/BOM";
+import { setWoodActiveTab, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
 
 
 const ConfigurationTab = () => {
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
-  const details = useSelector((state) => state.shelfDetail);
+
+  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+
+  const activeTab = material == "metal" ?
+  useSelector((state) => state.shelfDetail.racks.activeTab):
+  useSelector((state) => state.woodShelfDetail.racks.activeTab);
+
+  const details = material == "metal" ?
+  useSelector((state) => state.shelfDetail):
+  useSelector((state) => state.shelfDetail);
+
   const[isModalOpen,setIsModalOpen] = useState(false);
   const[bomData,setBomData] = useState('');
 
@@ -36,8 +46,21 @@ const ConfigurationTab = () => {
   // }
 
   const handleSectionClick = (sectionKey) => {
-    dispatch(setActiveTab(sectionKey));
-    if (sectionKey == "shelves") dispatch(setShowCounter(true));
+
+    if(material == "metal"){
+      dispatch(setActiveTab(sectionKey));
+    }else{
+      dispatch(setWoodActiveTab(sectionKey));
+    }
+    
+    if (sectionKey == "shelves"){
+      if(material == "metal"){
+        dispatch(setShowCounter(true));
+      }else{
+        dispatch(setWoodShowCounter(true));
+      }
+    } 
+      
   };
 
   const handleInfoClick = () =>{
@@ -49,13 +72,13 @@ const ConfigurationTab = () => {
   const configTabs = [
     { id: "dimensions", label: "Afmetingen", component: <DimensionsComponent /> },
     { id: "execution", label: "Voeten", component: <ExecutionComponent /> },
-    { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
+   // { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
     { id: "sides", label: "Zijwanden", component: <SidesComponent /> },
-    { id: "backwalls", label: "Achterwanden", component: <BackwallComponent /> },
+   // { id: "backwalls", label: "Achterwanden", component: <BackwallComponent /> },
     { id: "compartments", label: "Vakverdeling", component: <CompartmentsMain /> },
-    { id: "revolvingdoors", label: "Draaideuren",component: <RevolvingDoors /> },
-    { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
-    { id: "drawers", label: "Lades", component: <Drawers /> },
+   // { id: "revolvingdoors", label: "Draaideuren",component: <RevolvingDoors /> },
+   // { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
+   // { id: "drawers", label: "Lades", component: <Drawers /> },
     { id: "wardroberods", label: "Garderobestangen", component: <WardrobeComponent /> },
   ];
   const selectedTab = configTabs.find((tab) => tab.id === activeTab);

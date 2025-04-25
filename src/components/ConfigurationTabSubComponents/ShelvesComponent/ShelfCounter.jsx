@@ -8,7 +8,8 @@ import {
   setShowCounter,
   updateShelvesPosition,
 } from "../../../slices/shelfDetailSlice";
-import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
+import { setWoodShowCounter , updateWoodShelvesPosition } from "../../../slices/WoodShelfDetailSlice";
+import { shelfCountsAccHeight, woodShelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 
 const ShelfCounter = ({ onClick, showCounter }) => {
   const counterRef = useRef(null);
@@ -17,17 +18,22 @@ const ShelfCounter = ({ onClick, showCounter }) => {
 
   const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
 
-  const sectionData = material == "metal" ?  useSelector((state) => state.shelfDetail.racks.sections):
+  const sectionData = material == "metal" ?
+  useSelector((state) => state.shelfDetail.racks.sections):
   useSelector((state) => state.woodShelfDetail.racks.sections);
 
-  const sectionId =  material == "metal" ? useSelector((state) => state.shelfDetail.racks.selectedSection):
+  const sectionId =  material == "metal" ?
+  useSelector((state) => state.shelfDetail.racks.selectedSection):
   useSelector((state) => state.woodShelfDetail.racks.selectedSection);
 
   const currentSection = sectionData[sectionId];
+
   let shelf_count = currentSection
     ? Object.keys(currentSection.shelves).length
     : 3;
+
   const shelfHeight = currentSection["height"];
+
   const [shelfCount, setShelfCount] = useState(shelf_count);
   //const [isUserAction,setIsUserAction] = useState(false);
 
@@ -69,7 +75,13 @@ const ShelfCounter = ({ onClick, showCounter }) => {
 
   useEffect(() => {
       positionArray = GeneratePosArr(shelfHeight, shelfCount);
-      dispatch(updateShelvesPosition({ sectionId, positionArray }));
+      if(material == "metal"){
+        dispatch(updateShelvesPosition({ sectionId, positionArray }));
+      }
+      else{
+        dispatch(updateWoodShelvesPosition({sectionId,positionArray}))
+      }
+      
      // setIsUserAction(false);
     
   }, [shelfCount]);
@@ -80,7 +92,12 @@ const ShelfCounter = ({ onClick, showCounter }) => {
         counterRef.current &&
         !event.target.closest(".CounterWithAddRemove_container")
       ) {
-        dispatch(setShowCounter(false));
+        if(material == "metal"){
+          dispatch(setShowCounter(false));
+        }else{
+          dispatch(setWoodShowCounter(false));
+        }
+        
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -91,7 +108,10 @@ const ShelfCounter = ({ onClick, showCounter }) => {
 
   const handleAddShelf = (e) => {
     e.preventDefault();
-    const maxShelfCount = shelfCountsAccHeight[shelfHeight]["max"];
+    const maxShelfCount =  material == "metal" ? 
+    shelfCountsAccHeight[shelfHeight]["max"]:
+    woodShelfCountsAccHeight[shelfHeight]["max"];
+
     if (shelfCount >= maxShelfCount) {
       setShelfCount(maxShelfCount);
       return;

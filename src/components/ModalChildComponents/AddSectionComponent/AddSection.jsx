@@ -130,7 +130,7 @@ const AddSection = ({ children, onClose }) => {
         setDimensions={setDimensions}
         material = {material}
       />
-      <div className="dimension-note font-inter !text-[12px]">
+      <div className="dimension-note font-inter !text-[12px] !border-[#00008B] !text-[#fff] !bg-[#00008B]">
         De diepte die hierboven is aangegeven geldt voor de gehele kast. 
         Het is mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen van de afmetingen.
       </div>

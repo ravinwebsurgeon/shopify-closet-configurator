@@ -11,7 +11,7 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
-import { deleteWoodSection, setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
+import { deleteWoodSection, setCurrSelectedWoodSection, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
 
 const SectionInterface = ({
   selectedSection,
@@ -25,10 +25,11 @@ const SectionInterface = ({
 }) => {
   const dispatch = useDispatch();
   const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  
   const activeTab = material == "metal" ? 
   useSelector((state) => state.shelfDetail.racks.activeTab):
   useSelector((state) => state.woodShelfDetail.racks.activeTab);
-  
+
   const isCompartmentHighlighted = useSelector(
     (state) => state.shelfDetail.isCompartmentHighlighted
   );
@@ -36,9 +37,10 @@ const SectionInterface = ({
     (state) => state.shelfDetail.isRevolvingDoorHighlighted
   );
 
-  const showCounter = useSelector(
-    (state) => state.shelfDetail.racks.showCounter
-  );
+  const showCounter = material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.showCounter):
+  useSelector((state) => state.woodShelfDetail.racks.showCounter);
+  
   const handleSectionDelete = (e, sectionKey) => {
     const activeIndex = sectionKeys.indexOf(sectionKey);
     const nextSectionId =
@@ -131,7 +133,8 @@ const SectionInterface = ({
         showCounter={
           selectedSection == sectionKey && activeTab == "shelves" && showCounter
         }
-        onClick={() => dispatch(setShowCounter(false))}
+        onClick={() => material == "metal" ?
+          dispatch(setShowCounter(false)): dispatch(setWoodShowCounter(false))}
       />
     </div>
   );

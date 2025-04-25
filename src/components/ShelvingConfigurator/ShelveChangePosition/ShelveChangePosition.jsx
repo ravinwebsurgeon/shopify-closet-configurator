@@ -1,29 +1,36 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
+import { shelfCountsAccHeight, woodShelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 import {
   updateShelveIndexAndPostion,
   updateShelvePostion,
 } from "../../../slices/shelfDetailSlice";
+import { updateWoodShelveIndexAndPostion, updateWoodShelvePostion, updateWoodShelvesPosition } from "../../../slices/WoodShelfDetailSlice";
 
 const ShelveChangePosition = ({ sectionId, shelfKey }) => {
   const [btnType, setBtnType] = useState("intial");
   const dispatch = useDispatch();
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+
+  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
+
+  const sections =  material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.sections):
+  useSelector((state) => state.woodShelfDetail.racks.sections);
+
   const [spaces, setSpaces] = useState({
     prevShelves: [],
     nextShelves: [],
   });
-  const getCurrentShelvePosition =
-    sections[sectionId]?.shelves[shelfKey]?.position;
+  const getCurrentShelvePosition = sections[sectionId]?.shelves[shelfKey]?.position;
   const getShelves = sections[sectionId]?.shelves;
   const shelvesKeys = Object.keys(getShelves);
 
   const getCurrentSectionHeight = sections[sectionId];
-  const getBottomShelfPostionMax = parseFloat(
-    shelfCountsAccHeight[getCurrentSectionHeight?.height]?.maxTop
-  );
+
+  const getBottomShelfPostionMax = material == "metal" ? 
+  parseFloat(shelfCountsAccHeight[getCurrentSectionHeight?.height]?.maxTop):
+  parseFloat(woodShelfCountsAccHeight[getCurrentSectionHeight?.height]?.maxTop);
 
   const getShelvesKeys = useMemo(
     () =>
@@ -248,29 +255,52 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
       (shelfKey == lowest.key ? true : newPosition >= 3.75)
     ) {
       newPosition = shelfKey == lowest.key ? newPosition - 1.25 : newPosition;
-      dispatch(
-        updateShelvePostion({
-          sectionId,
-          position: newPosition <= 1.25 ? 0 : newPosition,
-          shelfKey,
-        })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateShelvePostion({
+            sectionId,
+            position: newPosition <= 1.25 ? 0 : newPosition,
+            shelfKey,
+          })
+        );
+      }else{
+        dispatch(
+          updateWoodShelvePostion({
+            sectionId,
+            position: newPosition <= 1.25 ? 0 : newPosition,
+            shelfKey,
+          })
+        );
+      }
+
     } else if (
       type.includes("topRight") &&
       (shelfKey == lowest.key ? true : sortedPrevShelves[0]?.space >= 8.75) &&
       (shelfKey == lowest.key ? true : newPosition >= 3.75)
     ) {
-      dispatch(
-        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+        );
+      }else{
+        dispatch(updateWoodShelvePostion({ sectionId, position: newPosition, shelfKey }))
+      }
+
     } else if (sortedPrevShelves[0]?.space <= 8.75 && type.includes("top")) {
       if (findPrevElementSpace && findPrevElementSpace?.space >= 5) {
         const jumpPostion =
           findPrevElementSpace.shelveTop -
           (type == "topRight" ? findPrevElementSpace?.space / 2 : 3.75);
-        dispatch(
-          updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
-        );
+        if(material == "metal"){
+          dispatch(
+            updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+          );
+        }else{
+          dispatch(
+            updateWoodShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+          );
+        }
+
         const sortedShelves = shelvesKeys
           .map((item) => ({
             key: item,
@@ -281,9 +311,16 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
           }))
           .sort((a, b) => a.top - b.top)
           .map((shelf) => shelf);
-        dispatch(
-          updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
-        );
+        if(material == "metal"){
+          dispatch(
+            updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+          );
+        }else{
+          dispatch(
+            updateWoodShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+          );
+        }
+
       }
     } else if (
       type.includes("bottomLeft") &&
@@ -292,26 +329,47 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
         : sortedNextShelves[0]?.space - 1.25 >= 3.75) &&
       newPosition <= maxBottom
     ) {
-      dispatch(
-        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+        );
+      }else{
+        dispatch(
+          updateWoodShelvePostion({ sectionId, position: newPosition, shelfKey })
+        );
+      }
+
     } else if (
       type.includes("bottomRight") &&
       (shelfKey == largest.key ? true : sortedNextShelves[0]?.space >= 8.75) &&
       (shelfKey == largest.key ? true : newPosition >= 3.75) &&
       newPosition <= maxBottom
     ) {
-      dispatch(
-        updateShelvePostion({ sectionId, position: newPosition, shelfKey })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateShelvePostion({ sectionId, position: newPosition, shelfKey })
+        );
+      }else{
+        dispatch(
+          updateWoodShelvePostion({ sectionId, position: newPosition, shelfKey })
+        );
+      }
+
     } else if (sortedNextShelves[0]?.space <= 8.75 && type.includes("bottom")) {
       if (nextElementSpaceJump && nextElementSpaceJump.space >= 5) {
         const jumpPostion =
           nextElementSpaceJump.shelveTop +
           (type == "bottomRight" ? nextElementSpaceJump?.space / 2 : 3.75);
-        dispatch(
-          updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
-        );
+          if(material == "metal"){
+            dispatch(
+              updateShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+            );
+          }else{
+            dispatch(
+              updateWoodShelvePostion({ sectionId, position: jumpPostion, shelfKey })
+            );
+          }
+
         const sortedShelves = shelvesKeys
           .map((item) => ({
             key: item,
@@ -322,9 +380,16 @@ const ShelveChangePosition = ({ sectionId, shelfKey }) => {
           }))
           .sort((a, b) => a.top - b.top)
           .map((shelf) => shelf);
-        dispatch(
-          updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
-        );
+          if(material == "metal"){
+            dispatch(
+              updateShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+            );
+          }else{
+            dispatch(
+              updateWoodShelveIndexAndPostion({ sectionId, shelves: sortedShelves })
+            );
+          }
+
       }
     }
   };

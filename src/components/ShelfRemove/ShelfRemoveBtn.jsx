@@ -2,22 +2,37 @@ import React from "react";
 import "./ShelfRemoveBtn.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteShelf } from "../../slices/shelfDetailSlice";
+import { deleteWoodShelf } from "../../slices/WoodShelfDetailSlice";
 
 const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
+
   const dispatch = useDispatch();
-  const sectionId = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const section = useSelector(
-    (state) => state.shelfDetail.racks.sections[sectionId]
-  );
+
+  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+
+  const sectionId = material  == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.selectedSection):
+  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+
+  const section =  material  == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.sections[sectionId]):
+  useSelector((state) => state.woodShelfDetail.racks.sections[sectionId]);
+
   const shelfKeys = section ? Object.keys(section.shelves || {}).filter((key)=> key.includes("shelves_")) : [];
   console.log(shelfKeys)
+
   const shelfCount = shelfKeys.length;
+
   const handleDeleteShelf = (e) => {
     e.preventDefault();
     if (shelfCount > 3) {
-      dispatch(deleteShelf({ sectionId, shelfId }));
+      if(material == "metal"){
+        dispatch(deleteShelf({ sectionId, shelfId }));
+      }
+      else{
+        dispatch(deleteWoodShelf({sectionId, shelfId}));
+      }
+      
       onClose();
     }
     onClick();
