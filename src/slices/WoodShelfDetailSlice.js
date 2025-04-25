@@ -14,6 +14,7 @@ const initialState = {
 
 const selectedSection = "section_1";
 const activeTab = "dimensions";
+let showCounter = true;
 
 const sideWallObject = {
   left: {
@@ -87,7 +88,7 @@ const woodShelfDetailSlice = createSlice({
         depth: Number(shelfDepth),
         selectedSection: newSectionKey[0],
         activeTab,
-        // showCounter,
+        showCounter,
         // isEditingSides,
         // isEditingBackwall,
       };
@@ -139,6 +140,66 @@ const woodShelfDetailSlice = createSlice({
           }
         }
       },
+      setWoodShowCounter: (state, action) => {
+        state.racks.showCounter = action.payload;
+      },
+      updateWoodShelvesPosition: (state, action) => {
+        const { sectionId, positionArray } = action.payload;
+        const section = state.racks.sections[sectionId];
+        if (section) {
+          const updatedShelves = {};
+  
+          positionArray.forEach((position, index) => {
+            updatedShelves[`shelves_${index + 1}`] = {
+              position,
+            };
+          });
+  
+          state.racks.sections[sectionId] = {
+            ...section,
+            shelves: updatedShelves,
+          };
+        }
+      },
+      setWoodActiveTab: (state, action) => {
+        state.racks.activeTab = action.payload;
+      },
+      deleteWoodShelf: (state, action) => {
+        const { sectionId, shelfId } = action.payload;
+        const section = state.racks.sections[sectionId];
+        if (section) {
+          delete section.shelves[shelfId];
+        }
+      },
+      updateWoodShelvePostion: (state, action) => {
+        const { sectionId, position, shelfKey } = action.payload;
+        if (position >= 0) {
+          const shelves = state.racks.sections[sectionId].shelves;
+          const shelfKeys = Object.keys(shelves).sort((a, b) => {
+            return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
+          });
+  
+          if (shelfKeys.length > 0) {
+            shelves[shelfKey] = {
+              ...shelves[shelfKey],
+              position: { ...shelves[shelfKey].position, top: position + "em" },
+            };
+          }
+        }
+      },
+      updateWoodShelveIndexAndPostion: (state, action) => {
+        const { sectionId, shelves } = action.payload;
+        if (shelves.length > 0) {
+          const newShelves = state.racks.sections[sectionId].shelves;
+  
+          shelves.map((item, index) => {
+            newShelves[item.key] = {
+              ...shelves[item.key],
+              position: { zIndex: shelves.length - index, top: item.top + "em" },
+            };
+          });
+        }
+      },
   },
 });
 
@@ -148,6 +209,12 @@ export const {
   setCurrSelectedWoodSection,
   deleteWoodSection,
   updateLastWoodShelvePostion,
+  setWoodShowCounter,
+  updateWoodShelvesPosition,
+  setWoodActiveTab,
+  deleteWoodShelf,
+  updateWoodShelvePostion,
+  updateWoodShelveIndexAndPostion
 } = woodShelfDetailSlice.actions;
 
 // export default reducer

@@ -1,5 +1,7 @@
 import metal from '../prices/metal.json';
 import black from '../prices/black.json';
+import wood from '../prices/wood.json';
+
 
 const getComponentPrice =({
     material = "metal",
@@ -26,10 +28,17 @@ const getComponentPrice =({
     }
     if(material == 'black'){
         if(subtype){
-            rawPrice = black[component]?.[subtype]?.[key];
+            rawPrice = [component]?.[subtype]?.[key];
         }else{
             rawPrice =  black[component]?.[key];
         }
+    }
+    if(material == 'wood'){
+        if(subtype){
+            rawPrice = wood[component]?.[subtype]?.[key];
+        }else{
+            rawPrice =  wood[component]?.[key];
+        } 
     }
 
     if(rawPrice != undefined){

@@ -57,32 +57,36 @@ const ImageConfigurator = () => {
   });
   const [topPosition, setTopPosition] = useState(null);
 
-  const initialShelfValue = useSelector(
-    (state) => state.shelfDetail.configuration
-  );
   const executionValues = useSelector(
     (state) => state.shelfDetail.racks.execution
   );
+
+  const initialShelfValue = executionValues.material == "metal" ? 
+  useSelector((state) => state.shelfDetail.configuration):
+  useSelector((state) => state.woodShelfDetail.configuration);
 
   const currentSelectedSection = executionValues.material == "metal" ?
   useSelector((state) => state.shelfDetail.racks.selectedSection) :
   useSelector((state) => state.woodShelfDetail.racks.selectedSection);
 
   const [selectedSection, setSelectedSection] = useState("");
+
   useEffect(() => {
     setSelectedSection(currentSelectedSection);
   }, [currentSelectedSection]);
+
   const [selectedShelf, setSelectedShelf] = useState(null);
 
 
-  const newInitialValue =  executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks):
+  const newInitialValue =  executionValues.material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks):
   useSelector((state) => state.woodShelfDetail.racks);
-
 
 
   const editingSides = useSelector(
     (state) => state.shelfDetail.racks.isEditingSides
   );
+
   const isEdtingWall = useSelector(
     (state) => state.shelfDetail.racks.isEditingBackwall
   );
@@ -91,9 +95,15 @@ const ImageConfigurator = () => {
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
-  const sections = executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks.sections) : useSelector((state) => state.woodShelfDetail.racks.sections);
+
+  const sections = executionValues.material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.sections) : 
+  useSelector((state) => state.woodShelfDetail.racks.sections);
+
   const sectionKeys = Object.keys(sections);
+
   const heightArr = [
+    {90:"52"},
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },
@@ -236,7 +246,8 @@ const ImageConfigurator = () => {
     .map((item) => parseInt(sections[item].height, 10))
     .sort((a, b) => b - a)[0];
 
-  const depth = executionValues.material == "metal" ? useSelector((state) => state.shelfDetail.racks.depth):
+  const depth = executionValues.material == "metal" ? 
+  useSelector((state) => state.shelfDetail.racks.depth):
   useSelector((state) => state.woodShelfDetail.racks.depth);
 
   useEffect(() => {
@@ -585,10 +596,19 @@ const ImageConfigurator = () => {
                             !sections[sectionKey].backWall.type && (
                               <EditingBack />
                             )}
-                          {(getMaxHeight() ||
-                            (parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
-                              sections[sectionKey].height > 100)) &&
-                            executionValues.braces == "X-braces" && <XBrace />}
+
+                          {  
+                            (executionValues.material == "wood" ||
+                              (
+                                (getMaxHeight() ||
+                                  (
+                                    parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
+                                    sections[sectionKey].height > 100
+                                  )
+                                ) &&
+                              executionValues.braces == "X-braces") ) && <XBrace />
+                          }
+
                           {Number(section?.width) < 115 && (
                             <BackWall
                               type={sections[sectionKey].backWall.type}
