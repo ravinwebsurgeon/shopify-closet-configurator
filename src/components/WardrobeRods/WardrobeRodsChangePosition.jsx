@@ -1,8 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateDrawerPosition } from "../../slices/shelfDetailSlice";
-const DrawerChangePosition = ({ selected }) => {
+import {
+  setIsWardrobeHighlighted,
+  updateWardrobePosition,
+} from "../../slices/shelfDetailSlice";
+const WardrobeRodsChangePosition = ({ selected }) => {
   const dispatch = useDispatch();
 
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
@@ -49,9 +52,8 @@ const DrawerChangePosition = ({ selected }) => {
     }
   }, [selected, shelves]);
   const handlePositionChange = (type) => {
-    const position = parseFloat(selected?.top);
+    const position = parseFloat(selected?.position); 
     // console.log("handlePositionChange", filteredShelfs);
-    console.log(selected);
     const spaceBetweenShelves = filteredShelfs
       .map((item, index, arr) => {
         if (index === 0) return null;
@@ -60,6 +62,8 @@ const DrawerChangePosition = ({ selected }) => {
           ? 15
           : fromKey?.key?.includes("drawer")
           ? 5
+          : fromKey?.key?.includes("wardrobe_")
+          ? 25
           : 0;
         return {
           from: fromKey?.key,
@@ -80,7 +84,6 @@ const DrawerChangePosition = ({ selected }) => {
     const filterNext = spaceBetweenShelves
       .filter((item) => item.type === "next")
       .sort((a, b) => a.toPosition - b.toPosition);
-    console.log(filterNext);
     const findNext = filterNext.find(
       (item) => item.type === "next" && item?.space >= 12.5
     );
@@ -88,10 +91,10 @@ const DrawerChangePosition = ({ selected }) => {
       (item) => item.type === "prev" && item?.space >= 12.5
     );
     const findACPrev = filterPrev.find(
-      (item) => item.type === "prev" && item?.to == selected?.shelfkey
+      (item) => item.type === "prev" && item?.to == selected?.key
     );
     const findACNext = filterNext.find(
-      (item) => item.type === "next" && item?.from == selected?.shelfkey
+      (item) => item.type === "next" && item?.from == selected?.key
     );
     setButtons({
       topLeft: {
@@ -109,11 +112,7 @@ const DrawerChangePosition = ({ selected }) => {
     });
 
     if (type) {
-      const currentPostion = parseFloat(
-        shelves[selected.shelfkey]?.drawer?.position?.top
-      );
-      console.log("findACNext", findACNext);
-      console.log("findNext", findNext);
+      const currentPostion = parseFloat(shelves[selected.key]?.position?.top);
       if (type.includes("Left")) {
         let newPostion = type.includes("top")
           ? currentPostion - 1.25
@@ -132,15 +131,19 @@ const DrawerChangePosition = ({ selected }) => {
           newPostion = findNext?.fromPosition + 3.75;
           jump = true;
         }
-        if (newPostion) {
+        if (newPostion > 0) {
           dispatch(
-            updateDrawerPosition({
+            updateWardrobePosition({
               sectionId: selectedSectionKey,
-              shelfKey: selected?.shelfkey,
+              shelfKey: selected?.key,
               top: newPostion,
               jump: jump,
             })
           );
+          setIsWardrobeHighlighted({
+            key: selected?.key,
+            position: newPostion,
+          });
         }
       }
       if (type.includes("Right")) {
@@ -162,87 +165,15 @@ const DrawerChangePosition = ({ selected }) => {
         }
         if (newPostion) {
           dispatch(
-            updateDrawerPosition({
+            updateWardrobePosition({
               sectionId: selectedSectionKey,
-              shelfKey: selected?.shelfkey,
+              key: selected?.key,
               top: newPostion,
               jump: jump,
             })
           );
         }
       }
-      // const currentPostion = parseFloat(
-      //   shelves[selected.shelfkey]?.drawer?.position?.top
-      // );
-      // const prevTop = parseFloat(shelves[topLeft?.prevKey]?.position?.top);
-      // let newPostion = type.includes("top")
-      //   ? currentPostion - 1.25
-      //   : currentPostion + 1.25;
-      // let gapBtwnPrevAndCur = newPostion - prevTop;
-      // console.log(topLeft?.space);
-      // if (topLeft?.space < 5 && topLeft?.space > 3.75) {
-      //   gapBtwnPrevAndCur = 3.75;
-      //   newPostion = newPostion - topLeft?.space;
-      // }
-      // if (gapBtwnPrevAndCur >= 3.75) {
-      //   dispatch(
-      //     updateDrawerPosition({
-      //       sectionId: selectedSectionKey,
-      //       shelfKey: selected?.shelfkey,
-      //       top: newPostion,
-      //     })
-      //   );
-      // }
-      // if (gapBtwnPrevAndCur < 3.75 && topRight?.space > 12.5) {
-      //   console.log(topRight);
-      //   newPostion = topRight?.shelfTop - 6.25;
-      //   dispatch(
-      //     updateDrawerPosition({
-      //       sectionId: selectedSectionKey,
-      //       shelfKey: selected?.shelfkey,
-      //       top: newPostion,
-      //       jump: true,
-      //     })
-      //   );
-      // }
-      // const maxTop = parseFloat(
-      //   shelfCountsAccHeight[section?.height]?.maxTop
-      // );
-      // console.log(topLeft);
-      // console.log(topRight);
-      // console.log("bottomRight--->", bottomRight);
-      // const key = type.includes("top") ? topLeft?.to : bottomLeft?.to;
-      // const minTop =
-      //   shelves[key]?.drawer?.position?.top ||
-      //   shelves[key]?.compartments?.position?.top ||
-      //   shelves[key]?.position?.top;
-      // const jumpTop =
-      //   parseFloat(minTop) + (type.includes("top") ? 3.75 : -5.25);
-      // const checkPrevSpace = type.includes("top")
-      //   ? jumpTop >= newPostion && newPostion > 0
-      //   : newPostion < maxTop && jumpTop >= newPostion;
-      // console.log(jumpTop, newPostion);
-      // if (checkPrevSpace) {
-      //   dispatch(
-      //     updateDrawerPosition({
-      //       sectionId: selectedSectionKey,
-      //       shelfKey: selected?.shelfkey,
-      //       top: newPostion,
-      //     })
-      //   );
-      // } else {
-      //   newPostion = type.includes("top") ? topRight?.shelfTop - 10 : bottomRight?.shelfTop + 10;
-      //   if (newPostion < maxTop && newPostion > 0) {
-      //     dispatch(
-      //       updateDrawerPosition({
-      //         sectionId: selectedSectionKey,
-      //         shelfKey: selected?.shelfkey,
-      //         top: newPostion,
-      //         jump: true,
-      //       })
-      //     );
-      //   }
-      // }
     }
   };
 
@@ -310,57 +241,4 @@ const DrawerChangePosition = ({ selected }) => {
   );
 };
 
-export default DrawerChangePosition;
-
-const getAvailbleShelve = ({ shelvesKeys, shelves, selected }) => {
-  const array = [];
-
-  shelvesKeys.map((item) => {
-    const object = {};
-    object.key = item;
-    object.top =
-      shelves[item]?.drawer?.position?.top ||
-      shelves[item]?.compartments?.position?.top ||
-      shelves[item]?.position?.top;
-    object.isDrawer = shelves[item]?.drawer;
-    object.isCompartments = shelves[item]?.compartments;
-    array.push(object);
-  });
-
-  const shelvesSorted = array.sort((a, b) => b?.top - a?.top);
-  const spaces = shelvesSorted
-    .map((shelf, index, arr) => {
-      const fromTop = parseFloat(arr[index - 1]?.top) || 0;
-      const next = arr[index + 1];
-      let shelftop = parseFloat(shelf?.top);
-      const drawer = shelf?.isDrawer;
-      const compartments = shelf?.isCompartments;
-      const selectedTop =
-        parseFloat(shelves[selected?.shelfkey]?.drawer?.position?.top) ||
-        parseFloat(shelves[selected?.shelfkey]?.compartments?.position?.top) ||
-        parseFloat(shelves[selected?.shelfkey]?.position?.top);
-      const current = shelftop == selectedTop;
-
-      let space = shelftop - fromTop;
-      if (compartments) {
-        space = space - 13.5;
-      }
-      if (drawer) {
-      }
-      return {
-        position: selectedTop < shelftop ? "next" : "prev",
-        current: current,
-        from: arr[index - 1]?.key,
-        to: shelf.key,
-        space: space,
-        drawer: drawer,
-        shelfTop: shelftop,
-        isDrawer: drawer ? true : false,
-        isCompartments: compartments ? true : false,
-        nextKey: next?.key,
-        prevKey: arr[index - 1]?.key,
-      };
-    })
-    .filter(Boolean);
-  return spaces || null;
-};
+export default WardrobeRodsChangePosition;

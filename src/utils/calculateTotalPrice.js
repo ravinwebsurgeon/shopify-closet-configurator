@@ -1,4 +1,3 @@
-import { combineReducers } from "@reduxjs/toolkit";
 import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
 

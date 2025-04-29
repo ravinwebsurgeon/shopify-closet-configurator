@@ -3,10 +3,11 @@ import DeleteAndConfirm from "../DeleteAndConfirm/DeleteAndConfirm";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeRevolvingDoor,
-  setisRevolvingDoorHighlighted,
+  setIsWardrobeHighlighted,
 } from "../../slices/shelfDetailSlice";
 
-const RevolvingDoorDelete = ({ section, door }) => {
+const WardrobeRodsDelete = ({ section, door }) => {
+  const top = parseFloat(door.position);
   const dispatch = useDispatch();
   const selectedSection = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
@@ -18,18 +19,21 @@ const RevolvingDoorDelete = ({ section, door }) => {
         doorKey,
       })
     );
-    dispatch(setisRevolvingDoorHighlighted(false));
+    dispatch(setIsWardrobeHighlighted(false));
   };
 
   const closeRevDoor = () => {
-    dispatch(setisRevolvingDoorHighlighted(false));
+    dispatch(setIsWardrobeHighlighted(false));
   };
 
   return (
     <DeleteAndConfirm
-      top={`${door.position + 12.5}em`}
+      top={`${top - 4}em`}
       onDelete={() =>
-        deleteRevDoor({ sectionId: selectedSection, doorKey: door?.id })
+        deleteRevDoor({
+          sectionId: selectedSection,
+          doorKey: door?.key,
+        })
       }
       onConfirm={closeRevDoor}
       section={section}
@@ -37,4 +41,4 @@ const RevolvingDoorDelete = ({ section, door }) => {
   );
 };
 
-export default RevolvingDoorDelete;
+export default WardrobeRodsDelete;

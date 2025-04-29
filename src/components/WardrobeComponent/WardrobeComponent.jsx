@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import wardroberod from "../../assets/wardrobe-rod.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getComponentPrice from "../../utils/getPrice";
+import { addWardrobe } from "../../slices/shelfDetailSlice";
+import { toast } from "react-toastify";
 const WardrobeComponent = () => {
+  const dispatch = useDispatch();
   const [wardrobeRod, setWardrobeRod] = useState("");
 
   const selectedSection = useSelector(
@@ -11,14 +14,36 @@ const WardrobeComponent = () => {
   const width = useSelector(
     (state) => state.shelfDetail.racks.sections[selectedSection].width
   );
-  const [shelvesKeys, setShelvesKeys] = useState([]);
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-   const sections = useSelector((state) => state.shelfDetail.racks.sections);
-   
-   const selectedSectionKey = useSelector((state) => state.shelfDetail.racks.selectedSection);
-  const section = sections[selectedSectionKey];
-  const shelves = section?.shelves;
+  const sections = useSelector((state) => state.shelfDetail.racks.sections);
+
+  const selectedSectionKey = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const { filteredShelfs } = useMemo(() => {
+    if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
+
+    const shelfs = Object.entries(
+      sections[selectedSectionKey]?.shelves || {}
+    ).map(([key, value]) => ({
+      key,
+      height: value?.height || 0,
+      position: key?.includes("compartment")
+        ? parseFloat(value?.compartments?.position?.top || 0)
+        : key?.includes("drawer")
+        ? parseFloat(value?.drawer?.position?.top || 0)
+        : parseFloat(value?.position?.top || 0),
+    }));
+
+    const filteredShelfs = shelfs.filter(
+      (item) =>
+        !item?.key.includes("slidingDoors") &&
+        !item?.key.includes("revolvingDoors_")
+    );
+
+    return { filteredShelfs };
+  }, [sections, selectedSectionKey]);
   const cardData = [
     {
       id: "wardrode_rod",
@@ -26,50 +51,45 @@ const WardrobeComponent = () => {
       label: "Garderobestang met dragers",
     },
   ];
-
-  const getAvailbleShelve = () => {
-    const shelvesKeys = Object.keys(shelves);
-    const spaces = shelvesKeys
-      .map((shelf, index, arr) => {
+  const handleCardClick = (id) => {
+    const spaceBetweenShelves = filteredShelfs
+      .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        const fromTop = parseFloat(shelves[fromKey]?.position?.top);
-        const shelftop = parseFloat(shelves[shelf]?.position?.top);
-        const compartments = shelves[shelf]?.compartments;
-
-        let remainingSpace = shelftop - fromTop;
-        if (index === 0) return null;
-        if(compartments){
-            remainingSpace = remainingSpace - 15.5
-        }
+        const changePoitsion = fromKey?.key?.includes("wardrobe_") ? 25 : 0;
         return {
-          from: fromKey,
-          to: shelf,
-          space: shelftop - fromTop,
-          compartments: compartments ? true : false,
-          remainingSpace,
-          shelfTop: shelftop,
+          from: fromKey?.key,
+          to: item?.key,
+          fromPosition: fromKey?.position,
+          toPosition: item?.position - changePoitsion,
+          space: item?.position - fromKey?.position - changePoitsion,
         };
       })
-      .filter(Boolean);
-    console.log("spaces-->",spaces)
-    // const findAvailble = spaces.find(
-    //   (item) => item.remainingSpace >= 2.0 && item?.compartments
-    // );
-    for(const item of spaces){
-        if(item.compartments){
-            if(item.remainingSpace > 7.5){
-                return item;
-            }
-        }
-        else{
-            return item;
-        }
-    }
-    console.log();
-    alert(`wardrobe rod clicked..`);
-  };
+      .filter(Boolean)
+      .sort((a, b) => a.toPosition - b.toPosition);
 
+    const findSuitable = spaceBetweenShelves?.find((item) => item?.space >= 25);
+    if (findSuitable) {
+      dispatch(
+        addWardrobe({
+          sectionId: selectedSectionKey,
+          shelfKey: findSuitable?.to,
+          top:
+            findSuitable?.fromPosition +
+            (findSuitable?.from?.includes("shelves") ? 2.5 : 27.5),
+        })
+      );
+    } else {
+      toast.info(
+        "Er kunnen geen lades meer worden toegevoegd in deze sectie.",
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+        }
+      );
+    }
+  };
   return (
     <div className="back-data-conatiner">
       {cardData.map((data) => {
@@ -86,7 +106,7 @@ const WardrobeComponent = () => {
             className={`back-data-card ${
               data.id === wardrobeRod ? "selected" : ""
             }`}
-            onClick={(e) => handleCardClick(e, data.id)}
+            onClick={(e) => handleCardClick(data.id)}
           >
             <div className="back-img">
               <img className="back-image" src={data.imgSrc} alt="shelf_image" />

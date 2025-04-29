@@ -11,6 +11,9 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
+import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
+import WardrobeRodsChangePosition from "../WardrobeRods/WardrobeRodsChangePosition";
+// import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
 import { deleteWoodSection, setCurrSelectedWoodSection, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
 
 const SectionInterface = ({
@@ -71,6 +74,12 @@ const SectionInterface = ({
   };
   const highlightedDrawer = shelfDetail?.highlightedDrawer;
   
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
+  const isWardrobeHighlighted = useSelector(
+    (state) => state.shelfDetail.isWardrobeHighlighted
+  );
   return (
     <div className="Section_sectionInterface">
       <div className="Section_sectionNumberContainer">
@@ -105,6 +114,10 @@ const SectionInterface = ({
           </button>
         )} */}
       </div>
+
+      {isSlidingDoorHighlighted && selectedSection == sectionKey && (
+        <SlidingDoorMoveButton selected={isSlidingDoorHighlighted} />
+      )}
       {isCompartmentHighlighted && selectedSection == sectionKey && (
         <CompartmentsMoveButton selected={isCompartmentHighlighted} />
       )}
@@ -123,7 +136,10 @@ const SectionInterface = ({
           selected={highlightedDrawer}
         />
       )}
-      {/* <ShelfCounter
+      {selectedSection == sectionKey && isWardrobeHighlighted && (
+        <WardrobeRodsChangePosition selected={isWardrobeHighlighted} />
+      )}
+      <ShelfCounter
         showCounter={
           selectedSection == sectionKey && activeTab == "shelves" && showCounter
         }

@@ -8,7 +8,7 @@ import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
-import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
+
 import SlidingDoors from "../SlidingDoors/SlidingDoors";
 import Drawers from "../Drawers/Drawers";
 import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
@@ -87,7 +87,7 @@ const ConfigurationTab = () => {
     <>
     <div className="flex flex-col max-w-[425px]">
     <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden">
-      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
+      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-520px)] overflow-auto">
         <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
           {selectedTab.label}
         </h2>

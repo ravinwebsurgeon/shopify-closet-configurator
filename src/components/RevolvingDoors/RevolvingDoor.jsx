@@ -3,7 +3,7 @@ import'./RevolvingDoor.css'
 import { useDispatch, useSelector } from "react-redux";
 import { setisRevolvingDoorHighlighted } from "../../slices/shelfDetailSlice";
 
-const RevolvingDoor = ({doorKey,type,position,width,section}) => {
+const RevolvingDoor = ({doorKey,type,position,width,section, height}) => {
   
  const dispatch = useDispatch();
  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
@@ -22,7 +22,8 @@ const RevolvingDoor = ({doorKey,type,position,width,section}) => {
     dispatch(setisRevolvingDoorHighlighted({
       id,
       position,
-      type
+      type,
+      height:height
     }))
     
   }
@@ -37,9 +38,9 @@ const RevolvingDoor = ({doorKey,type,position,width,section}) => {
     >
       <div className="Deuren_inner__dJXD6">
         <div className="Deuren_container__Pk33j">
-          <span className="ssdf">
+          {/* <span className="ssdf">
             {doorKey}
-          </span>
+          </span> */}
         </div>
       </div>
     </button>

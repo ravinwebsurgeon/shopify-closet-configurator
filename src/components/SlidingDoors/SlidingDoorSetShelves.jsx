@@ -6,48 +6,169 @@ import {
   updateShelvePostion,
 } from "../../slices/shelfDetailSlice";
 
-const RevolvingDoorSetShelves = ({ section }) => {
+const SlidingDoorSetShelves = ({ section }) => {
   const dispatch = useDispatch();
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
   const selectedSectionKey = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
   const sections = useSelector(
     (state) => state.shelfDetail.racks.sections[selectedSectionKey]
   );
-  const [revolvingDoors, setRevolvingDoor] = useState([]);
+  const shelves = sections?.shelves;
+  const [slidingDoors, setSlidingDoors] = useState([]);
   const [shelfsData, setShelfData] = useState([]);
-  useEffect(() => {
-    if (sections) {
-      if (sections?.revolvingDoor) {
-        const revolvingDoor = Object.entries(sections?.revolvingDoor).map(
-          ([key, value]) => ({
-            key,
-            type: value?.type,
-            position: value?.position,
-            height: value?.height,
-          })
-        );
+  // useEffect(() => {
+  //   if (sections) {
+  //     if (sections?.revolvingDoor) {
+  //       const revolvingDoor = Object.entries(sections?.revolvingDoor).map(
+  //         ([key, value]) => ({
+  //           key,
+  //           type: value?.type,
+  //           position: value?.position,
+  //           height: value?.height,
+  //         })
+  //       );
 
-        setRevolvingDoor(revolvingDoor);
-      }
-      const shelfDetail = Object.entries(sections?.shelves).map(
-        ([key, value]) => ({
-          key,
-          position: parseFloat(value?.position?.top),
-        })
-      );
-      const shelfPositions = shelfDetail.map((item) => item?.position);
-      setShelfData({
-        positions: shelfPositions,
-        data: shelfDetail,
-      });
-    }
-    // console.log(sections);
-  }, [sections]);
-  const addOrUpdateShelve = ({ revolvingDoor, position }) => {
+  //       setRevolvingDoor(revolvingDoor);
+  //     }
+  //     const shelfDetail = Object.entries(sections?.shelves).map(
+  //       ([key, value]) => ({
+  //         key,
+  //         position: parseFloat(value?.position?.top),
+  //       })
+  //     );
+  //     const shelfPositions = shelfDetail.map((item) => item?.position);
+  //     setShelfData({
+  //       positions: shelfPositions,
+  //       data: shelfDetail,
+  //     });
+  //   }
+  //   // console.log(sections);
+  // }, [sections]);
+  // const addOrUpdateShelve = ({ revolvingDoor, position }) => {
+  //   const prevShelfMoveRange = position - 10;
+  //   const newShelfMoveRange = position + 10;
+  //   const findSutiableShelf = shelfsData?.data?.filter(
+  //     (item) =>
+  //       item?.position > prevShelfMoveRange &&
+  //       item?.position < newShelfMoveRange
+  //   );
+  //   if (findSutiableShelf?.length > 1) {
+  //     const key = findSutiableShelf[0]?.key;
+  //     dispatch(
+  //       updateShelvePostion({
+  //         sectionId: selectedSectionKey,
+  //         position: position,
+  //         shelfKey: key,
+  //       })
+  //     );
+  //     findSutiableShelf?.map((item, index) => {
+  //       if (index === 0) return null;
+  //       dispatch(
+  //         deleteShelf({
+  //           sectionId: selectedSectionKey,
+  //           shelfId: item?.key,
+  //         })
+  //       );
+  //     });
+  //   } else if (findSutiableShelf?.length == 1) {
+  //     const key = findSutiableShelf[0]?.key;
+  //     // console.log(key, position);
+  //     dispatch(
+  //       updateShelvePostion({
+  //         sectionId: selectedSectionKey,
+  //         position: position,
+  //         shelfKey: key,
+  //       })
+  //     );
+  //   } else if (findSutiableShelf?.length == 0) {
+  //     const shelfDetail = Object.entries(sections?.shelves).map(
+  //       ([key, value]) => ({
+  //         key,
+  //         position: parseFloat(value?.position?.top),
+  //       })
+  //     );
+  //     let getShelf = shelfDetail?.find((item) => item?.position > position);
+
+  //     const shelfKeys = Object.keys(sections?.shelves);
+  //     const shelves = sections?.shelves;
+  //     const updatedShelves = {};
+  //     if (!getShelf) {
+  //       getShelf = {
+  //         key: "shelves_" + shelfKeys.length,
+  //       };
+  //     }
+  //     // console.log(getShelf);
+  //     // console.log(shelfKeys.length);
+  //     for (let i = 0; i < shelfKeys.length; i++) {
+  //       const key = shelfKeys[i];
+  //       const shelf = sections?.shelves[key];
+  //       if (key === getShelf?.key) {
+  //         let drawerIndex = 1;
+  //         let newKey = `shelves_${drawerIndex}`;
+  //         while (shelves[newKey] || updatedShelves[newKey]) {
+  //           drawerIndex++;
+  //           newKey = `shelves_${drawerIndex}`;
+  //         }
+
+  //         updatedShelves[newKey] = {
+  //           position: { top: position + "em" },
+  //         };
+  //       }
+  //       updatedShelves[key] = shelf;
+  //     }
+  //     dispatch(
+  //       addShelve({
+  //         sectionId: selectedSectionKey,
+  //         shelves: updatedShelves,
+  //       })
+  //     );
+  //   }
+  // };
+  useEffect(() => {
+    const shelfs = Object.entries(shelves).map(([key, value]) => ({
+      key,
+      position: key?.includes("slidingDoors")
+        ? value?.position
+        : parseFloat(value?.position?.top),
+    }));
+    const doors = shelfs.filter(
+      (item) => item && item?.key?.includes("slidingDoors_")
+    );
+    const shelvesFilter = shelfs.filter(
+      (item) =>
+        item &&
+        !item?.key?.includes("slidingDoors_") &&
+        !item?.key.includes("drawer_") &&
+        !item?.key.includes("compartment")
+    );
+    const shelfPositions = shelvesFilter.map((item) => item?.position);
+    setShelfData({
+      positions: shelfPositions,
+    });
+    setSlidingDoors(doors);
+  }, [shelves]);
+
+  const addOrUpdateShelve = ({ door, position }) => {
+    const shelfs = Object.entries(shelves).map(([key, value]) => ({
+      key,
+      position: key?.includes("slidingDoors")
+        ? value?.position
+        : parseFloat(value?.position?.top),
+    }));
+    const filteredShelfs = shelfs.filter(
+      (item) =>
+        !item?.key.includes("drawer_") &&
+        !item?.key.includes("compartment") &&
+        !item?.key.includes("slidingDoors")
+    );
+
     const prevShelfMoveRange = position - 10;
     const newShelfMoveRange = position + 10;
-    const findSutiableShelf = shelfsData?.data?.filter(
+    const findSutiableShelf = filteredShelfs?.filter(
       (item) =>
         item?.position > prevShelfMoveRange &&
         item?.position < newShelfMoveRange
@@ -81,12 +202,17 @@ const RevolvingDoorSetShelves = ({ section }) => {
         })
       );
     } else if (findSutiableShelf?.length == 0) {
-      const shelfDetail = Object.entries(sections?.shelves).map(
-        ([key, value]) => ({
+      const shelfDetail = Object.entries(sections?.shelves)
+        .map(([key, value]) => ({
           key,
           position: parseFloat(value?.position?.top),
-        })
-      );
+        }))
+        .filter(
+          (item) =>
+            !item?.key.includes("drawer_") &&
+            !item?.key.includes("compartment") &&
+            !item?.key.includes("slidingDoors")
+        );
       let getShelf = shelfDetail?.find((item) => item?.position > position);
 
       const shelfKeys = Object.keys(sections?.shelves);
@@ -97,8 +223,6 @@ const RevolvingDoorSetShelves = ({ section }) => {
           key: "shelves_" + shelfKeys.length,
         };
       }
-      // console.log(getShelf);
-      // console.log(shelfKeys.length);
       for (let i = 0; i < shelfKeys.length; i++) {
         const key = shelfKeys[i];
         const shelf = sections?.shelves[key];
@@ -123,25 +247,25 @@ const RevolvingDoorSetShelves = ({ section }) => {
         })
       );
     }
+    console.log(findSutiableShelf);
   };
-
   return (
     <div
       className={`shelfRemoveBtnOver scale-90 shelfRemove_bottom${section?.height} shelfRemove_width${section?.width}`}
     >
-      {revolvingDoors &&
-        revolvingDoors.length > 0 &&
-        revolvingDoors.map((item, index) => (
+      {slidingDoors &&
+        slidingDoors.length > 0 &&
+        slidingDoors.map((item, index) => (
           <React.Fragment key={item?.key + "__" + index}>
             {!shelfsData?.positions.includes(item?.position) && (
               <div
                 className="absolute right-[-10px] revolving__doors_set z-[1]"
-                style={{ top: item?.position + 4 + "em" }}
+                style={{ top: item?.position + 12 + "em" }}
               >
                 <button
                   onClick={() =>
                     addOrUpdateShelve({
-                      revolvingDoor: item,
+                      door: item,
                       position: item?.position,
                     })
                   }
@@ -161,18 +285,16 @@ const RevolvingDoorSetShelves = ({ section }) => {
                 </button>
               </div>
             )}
-            {!shelfsData?.positions.includes(
-              item?.position + item?.height - 2.5
-            ) && (
+            {!shelfsData?.positions.includes(item?.position + 22.5) && (
               <div
                 className="absolute right-[-10px] revolving__doors_set "
-                style={{ top: item?.position + item?.height + 4 + "em" }}
+                style={{ top: item?.position + 22.5 + 12 + "em" }}
               >
                 <button
                   onClick={() =>
                     addOrUpdateShelve({
-                      revolvingDoor: item,
-                      position: item?.position + item?.height,
+                      door: item,
+                      position: item?.position + 22.5,
                     })
                   }
                   className="bg-white rounded-[2px] h-8 w-8 border border-[#5c5c5c] rightArrow arrow_cstm flex items-center justify-center"
@@ -197,4 +319,4 @@ const RevolvingDoorSetShelves = ({ section }) => {
   );
 };
 
-export default RevolvingDoorSetShelves;
+export default SlidingDoorSetShelves;

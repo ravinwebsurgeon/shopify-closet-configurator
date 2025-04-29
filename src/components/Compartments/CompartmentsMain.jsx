@@ -88,7 +88,9 @@ const CompartmentsMain = () => {
           : item?.compartments.type == "compartment_divider_set"
           ? false
           : item?.compartments.count < 4;
-      return item.space >= gap && compartments;
+      return (
+        item.space >= gap && compartments && !item?.to?.includes("wardrobe_")
+      );
     });
     return findAvailble || null;
   };
