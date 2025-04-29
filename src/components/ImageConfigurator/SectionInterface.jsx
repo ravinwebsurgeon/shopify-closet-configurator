@@ -74,6 +74,9 @@ const SectionInterface = ({
   };
   const highlightedDrawer = shelfDetail?.highlightedDrawer;
   
+  // const highlightedDrawer = useSelector(
+  //   (state) => state.shelfDetail.highlightedDrawer
+  // );
   const isSlidingDoorHighlighted = useSelector(
     (state) => state.shelfDetail.isSlidingDoorHighlighted
   );
@@ -139,13 +142,13 @@ const SectionInterface = ({
       {selectedSection == sectionKey && isWardrobeHighlighted && (
         <WardrobeRodsChangePosition selected={isWardrobeHighlighted} />
       )}
-      <ShelfCounter
+      {/* <ShelfCounter
         showCounter={
           selectedSection == sectionKey && activeTab == "shelves" && showCounter
         }
         onClick={() => material == "metal" ?
           dispatch(setShowCounter(false)): dispatch(setWoodShowCounter(false))}
-      /> */}
+      />  */}
     </div>
   );
 };
