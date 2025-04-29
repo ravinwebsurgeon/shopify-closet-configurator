@@ -33,18 +33,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong, faArrowRightLong, faEye, faEyeSlash, faRuler, faTrash } from "@fortawesome/free-solid-svg-icons";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
 import { setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
-
-
-import EditIcon  from '../../assets/Edit.svg';
-import HeightIcon from '../../assets/Height.svg';
-import WidthIcon from '../../assets/Breadth.svg';
-import DepthIcon from '../../assets/Depth.svg'
 import DimensionVisualizer from "../DimensionVisualizerComponent/DimensionVisualizer";
 
 const ImageConfigurator = () => {
   const dispatch = useDispatch();
   const [positionArr, setPositionArr] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
+
+  const metalConfig = useSelector((state) => state.shelfDetail.configuration);
+  const woodConfig =  useSelector((state) => state.woodShelfDetail.configuration);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
   // const[scale,setScale] = useState(0.9);
 
@@ -67,17 +67,13 @@ const ImageConfigurator = () => {
   });
   const [topPosition, setTopPosition] = useState(null);
 
-  const executionValues = useSelector(
-    (state) => state.shelfDetail.racks.execution
-  );
+  const executionValues = metalRacks?.execution;
 
   const initialShelfValue = executionValues.material == "metal" ? 
-  useSelector((state) => state.shelfDetail.configuration):
-  useSelector((state) => state.woodShelfDetail.configuration);
+  metalConfig : woodConfig;
 
   const currentSelectedSection = executionValues.material == "metal" ?
-  useSelector((state) => state.shelfDetail.racks.selectedSection) :
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+  metalRacks.selectedSection : woodRacks.selectedSection;
 
   const [selectedSection, setSelectedSection] = useState("");
 
@@ -89,26 +85,18 @@ const ImageConfigurator = () => {
 
 
   const newInitialValue =  executionValues.material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks):
-  useSelector((state) => state.woodShelfDetail.racks);
+  metalRacks : woodRacks;
 
 
-  const editingSides = useSelector(
-    (state) => state.shelfDetail.racks.isEditingSides
-  );
+  const editingSides = metalRacks?.isEditingSides;
 
-  const isEdtingWall = useSelector(
-    (state) => state.shelfDetail.racks.isEditingBackwall
-  );
-
-  const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
+  const isEdtingWall = metalRacks?.isEditingBackwall;
 
   const shelfCount = initialShelfValue.shelfCount;
   const currShelfHeight = initialShelfValue.height;
 
   const sections = executionValues.material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.sections) : 
-  useSelector((state) => state.woodShelfDetail.racks.sections);
+  metalRacks.sections : woodRacks.sections;
 
   const sectionKeys = Object.keys(sections);
 
@@ -339,8 +327,7 @@ const ImageConfigurator = () => {
     .sort((a, b) => b - a)[0];
 
   const depth = executionValues.material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.depth):
-  useSelector((state) => state.woodShelfDetail.racks.depth);
+  metalRacks.depth : woodRacks.depth;
 
   useEffect(() => {
     setIsShelfSelected((prev) => ({

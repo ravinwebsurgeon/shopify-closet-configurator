@@ -15,17 +15,12 @@ import ItemBlock from "../../Shared/ItemBlock/ItemBlock";
 const SidesComponent = () => {
   const dispatch = useDispatch();
   const [sideWall, setSideWall] = useState("");
-  const editing = useSelector(
-    (state) => state.shelfDetail.racks.isEditingSides
-  );
-  const selectedSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const height = useSelector(
-    (state) => state.shelfDetail.racks.sections[selectedSection].height
-  );
-  const depth = useSelector((state) => state.shelfDetail.racks.depth);
-  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const editing = metalRacks?.isEditingSides;
+  const selectedSection = metalRacks?.selectedSection;
+  const height = metalRacks?.sections?.[selectedSection]?.height;
+  const depth = metalRacks?.depth;
+  const color = metalRacks?.execution?.color;
 
   const cardData = [
     {

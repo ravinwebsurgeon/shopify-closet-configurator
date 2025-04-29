@@ -11,10 +11,8 @@ import { setWoodSection } from "../../../slices/WoodShelfDetailSlice";
 import { getWoodShelfPostions } from "../../../utils/getShelfPositions";
 
 const ExecutionComponent = () => {
-  const executionDetails = useSelector(
-    (state) => state.shelfDetail.racks.execution
-  );
-
+  const executionDetails = useSelector((state) => state.shelfDetail.racks.execution);
+  const woodConfigurations = useSelector((state) => state.woodShelfDetail.configuration);
   const dispatch = useDispatch();
 
   const [selectedFoot, setSelectedFoot] = useState(null);
@@ -23,7 +21,6 @@ const ExecutionComponent = () => {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
 
-  const woodConfigurations = useSelector((state) => state.woodShelfDetail.configuration);
 
   const footOptions = [
     { type: "Plastic", image: plasticFoot, label: "Voetje (plastic)" },

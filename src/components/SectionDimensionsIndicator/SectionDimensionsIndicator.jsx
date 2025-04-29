@@ -14,15 +14,11 @@ const SectionDimensionsIndicator = () => {
     130: "60em",
   };
 
-  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
-
-  const selectedSection = material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.selectedSection):
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
-
-  const sections =  material == "metal" ?
-  useSelector((state) => state.shelfDetail.racks.sections):
-  useSelector((state) => state.woodShelfDetail.racks.sections);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
+  const selectedSection = material == "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
+  const sections =  material == "metal" ? metalRacks?.sections : woodRacks?.sections;
 
   const sectionItems = Object.keys(sections);
   

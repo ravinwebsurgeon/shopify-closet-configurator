@@ -14,26 +14,18 @@ import {
 import "./DimensionsComponent.css";
 import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
 import { updateLastWoodShelvePostion, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
-import ShelfCounter from "../ShelvesComponent/ShelfCounter";
 import SliderShelfCounter from "../ShelvesComponent/SliderShelfCounter";
 
 const DimensionsComponent = () => {
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
   const material = useSelector((state) => state.shelfDetail.racks.execution.material);
-
-  const sections = material== "metal" ?  
-  useSelector((state) => state.shelfDetail.racks.sections) :
-  useSelector((state) => state.woodShelfDetail.racks.sections);
-
-  const activeSectionId = material ==  "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.selectedSection):
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const sections = material== "metal" ? metalRacks?.sections : woodRacks?.sections;
+  const activeSectionId = material ==  "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
   const activeSection = sections[activeSectionId];
-
-  const depth = material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.depth):
-  useSelector((state) => state.woodShelfDetail.racks.depth);
+  const depth = material == "metal" ? metalRacks.depth : woodRacks.depth;
   const revDoor = activeSection.revolvingDoor;
 
   // Predefined values for each dimension

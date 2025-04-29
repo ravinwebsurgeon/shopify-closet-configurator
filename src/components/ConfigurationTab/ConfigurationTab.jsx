@@ -24,16 +24,13 @@ import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/
 
 
 const ConfigurationTab = () => {
-
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
-
-  const activeTab = material == "metal" ?
-  useSelector((state) => state.shelfDetail.racks.activeTab):
-  useSelector((state) => state.woodShelfDetail.racks.activeTab);
-
-  const details = material == "metal" ?
-  useSelector((state) => state.shelfDetail):
-  useSelector((state) => state.shelfDetail);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const metalShelfDetail = useSelector((state) => state.shelfDetail);
+  const woodShelfDetail = useSelector((state) => state.woodShelfDetail);
+  const material = metalRacks?.execution.material;
+  const activeTab = material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
+  const details = material == "metal" ? metalShelfDetail : woodShelfDetail;
 
   const[isModalOpen,setIsModalOpen] = useState(false);
   const[bomData,setBomData] = useState('');

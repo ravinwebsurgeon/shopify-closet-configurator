@@ -6,10 +6,17 @@ import { setisRevolvingDoorHighlighted } from "../../slices/shelfDetailSlice";
 const RevolvingDoor = ({doorKey,type,position,width,section}) => {
   
  const dispatch = useDispatch();
- const color = useSelector((state)=>state.shelfDetail.racks.execution.color);
- const selectedSection = useSelector((state)=>state.shelfDetail.racks.selectedSection);
- const isRevDoorSelected = useSelector((state)=>state.shelfDetail.isRevolvingDoorHighlighted);
- const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
+ const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+ const shelfDetail = useSelector((state)=>state.shelfDetail);
+ const color = metalRacks?.execution?.color;
+ const selectedSection = metalRacks?.selectedSection;
+ const isRevDoorSelected = shelfDetail?.isRevolvingDoorHighlighted;
+ const hideDoor = shelfDetail?.hideDoor;
+ 
+ //const color = useSelector((state)=>state.shelfDetail.racks.execution.color);
+ //const selectedSection = useSelector((state)=>state.shelfDetail.racks.selectedSection);
+ //const isRevDoorSelected = useSelector((state)=>state.shelfDetail.isRevolvingDoorHighlighted);
+ //const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
   const handleDoorClick = (e,id) =>{
     dispatch(setisRevolvingDoorHighlighted({

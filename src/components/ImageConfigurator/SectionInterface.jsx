@@ -24,22 +24,17 @@ const SectionInterface = ({
   isShelfSelected,
 }) => {
   const dispatch = useDispatch();
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const shelfDetail = useSelector((state) => state.shelfDetail);
+  const material = metalRacks?.execution?.material;
   
-  const activeTab = material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.activeTab):
-  useSelector((state) => state.woodShelfDetail.racks.activeTab);
+  const activeTab = material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
 
-  const isCompartmentHighlighted = useSelector(
-    (state) => state.shelfDetail.isCompartmentHighlighted
-  );
-  const isRevolvingDoorHighlighted = useSelector(
-    (state) => state.shelfDetail.isRevolvingDoorHighlighted
-  );
+  const isCompartmentHighlighted = shelfDetail?.isCompartmentHighlighted;
+  const isRevolvingDoorHighlighted = shelfDetail?.isRevolvingDoorHighlighted;
 
-  const showCounter = material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.showCounter):
-  useSelector((state) => state.woodShelfDetail.racks.showCounter);
+  const showCounter = material == "metal" ? metalRacks?.showCounter : woodRacks?.showCounter;
   
   const handleSectionDelete = (e, sectionKey) => {
     const activeIndex = sectionKeys.indexOf(sectionKey);
@@ -74,9 +69,8 @@ const SectionInterface = ({
     }
 
   };
-  const highlightedDrawer = useSelector(
-    (state) => state.shelfDetail.highlightedDrawer
-  );
+  const highlightedDrawer = shelfDetail?.highlightedDrawer;
+  
   return (
     <div className="Section_sectionInterface">
       <div className="Section_sectionNumberContainer">

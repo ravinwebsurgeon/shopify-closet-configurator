@@ -8,15 +8,12 @@ const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
 
   const dispatch = useDispatch();
 
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
 
-  const sectionId = material  == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.selectedSection):
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
-
-  const section =  material  == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks.sections[sectionId]):
-  useSelector((state) => state.woodShelfDetail.racks.sections[sectionId]);
+  const sectionId = material  == "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
+  const section =  material  == "metal" ?  metalRacks?.sections?.[sectionId] : woodRacks?.sections?.[sectionId];
 
   const shelfKeys = section ? Object.keys(section.shelves || {}).filter((key)=> key.includes("shelves_")) : [];
   console.log(shelfKeys)

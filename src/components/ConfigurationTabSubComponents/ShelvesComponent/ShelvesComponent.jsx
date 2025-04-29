@@ -16,16 +16,12 @@ import { setWoodShowCounter } from "../../../slices/WoodShelfDetailSlice";
 
 const ShelvesComponent = () => {
   const dispatch = useDispatch();
-  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
-
-  const selectedSection = material =="metal" ? 
-  useSelector((state) => state.shelfDetail.racks.selectedSection):
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
-
-  const dimention = material =="metal" ?
-  useSelector((state) => state.shelfDetail.racks):
-  useSelector((state) => state.woodShelfDetail.racks);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const color = metalRacks?.execution?.color;
+  const material = metalRacks?.execution?.material;
+  const selectedSection = material =="metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
+  const dimention = material =="metal" ? metalRacks: woodRacks;
 
   // const cardData = [
   //   { id: "metal", imgSrc: legboard, title: "Legbord met dragers" },

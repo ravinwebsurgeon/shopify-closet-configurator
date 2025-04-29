@@ -16,15 +16,11 @@ const ShelfCounter = ({ onClick, showCounter }) => {
   const dispatch = useDispatch();
   let positionArray = [];
 
-  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
-
-  const sectionData = material == "metal" ?
-  useSelector((state) => state.shelfDetail.racks.sections):
-  useSelector((state) => state.woodShelfDetail.racks.sections);
-
-  const sectionId =  material == "metal" ?
-  useSelector((state) => state.shelfDetail.racks.selectedSection):
-  useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
+  const sectionData = material == "metal" ? metalRacks?.sections : woodRacks?.sections;
+  const sectionId =  material == "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
 
   const currentSection = sectionData[sectionId];
 

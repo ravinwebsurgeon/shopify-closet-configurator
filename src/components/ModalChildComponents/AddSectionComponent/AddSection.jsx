@@ -12,15 +12,11 @@ import AddSectionDimensions from "./AddSectionDimensions";
 import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
 
 const AddSection = ({ children, onClose }) => {
-  const material = useSelector((state)=>state.shelfDetail.racks.execution.material);
-  const sections = material == "metal"? 
-  useSelector((state) => state.shelfDetail.racks.sections) :
-  useSelector((state)=>state.woodShelfDetail.racks.sections);
-
-  const dimension =  material == "metal" ? 
-  useSelector((state) => state.shelfDetail.racks):
-  useSelector((state) => state.woodShelfDetail.racks);
-
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
+  const sections = material == "metal"? metalRacks?.sections : woodRacks?.sections;
+  const dimension =  material == "metal" ? metalRacks : woodRacks;
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);

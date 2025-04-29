@@ -15,17 +15,23 @@ import {toast } from 'react-toastify';
 
 const RevolvingDoors = () => {
   const dispatch = useDispatch();
-  const selectedSectionKey = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
-  const dimension = useSelector((state) => state.shelfDetail.racks);
-  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
-  const revolvingDoorsAll = useSelector(
-    (state) =>
-      state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
-  );
-  const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+
+  const selectedSectionKey = metalRacks?.selectedSection;
+  const sections = metalRacks?.sections;
+  const dimension = metalRacks;
+  const color = metalRacks?.execution?.color;
+  const revolvingDoorsAll = sections?.[selectedSectionKey]?.revolvingDoor;
+  const feet = metalRacks?.execution?.feet;
+  
+  // const dimension = useSelector((state) => state.shelfDetail.racks);
+  // const color = useSelector((state) => state.shelfDetail.racks.execution.color);
+  // const revolvingDoorsAll = useSelector(
+  //   (state) =>
+  //     state.shelfDetail.racks.sections[selectedSectionKey].revolvingDoor
+  // );
+  // const feet = useSelector((state) => state.shelfDetail.racks.execution.feet);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contWithout, setContWithout] = useState(false);
 

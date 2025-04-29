@@ -12,12 +12,8 @@ const AddBackwallModal = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const height = useSelector((state) => state.shelfDetail.options.height);
-  const currSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const currHeight = useSelector(
-    (state) => state.shelfDetail.racks.sections[currSection].height
-  );
+  const currSection = useSelector((state) => state.shelfDetail.racks.selectedSection);
+  const currHeight = useSelector((state) => state.shelfDetail.racks.sections[currSection].height);
   const currType = useSelector((state) => state.shelfDetail.selectedBackwall);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const heightOptions = [50, ...height];
