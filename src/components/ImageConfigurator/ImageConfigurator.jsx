@@ -32,7 +32,6 @@ import RevolvingDoor from "../RevolvingDoors/RevolvingDoor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong, faArrowRightLong, faEye, faEyeSlash, faRuler, faTrash } from "@fortawesome/free-solid-svg-icons";
 import CompartmentsButton from "../Compartments/CompartmentsButton";
-import SlidingDoorViewer from "../SlidingDoors/SlidingDoorViewer";
 import { setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
 
 
@@ -569,19 +568,33 @@ const ImageConfigurator = () => {
                                 <div
                                   className={`arrows-dimensionsIndicator-left _selected !left-[-30%] relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width bg-[#3c9cea] w-[2px]`}
                                 >
-                                  {parseFloat(section.height) + 2.7} cm
-                                </span>
-                              </div>
-                            )}
-                          <div className={`Section_accessoires__+se2+ ${section.width > 70 ? 'Garderobe_Garderobe__active' : ''}`}>
-                            {section.shelves &&
-                              Object.entries(section.shelves).map(
-                                ([shelfkey, shelf], index, arr) => {
-                                  return (
-                                    <React.Fragment key={shelfkey}>
-                                      {shelf?.compartments &&
-                                        shelfkey.includes("compartment") && (
-                                          <CompartmentViewer
+                                  <span
+                                    className={`text-sm bg-white -rotate-90 px-2 whitespace-nowrap font-bold text-[#5c5c5c] font-inter`}
+                                  >
+                                    {parseFloat(section.height) + 2.7} cm
+                                  </span>
+                                </div>
+                              )} */}
+                            <div className="Section_accessoires__+se2+">
+                              {section.shelves &&
+                                Object.entries(section.shelves).map(
+                                  ([shelfkey, shelf], index, arr) => {
+                                    return (
+                                      <React.Fragment key={shelfkey}>
+                                        {shelf?.compartments &&
+                                          shelfkey.includes("compartment") && (
+                                            <CompartmentViewer
+                                              key={shelfkey}
+                                              arr={arr}
+                                              index={index}
+                                              sectionKey={sectionKey}
+                                              selectedSection={selectedSection}
+                                              shelf={shelf}
+                                              shelfkey={shelfkey}
+                                            />
+                                          )}
+                                        {shelfkey.includes("drawer_") && (
+                                          <DrawersButton
                                             key={shelfkey}
                                             arr={arr}
                                             index={index}
@@ -589,153 +602,80 @@ const ImageConfigurator = () => {
                                             shelfkey={shelfkey}
                                           />
                                         )}
-                                      {shelfkey.includes("drawer_") && (
-                                        <DrawersButton
-                                          key={shelfkey}
-                                          arr={arr}
-                                          index={index}
-                                          shelf={shelf}
-                                          shelfkey={shelfkey}
-                                        />
-                                      )}
-                                      {shelfkey.includes("slidingDoors") && (
-                                        <SlidingDoorViewer
-                                          key={shelfkey}
-                                          doorKey={shelfkey}
-                                          type={shelf.type}
-                                          position={shelf.position}
-                                          width={section.width}
-                                          section={sectionKey}
-                                        />
-                                      )}
-                                      {shelfkey.includes("revolvingDoors_") && (
-                                        <RevolvingDoor
-                                          key={shelfkey}
-                                          doorKey={shelfkey}
-                                          type={shelf.type}
-                                          position={shelf.position}
-                                          width={section.width}
-                                          section={sectionKey}
-                                          height={shelf.height}
-                                        />
-                                      )}
-                                      {shelfkey.includes("wardrobe_") && (
-                                        <WardrobeRods
-                                          key={shelfkey}
-                                          doorKey={shelfkey}
-                                          type={shelf.type}
-                                          top={shelf.position.top}
-                                          index={arr.length - index}
-                                          width={section.width}
-                                          section={sectionKey}
-                                          height={shelf.height}
-                                        />
-                                      )}
-                                      {!shelfkey.includes("slidingDoors") &&
-                                        !shelfkey.includes("wardrobe_") &&
-                                        !shelfkey.includes("revolvingDoors_") &&
-                                        !shelfkey.includes("compartment") &&
-                                        !shelfkey.includes("drawer_") && (
-                                          <div
-                                            className={`Legbord_Legbord__Outer`}
-                                            data-key={shelfkey}
-                                            data-type="shelve"
-                                            style={{
-                                              zIndex: arr.length - index,
-                                              top: shelf.position.top,
-                                            }}
-                                          >
-                                            <button
-                                              className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
-                                                        ${executionValues.material == "wood" ? "Legboard_wood" : ""}
-                                                        ${
-                                                          executionValues.color ===
-                                                          "black" && executionValues.material == "metal"
-                                                            ? "Legbord_black"
-                                                            : "Legbord_metal"
-                                                        } Legbord_clickable__uTn2b
-                                                        ${
-                                                          selectedShelf ===
-                                                          `${sectionKey}-${shelfkey}`
-                                                            ? "Legboard_isHighlighted"
-                                                            : ""
-                                                        }`}
-                                              key={shelfkey}
-                                              onClick={(e) =>
-                                                handleSelectedShelfClick(
-                                                  e,
-                                                  `${sectionKey}-${shelfkey}`,
-                                                  `${sectionKey}`,
-                                                  `${shelfkey}`,
-                                                  `${shelf.position.top}`
-                                                )
-                                              }
-                                              compartments={shelf?.compartments}
-                                              type="compartment_divider_set"
+                                        {!shelfkey.includes("compartment") &&
+                                          !shelfkey.includes("drawer_") && (
+                                            <div
+                                              className={`Legbord_Legbord__Outer`}
+                                              data-key={shelfkey}
+                                              data-type="shelve"
+                                              style={{
+                                                zIndex: arr.length - index,
+                                                top: shelf.position.top,
+                                              }}
                                             >
-                                              <div className="Legbord_inner__eOg0b">
-                                                <div className="Legbord_left__ERgV5"></div>
-                                                <div className="Legbord_middle__D8U0x"></div>
-                                                <div className="Legbord_right__HB8+U"></div>
-                                              </div>
-                                            </button>
-                                          </div>
-                                        )}
-                                    </React.Fragment>
-                                  );
-                                }
-                              )}
-                            {section?.revolvingDoor &&
-                              Object.entries(section.revolvingDoor).map(
-                                ([key, door], index) => {
-                                  return (
-                                    <RevolvingDoor
-                                      key={key}
-                                      doorKey={key}
-                                      type={door.type}
-                                      position={door.position}
-                                      width={section.width}
-                                      section={sectionKey}
-                                    />
-                                  );
-                                }
-                              )}
-                          </div>
-                          {/* Here section header dimensions div will come */}
-                          <SectionInterface
-                            handleSectionClick={handleSectionClick}
-                            index={index}
-                            isShelfSelected={isShelfSelected}
-                            sectionKey={sectionKey}
-                            sectionKeys={sectionKeys}
-                            sections={sections}
-                            selectedSection={selectedSection}
-                            selectedShelf={selectedShelf}
-                          />
-                          {selectedSection === sectionKey &&
-                            isEdtingWall &&
-                            !sections[sectionKey].backWall.type && (
-                              <EditingBack />
-                            )}
-
-                          {  
-                            (executionValues.material == "wood" ||
-                              (
-                                (getMaxHeight() ||
-                                  (
-                                    parseInt(sectionKey.split("_")[1], 10) % 2 !== 0 &&
-                                    sections[sectionKey].height > 100
-                                  )
-                                ) &&
-                              executionValues.braces == "X-braces") ) && <XBrace />
-                          }
-
-                          {Number(section?.width) < 115 && (
-                            <BackWall
-                              type={sections[sectionKey].backWall.type}
-                              height={sections[sectionKey].backWall.height}
-                              id={sectionKey}
-                              selectedSectionBackWall={backWallSelectedSection}
+                                              <button
+                                                className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
+                                                          ${executionValues.material == "wood" ? "Legboard_wood" : ""}
+                                                          ${
+                                                            executionValues.color ===
+                                                            "black" && executionValues.material == "metal"
+                                                              ? "Legbord_black"
+                                                              : "Legbord_metal"
+                                                          } Legbord_clickable__uTn2b
+                                                          ${
+                                                            selectedShelf ===
+                                                            `${sectionKey}-${shelfkey}`
+                                                              ? "Legboard_isHighlighted"
+                                                              : ""
+                                                          }`}
+                                                key={shelfkey}
+                                                onClick={(e) =>
+                                                  handleSelectedShelfClick(
+                                                    e,
+                                                    `${sectionKey}-${shelfkey}`,
+                                                    `${sectionKey}`,
+                                                    `${shelfkey}`,
+                                                    `${shelf.position.top}`
+                                                  )
+                                                }
+                                                compartments={shelf?.compartments}
+                                                type="compartment_divider_set"
+                                              >
+                                                <div className="Legbord_inner__eOg0b">
+                                                  <div className="Legbord_left__ERgV5"></div>
+                                                  <div className="Legbord_middle__D8U0x"></div>
+                                                  <div className="Legbord_right__HB8+U"></div>
+                                                </div>
+                                              </button>
+                                            </div>
+                                          )}
+                                      </React.Fragment>
+                                    );
+                                  }
+                                )}
+                              {section?.revolvingDoor &&
+                                Object.entries(section.revolvingDoor).map(
+                                  ([key, door], index) => {
+                                    return (
+                                      <RevolvingDoor
+                                        doorKey={key}
+                                        type={door.type}
+                                        position={door.position}
+                                        width={section.width}
+                                        section={sectionKey}
+                                      />
+                                    );
+                                  }
+                                )}
+                            </div>
+                            {/* Here section header dimensions div will come */}
+                            <SectionInterface
+                              handleSectionClick={handleSectionClick}
+                              index={index}
+                              isShelfSelected={isShelfSelected}
+                              sectionKey={sectionKey}
+                              sectionKeys={sectionKeys}
+                              sections={sections}
                               selectedSection={selectedSection}
                               selectedShelf={selectedShelf}
                             />
