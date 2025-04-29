@@ -27,17 +27,17 @@ const ExecutionComponent = () => {
 
   const footOptions = [
     { type: "Plastic", image: plasticFoot, label: "Voetje (plastic)" },
-    {
-      type: "SteelBasePlate",
-      image: steelPlate,
-      label: "Voetplaat staal verankerbaar",
-    },
-    {
-      type: "SteelBasePlateSnap",
-      image: steelPlateSnap,
-      label: "Voetplaat staal (inklik)",
-    },
-    { type: "Adjustable", image: Adjustable, label: "Verstelbaar voetje" },
+    // {
+    //   type: "SteelBasePlate",
+    //   image: steelPlate,
+    //   label: "Voetplaat staal verankerbaar",
+    // },
+    // {
+    //   type: "SteelBasePlateSnap",
+    //   image: steelPlateSnap,
+    //   label: "Voetplaat staal (inklik)",
+    // },
+    // { type: "Adjustable", image: Adjustable, label: "Verstelbaar voetje" },
   ];
 
   const sustainOptions = [
@@ -160,7 +160,7 @@ const ExecutionComponent = () => {
         ) }
 
         {/* sustain component */}
-        <div className="sustain-container">
+        {/* <div className="sustain-container">
           <span className="sustain-label execution-label">Schoren</span>
           <div className="sustain-label-div !gap-0  mt-2">
             <div className="border border-[#EB6200] rounded-[5px] flex">
@@ -179,9 +179,9 @@ const ExecutionComponent = () => {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
         {/* top caps component */}
-        {executionDetails.material == "metal" && (
+        {/* {executionDetails.material == "metal" && (
                   <div className="topcaps-container">
                   <span className="topcaps-label execution-label">Topdoppen</span>
                   <div className="topcaps-label-div mt-2">
@@ -202,10 +202,10 @@ const ExecutionComponent = () => {
                     </div>
                   </div>
                 </div>
-        )}
+        )} */}
 
         {/* Material Select Component */}
-        <div className="material-cotainer execution-select-container">
+        {/* <div className="material-cotainer execution-select-container">
           <span className="material-label execution-label">Materiaal</span>
           <select
             className="execution-select"
@@ -222,9 +222,10 @@ const ExecutionComponent = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
+
         {/* Color select component */}
-        {executionDetails.material == "metal" && (
+        {/* {executionDetails.material == "metal" && (
                   <div className="color-cotainer execution-select-container">
                   <span className="color-label execution-label">Kleur</span>
                   <select
@@ -243,7 +244,7 @@ const ExecutionComponent = () => {
                     ))}
                   </select>
                 </div>
-        )}
+        )} */}
       </div>
     </>
   );

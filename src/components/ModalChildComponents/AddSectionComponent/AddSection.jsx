@@ -37,6 +37,7 @@ const AddSection = ({ children, onClose }) => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
+    { 350: "182" },
   ];
 
   const [dimensions, setDimensions] = useState({
@@ -130,13 +131,13 @@ const AddSection = ({ children, onClose }) => {
         setDimensions={setDimensions}
         material = {material}
       />
-      <div className="dimension-note font-inter !text-[12px] !border-[#00008B] !text-[#fff] !bg-[#00008B]">
+      <div className="dimension-note font-inter !text-[12px] !border-[#0665C5] !text-[#fff] !bg-[#0665C5]">
         De diepte die hierboven is aangegeven geldt voor de gehele kast. 
         Het is mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen van de afmetingen.
       </div>
       <div className="counter-button-div">
         <span className="add-shevles-label !font-inter">Legborden</span>
-        <div className="counter-container-div">
+        <div className="counter-container-div !bg-[#0665C5]">
           <button
             className="counter-decreament-btn !font-inter"
             disabled={shelfCount === initialShelfCount}

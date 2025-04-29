@@ -49,6 +49,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
+    { 350: "182" }
   ];
 
   // function used to set shelves at a specific height
@@ -67,6 +68,7 @@ const ShelfCounter = ({ onClick, showCounter }) => {
     }
     return positions;
   };
+
 
  
   // useEffect(() => {
