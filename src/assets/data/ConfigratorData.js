@@ -6,6 +6,7 @@ const shelfCountsAccHeight = {
   220: { max: 28, maxTop: "107.5em", maxHeight: 117 },
   250: { max: 32, maxTop: "122.5em", maxHeight: 132 },
   300: { max: 39, maxTop: "147.5em", maxHeight: 157 },
+  350: { max: 46, maxTop: "172.5em", maxHeight: 182 },
 };
 
 const woodShelfCountsAccHeight = {

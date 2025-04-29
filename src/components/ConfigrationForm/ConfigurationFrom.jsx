@@ -32,6 +32,7 @@ const ConfigurationFrom = () => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
+    { 350: "182" }
   ];
 
   const [positionArr, setPositionArr] = useState([]);

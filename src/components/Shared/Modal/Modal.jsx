@@ -33,7 +33,7 @@ const Modal = ({
           <div className="flex justify-between items-center py-5 px-6 border-b border-[#f2f2f2]">
             <h2 className="text-[20px] font-inter text-light-1002 font-semibold">
               {" "}
-              {mainHeading || "Product information"}
+              {mainHeading || "Productinformatie"}
             </h2>
             <button onClick={() => closeModalHandler()}>
               <IconClose className="w-6 h-6 fill-black" />

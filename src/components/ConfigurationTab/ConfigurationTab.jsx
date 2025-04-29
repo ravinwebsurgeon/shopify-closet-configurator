@@ -19,6 +19,8 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Shared/Modal/Modal";
 import BOM from "../ModalChildComponents/BOMComponent/BOM";
 import { setWoodActiveTab, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
+import SustainComponent from "../ConfigurationTabSubComponents/SustainComponent/SustainComponent";
+import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/TopCapsComponent";
 
 
 const ConfigurationTab = () => {
@@ -72,6 +74,8 @@ const ConfigurationTab = () => {
   const configTabs = [
     { id: "dimensions", label: "Afmetingen", component: <DimensionsComponent /> },
     { id: "execution", label: "Voeten", component: <ExecutionComponent /> },
+    {id:"Sustain",label:"Schoren",component:<SustainComponent/>},
+    {id:"TopCaps",label:"Topdoppen",component:<TopCapsComponent/>},
    // { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
     { id: "sides", label: "Zijwanden", component: <SidesComponent /> },
    // { id: "backwalls", label: "Achterwanden", component: <BackwallComponent /> },
@@ -84,6 +88,7 @@ const ConfigurationTab = () => {
   const selectedTab = configTabs.find((tab) => tab.id === activeTab);
   return (
     <>
+    <div className="flex flex-col max-w-[425px]">
     <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden">
       <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
         <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
@@ -99,7 +104,7 @@ const ConfigurationTab = () => {
           Extra opties
         </h2>
 
-        <div className="config-tabs grid grid-cols-3 gap-[10px] mt-[11px]">
+        <div className="config-tabs grid grid-cols-2 gap-[10px] mt-[11px]">
           {configTabs.map((tab) => (
             <button
               key={tab.id}
@@ -137,6 +142,13 @@ const ConfigurationTab = () => {
             </div>
           </button>
         </div>
+      </div>
+    </div>
+    <div className=" flex flex-col bg-[#0665C5] text-[#fff] mt-[20px] py-[25px] px-[25px]">
+        <span className=" font-inter text-[16px] tracking-[-2%] leading-[150%] font-semibold">Heeft u een vraag over uw samenstelling?</span>
+        <span className="font-inter font-light tracking-[-2%] leading-[150%] text-[14px] mt-[5px]">
+        Neem dan contact met ons op via info@bedrijfsinrichtingnederland.nl en wij zullen uw vraag zo snel mogelijk behandelen.
+        </span>
       </div>
     </div>
     {isModalOpen && (

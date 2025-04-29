@@ -78,12 +78,12 @@ const SidePoll = ({
       ) : (
         ""
       )}
-      {isShelfSelected?.key != "" && sectionKey == selectedSection && (
+      {/* {isShelfSelected?.key != "" && sectionKey == selectedSection && (
         <ShelveChangeIndicator
           selectedShelfKey={isShelfSelected?.key}
           selectedSectionKey={selectedSection}
         />
-      )}
+      )} */}
     </div>
   );
 };

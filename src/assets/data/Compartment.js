@@ -7,9 +7,9 @@ export const compartmentData = [
     dimention: "98x30 cm",
     price: 46.11,
     productInformation: {
-      title: "Compartment divider set (Metal)",
+      title: "Vakverdeelset (Metaal)",
       description:
-        "<p>Flexible compartment division. The front edge (10cm high) and the rear edge (20cm high) are placed on a shelf, the dividers can then be divided to size as desired. The whole fits nicely between the uprights, which also provides stability.</p><p>The compartment divider sets are available for shelves from 30cm to 60cm deep and for any width.</p>",
+        "<p>Flexibel in te delen vakverdeling. De voorzetrand (10cm hoog) en de achterzetrand (20cm hoog) worden op een legbord geplaatst, de verdeelschotten dan naar wens op maat indelen. Het geheel valt mooi tussen de staanders wat ook stevigheid geeft.</p><p>De vakverdeelsets zijn beschikbaar voor legborden van 30cm tot 60cm diep en voor elke breedte.</p>",
     },
   },
   {
@@ -20,9 +20,9 @@ export const compartmentData = [
     dimention: "30 cm",
     price: 8.69,
     productInformation: {
-      title: "Metal sliding bulkhead",
+      title: "Schuifschot Metaal",
       description:
-        "<p>The sliding partition is 20 cm high, it clamps around the shelf by means of a double setting at the front and a setting at the back. This gives the possibility to place the partitions on the shelf as desired.</p><p> Sliding partitions are available for shelves from 20cm to 60cm deep.</p>",
+        "<p>Het schuifschot is 20 cm hoog, deze klemt om het legbord middels een dubbele zetting aan de voorzijde en een zetting aan de achterzijde. Dit geeft de mogelijkheid de verdeelschotten naar wens op het legbord te plaatsen.</p><p> Schuifschotten zijn beschikbaar voor legborden van 20cm tot 60cm diep.</p>",
     },
   },
 ];

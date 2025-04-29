@@ -88,17 +88,17 @@ const SectionInterface = ({
   );
   return (
     <div className="Section_sectionInterface">
-      <div className="Section_sectionNumberContainer sk_hide_on_print">
-        <button
+      <div className="Section_sectionNumberContainer">
+        {/* <button
           className={`Section_sectionNumber font-inter ${
             selectedSection === sectionKey ? "Section_sectionNumberActive" : ""
           }`}
           onClick={(e) => handleSectionClick(e, sectionKey)}
         >
           {index + 1}
-        </button>
+        </button> */}
 
-        {selectedSection === sectionKey && sectionKeys.length > 1 && (
+        {/* {selectedSection === sectionKey && sectionKeys.length > 1 && (
           <button
             type="button"
             className="AddRemove_button Section_removeButton z-[1] cursor-pointer"
@@ -118,7 +118,7 @@ const SectionInterface = ({
               </svg>
             </i>
           </button>
-        )}
+        )} */}
       </div>
 
       {isSlidingDoorHighlighted && selectedSection == sectionKey && (
@@ -130,12 +130,12 @@ const SectionInterface = ({
       {isRevolvingDoorHighlighted && selectedSection == sectionKey && (
         <RevolvingDoorMoveButton selected={isRevolvingDoorHighlighted} />
       )}
-      {selectedSection == sectionKey && selectedShelf && (
+      {/* {selectedSection == sectionKey && selectedShelf && (
         <ShelveChangePosition
           sectionId={selectedSection}
           shelfKey={isShelfSelected?.key}
         />
-      )}
+      )} */}
       {selectedSection == sectionKey && highlightedDrawer && (
         <DrawerChangePosition
           sectionId={selectedSection}
@@ -151,7 +151,7 @@ const SectionInterface = ({
         }
         onClick={() => material == "metal" ?
           dispatch(setShowCounter(false)): dispatch(setWoodShowCounter(false))}
-      />
+      /> */}
     </div>
   );
 };

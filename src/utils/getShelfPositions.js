@@ -10,6 +10,7 @@ const heightArray = [
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
+    { 300: "182" },
 ]
 
 function getWoodShelfPostions(currShelfHeight=90, shelfCount=2){
