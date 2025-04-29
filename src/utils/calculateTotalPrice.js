@@ -1,4 +1,3 @@
-import { combineReducers } from "@reduxjs/toolkit";
 import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
 
@@ -7,7 +6,6 @@ export function calculateTotalPrice(details) {
   let color = details.racks.execution.color;
   let sections = details.racks.sections;
   let depth = details.racks.depth;
-
 
   // calculate shelf price
   Object.values(sections).forEach((section) => {
@@ -92,7 +90,7 @@ export function calculateTotalPrice(details) {
         // if (section.sideWall.left.height == "50") {
         //   total += Math.floor(leftSideWallPrice / 2);
         // } else {
-          total += leftSideWallPrice;
+        total += leftSideWallPrice;
         // }
       }
       if (section.sideWall.right.isRight) {
@@ -110,7 +108,7 @@ export function calculateTotalPrice(details) {
         // if (section.sideWall.right.height == "50") {
         //   total += Math.floor(rightSideWallPrice / 2);
         // } else {
-          total += rightSideWallPrice;
+        total += rightSideWallPrice;
         //}
       }
     }
