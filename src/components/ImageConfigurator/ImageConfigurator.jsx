@@ -440,7 +440,7 @@ const ImageConfigurator = () => {
         <button className={`selection-none border border-[#0665C5] rounded h-[30px] px-[10px] bg-[#0665C5] text-[#fff]
         disabled:opacity-50 disabled:cursor-not-allowed`} disabled={isPrevDisabled} onClick={handlePrev}><FontAwesomeIcon icon={faArrowLeftLong} /></button>
         <div ref={scrollRef} className="demo-config w-[800px] overflow-x-hidden" id="shelf-capture-area">
-            <div className="main-wrapper__ relative">
+            <div className="main-wrapper__ relative ">
               {/* <SectionDimensionsIndicator /> */}
               <div className="Visual_container__tG7BQ Carousel_visual__FfW0p"
                 style={{ transform: `translateX(${translate}%)` }}
@@ -484,7 +484,7 @@ const ImageConfigurator = () => {
                                               key={index}
                         >
                           
-                          <div className="Staander_achter__8cpuX">
+                          <div className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -511,7 +511,7 @@ const ImageConfigurator = () => {
                               highlighted={isHighlighted.left === sectionKey}
                             />
                           )}
-                          <div className="Staander_voor__AegR3">
+                          <div className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
@@ -558,7 +558,7 @@ const ImageConfigurator = () => {
                         <div>
                           <div
                             data-indicator-index={index + 1}
-                            className={`Section_Section__3MCIu Visual_animating__a8ZaU 
+                            className={`Section_Section__3MCIu  Visual_animating__a8ZaU 
                               ${
                                 executionValues.color === "black"
                                   ? "Section_black"
@@ -616,7 +616,7 @@ const ImageConfigurator = () => {
                                         {!shelfkey.includes("compartment") &&
                                           !shelfkey.includes("drawer_") && (
                                             <div
-                                              className={`Legbord_Legbord__Outer`}
+                                              className={`Legbord_Legbord__Outer change__color`}
                                               data-key={shelfkey}
                                               data-type="shelve"
                                               style={{
@@ -778,7 +778,7 @@ const ImageConfigurator = () => {
                             />
                           )}
         
-                          <div className="Staander_achter__8cpuX">
+                          <div className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -796,7 +796,7 @@ const ImageConfigurator = () => {
                               <EditingSides />
                             )}
 
-                          <div className="Staander_voor__AegR3">
+                          <div className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>

@@ -148,3 +148,6 @@ button.compartments_wrapper__slide {
 .revolving__doors_set .rightArrow::after{
   top: 8px;
 }
+.change__color {
+filter: brightness(0.6)
+}
