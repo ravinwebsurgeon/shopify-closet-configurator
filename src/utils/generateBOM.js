@@ -14,6 +14,7 @@ export function generateBOM(details,priceData) {
   const drawerMap = new Map();
   const poleMap = new Map();
   const braceMap = new Map();
+  const wardrobeRodMap = new Map();
   const color = details.racks.execution.color;
   const depth = details.racks.depth;
   const sections = details.racks.sections;
@@ -67,6 +68,14 @@ export function generateBOM(details,priceData) {
             targetMap.set(dimensionKey, 1);
           }
         }
+
+        // process wardrobeRods
+          if (key.includes('wardrobe_')) {
+            const width = section.width;
+            const dimensionKey = `${width}x${depth}`;
+            const count = wardrobeRodMap.get(dimensionKey) || 0;
+            wardrobeRodMap.set(dimensionKey, count + 1);
+          }
 
         // Process drawers if they exist
         if (shelf.drawer && Object.keys(shelf.drawer.position).length > 0) {
@@ -403,6 +412,27 @@ export function generateBOM(details,priceData) {
         totalPrice: calculateFormattedTotalPrice(price, quantity)
       });
     });
+
+
+     // Add wardrobe rods to BOM list
+  wardrobeRodMap.forEach((quantity, dimensions) => {
+    const [width, depth] = dimensions.split("x").map(Number);
+    const price = getDynamicPrice({
+      priceData,
+      material: color,
+      component: 'wardrobe_rod',
+      width: Number(width),
+      depth
+    });
+
+    bomList.push({
+      component: `Garderobestang `,
+      dimensions: `${width-2} x ${depth} cm`,
+      quantity,
+      unitPrice: price,
+      totalPrice: calculateFormattedTotalPrice(price, quantity)
+    });
+  });
 
   // Sort BOM list by dimensions
   //bomList.sort((a, b) => a.dimensions.localeCompare(b.dimensions));
