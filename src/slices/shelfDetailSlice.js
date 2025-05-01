@@ -3,6 +3,7 @@ import cryptoRandomString from "crypto-random-string";
 
 const initialState = {
   configuration: null,
+  priceData: null,
   showConfigurator: false,
   options: {
     height: [100, 120, 150, 200, 220, 250, 300,350],
@@ -65,6 +66,9 @@ const shelfDetailSlice = createSlice({
   name: "shelfDetails",
   initialState,
   reducers: {
+    setAPIData:(state,action) =>{
+      state.priceData = action.payload;
+    },
     setActiveTab: (state, action) => {
       state.racks.activeTab = action.payload;
     },
@@ -833,7 +837,8 @@ export const {
   addRevloDoor,
   addWardrobe,
   setIsWardrobeHighlighted,
-  updateWardrobePosition
+  updateWardrobePosition,
+  setAPIData,
 } = shelfDetailSlice.actions;
 
 // export default reducer

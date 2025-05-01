@@ -3,8 +3,8 @@ import black from '../prices/black.json';
 import wood from '../prices/wood.json';
 import metal_new from '../prices/metal1.json'
 
-
-const getComponentPrice =({
+const getDynamicPrice =({
+    priceData,
     material = "metal",
     component="shelves",
     subtype = null,
@@ -20,11 +20,13 @@ const getComponentPrice =({
     else if(height && depth) key = `${height}x${depth}`
     else if(width && depth) key = `${width}x${depth}`
 
+console.log("price Datazz -->",priceData);
+
     if(material == 'metal'){
         if(subtype){
-            rawPrice = metal_new[component]?.[subtype]?.[key];
+            rawPrice = priceData[component]?.[subtype]?.[key];
         }else{
-            rawPrice =  metal_new[component]?.[key];
+            rawPrice =  priceData[component]?.[key];
         }
     }
     if(material == 'black'){
@@ -53,6 +55,4 @@ const getComponentPrice =({
 
 }
 
-
-
-export default getComponentPrice ;
+export default getDynamicPrice;

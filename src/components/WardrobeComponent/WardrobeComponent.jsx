@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import getComponentPrice from "../../utils/getPrice";
 import { addWardrobe } from "../../slices/shelfDetailSlice";
 import { toast } from "react-toastify";
+import getDynamicPrice from "../../utils/getAPIPrice";
 const WardrobeComponent = () => {
   const dispatch = useDispatch();
   const [wardrobeRod, setWardrobeRod] = useState("");
@@ -17,7 +18,7 @@ const WardrobeComponent = () => {
   const depth = useSelector((state) => state.shelfDetail.racks.depth);
   const color = useSelector((state) => state.shelfDetail.racks.execution.color);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
-
+  const priceData = useSelector((state) => state.shelfDetail.priceData);
   const selectedSectionKey = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
@@ -93,12 +94,19 @@ const WardrobeComponent = () => {
   return (
     <div className="back-data-conatiner">
       {cardData.map((data) => {
-        const price = getComponentPrice({
+        // const price = getComponentPrice({
+        //   material: color,
+        //   component: "wardrobe_rod",
+        //   width,
+        //   depth,
+        // });
+        const price = getDynamicPrice({
+          priceData,
           material: color,
           component: "wardrobe_rod",
           width,
           depth,
-        });
+        })
 
         return (
           <div

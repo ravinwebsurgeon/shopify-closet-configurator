@@ -11,8 +11,9 @@ import {
   setShowCounter,
 } from "../../../slices/shelfDetailSlice";
 import ItemBlock from "../../Shared/ItemBlock/ItemBlock";
-import getComponentPrice from "../../../utils/getPrice";
+import   getComponentPrice from "../../../utils/getPrice";
 import { setWoodShowCounter } from "../../../slices/WoodShelfDetailSlice";
+import getDynamicPrice from "../../../utils/getAPIPrice";
 
 const ShelvesComponent = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const ShelvesComponent = () => {
   const material = metalRacks?.execution?.material;
   const selectedSection = material =="metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
   const dimention = material =="metal" ? metalRacks: woodRacks;
+  const priceData = useSelector((state)=>state.shelfDetail.priceData);
 
   // const cardData = [
   //   { id: "metal", imgSrc: legboard, title: "Legbord met dragers" },
@@ -72,12 +74,19 @@ const ShelvesComponent = () => {
     dispatch(setOpenModal(true));
     dispatch(setProductInfoModalContent(item.productInformation));
   };
-  const price = getComponentPrice({
+  // const price = getComponentPrice({
+  //   material: material == "metal" ? color : "wood",
+  //   component: "shelves",
+  //   width: dimention.sections[selectedSection].width,
+  //   depth: dimention.depth,
+  // });
+  const price = getDynamicPrice({
+    priceData,
     material: material == "metal" ? color : "wood",
     component: "shelves",
     width: dimention.sections[selectedSection].width,
     depth: dimention.depth,
-  });
+  })
   return (
     <div className="shelf-data-conatiner">
       {inputData && (

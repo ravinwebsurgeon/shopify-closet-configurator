@@ -974,3 +974,7 @@ button.compartments_wrapper__slide:nth-child(4){
     height: 52em;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+

@@ -11,7 +11,8 @@ import {
 import AddSectionDimensions from "./AddSectionDimensions";
 import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
 
-const AddSection = ({ children, onClose }) => {
+const AddSection = ({ children, onClose ,translate,setTranslate }) => {
+  console.log("Current Translate -->",translate);
   const metalRacks = useSelector((state)=>state.shelfDetail.racks);
   const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
   const material = metalRacks?.execution?.material;
@@ -20,6 +21,8 @@ const AddSection = ({ children, onClose }) => {
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
+
+  console.log("Total Sections -->",Object.keys(sections).length)
 
   const heightArr = [
     {90:"52"},
@@ -63,6 +66,7 @@ const AddSection = ({ children, onClose }) => {
     const sectionsCount = Object.keys(sections);
     const lastSectionKey = sectionsCount[sectionsCount.length - 1];
     const lastSection = sections[lastSectionKey];
+    
     if (dimensions.height > lastSection.height) {
       if(material == "metal"){
         dispatch(
@@ -99,7 +103,12 @@ const AddSection = ({ children, onClose }) => {
           fromSelect:false
       }))
     }
+    const totalSections = sectionsCount.length + 1;
+    const centerOffset = 50; 
+    const sectionWidth = 100 / totalSections;
+    const newTranslate = centerOffset - (totalSections * sectionWidth);
     
+    setTranslate(newTranslate);
     onClose();
   };
 

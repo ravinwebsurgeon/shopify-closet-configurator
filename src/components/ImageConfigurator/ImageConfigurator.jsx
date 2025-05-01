@@ -46,6 +46,7 @@ const ImageConfigurator = () => {
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
+  const scrollRef = useRef(null);
   // const[scale,setScale] = useState(0.9);
 
   const [prevSection, setPrevSection] = useState({
@@ -58,6 +59,8 @@ const ImageConfigurator = () => {
   });
 
   const [selectedIndex,setSelectedIndex] = useState(0);
+
+  const[translate,setTranslate] = useState(30);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
@@ -134,6 +137,16 @@ const ImageConfigurator = () => {
       }
     }
   };
+
+
+  useEffect(() => {
+    // Calculate center position based on selected index
+    const totalSections = sectionKeys.length;
+    const centerOffset = 50; // Center of viewport
+    const sectionOffset = selectedIndex * (100 / totalSections);
+    const newTranslate = centerOffset - sectionOffset;
+    setTranslate(newTranslate);
+  }, [selectedIndex, sectionKeys.length]);
 
 
 
@@ -275,7 +288,15 @@ const ImageConfigurator = () => {
     e.preventDefault();
     setSelectedSection(sectionKey);
 
+    const indexData = sectionItems.indexOf(sectionKey);
+    const totalSections = sectionItems.length;
+    const centerOffset = 50; 
+    const sectionWidth = 100 / totalSections;
+    const newTranslate = centerOffset - (indexData * sectionWidth);
+    setTranslate(newTranslate);
+    
     const index = sectionItems.findIndex(item => item.key === sectionKey);
+
     if (index !== -1) {
       setSelectedIndex(index);
     }
@@ -417,10 +438,12 @@ const ImageConfigurator = () => {
         <div className="Demo-test flex justify-between gap-5 items-center">
         <button className={`selection-none border border-[#0665C5] rounded h-[30px] px-[10px] bg-[#0665C5] text-[#fff]
         disabled:opacity-50 disabled:cursor-not-allowed`} disabled={isPrevDisabled} onClick={handlePrev}><FontAwesomeIcon icon={faArrowLeftLong} /></button>
-        <div className="demo-config" id="shelf-capture-area">
+        <div ref={scrollRef} className="demo-config w-[800px] overflow-x-hidden" id="shelf-capture-area">
             <div className="main-wrapper__ relative">
               {/* <SectionDimensionsIndicator /> */}
-              <div className="Visual_container__tG7BQ Carousel_visual__FfW0p">
+              <div className="Visual_container__tG7BQ Carousel_visual__FfW0p"
+                style={{ transform: `translateX(${translate}%)` }}
+              >
                 {/* <div
                   className={`arrows-dimensionsIndicator-left relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
             bg-[#d4d7db] w-[2px]
@@ -807,7 +830,7 @@ const ImageConfigurator = () => {
           mainHeading={"Nieuwe sectie"}
           closeModal={() => setIsModalOpen(false)}
         >
-          <AddSection onClose={() => setIsModalOpen(false)}></AddSection>
+          <AddSection onClose={() => setIsModalOpen(false)} translate={translate} setTranslate={setTranslate}></AddSection>
         </Modal>
       )}
     </>
