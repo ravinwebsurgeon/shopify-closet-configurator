@@ -29,7 +29,7 @@ const Modal = ({
       } opacity-0`}
     >
       <div className="w-full h-full flex justify-center items-center">
-        <div className="max-w-[600px] w-full bg-white relative rounded-[2px]">
+        <div className="modal-container max-w-[600px] w-full bg-white relative rounded-[2px]">
           <div className="flex justify-between items-center py-5 px-6 border-b border-[#f2f2f2]">
             <h2 className="text-[20px] font-inter text-light-1002 font-semibold">
               {" "}

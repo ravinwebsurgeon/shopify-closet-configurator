@@ -1,7 +1,8 @@
 import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
+import getDynamicPrice from "./getAPIPrice";
 
-export function calculateTotalPrice(details) {
+export function calculateTotalPrice(details,priceData) {
   let total = 0;
   let color = details.racks.execution.color;
   let sections = details.racks.sections;
@@ -11,7 +12,14 @@ export function calculateTotalPrice(details) {
   Object.values(sections).forEach((section) => {
     const width = section.width;
     if (section.shelves) {
-      const price = getComponentPrice({
+      // const price = getComponentPrice({
+      //   material: color,
+      //   component: "shelves",
+      //   width,
+      //   depth,
+      // });
+      const price = getDynamicPrice({
+        priceData,
         material: color,
         component: "shelves",
         width,
@@ -31,7 +39,16 @@ export function calculateTotalPrice(details) {
           const { type, count } = item.compartments;
 
           if (type && count > 0) {
-            const price = getComponentPrice({
+            // const price = getComponentPrice({
+            //   material: color,
+            //   component: "compartment",
+            //   subtype: type,
+            //   width,
+            //   depth,
+            // });
+
+            const price = getDynamicPrice({
+              priceData,
               material: color,
               component: "compartment",
               subtype: type,
@@ -78,7 +95,15 @@ export function calculateTotalPrice(details) {
       if (section.sideWall.left.isLeft) {
         let subType = section.sideWall.left.type;
         let leftRevDoorHeight = section.sideWall.left.height;
-        const price = getComponentPrice({
+        // const price = getComponentPrice({
+        //   material: color,
+        //   component: "sidewall",
+        //   subtype: subType,
+        //   height: leftRevDoorHeight == "50" ? leftRevDoorHeight : height,
+        //   depth,
+        // });
+        const price = getDynamicPrice({
+          priceData,
           material: color,
           component: "sidewall",
           subtype: subType,
@@ -96,7 +121,16 @@ export function calculateTotalPrice(details) {
       if (section.sideWall.right.isRight) {
         let subType = section.sideWall.right.type;
         let rightRevDoorHeight = section.sideWall.right.height;
-        const price = getComponentPrice({
+        // const price = getComponentPrice({
+        //   material: color,
+        //   component: "sidewall",
+        //   subtype: subType,
+        //   height: rightRevDoorHeight == "50" ? rightRevDoorHeight : height,
+        //   depth,
+        // });
+
+        const price = getDynamicPrice({
+          priceData,
           material: color,
           component: "sidewall",
           subtype: subType,

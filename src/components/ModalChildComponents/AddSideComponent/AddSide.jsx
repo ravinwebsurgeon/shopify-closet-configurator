@@ -77,12 +77,12 @@ const AddSide = ({ onClose, side }) => {
 
   return (
     <>
-      <div className="header-div border-b border-[#c2c2c2]">
-        <h2 className="text-base !mb-0">Wil je doorgaan met deze wijziging?</h2>
-        <button className="add-section-close" onClick={onClose}>
+     {/* <div className="header-div border-b border-[#c2c2c2]">
+         <h2 className="text-base !mb-0">Wil je doorgaan met deze wijziging?</h2>
+         <button className="add-section-close" onClick={onClose}>
           <FontAwesomeIcon icon={faXmark} />
-        </button>
-      </div>
+        </button> 
+      </div> */}
       <div className="data-container-div flex flex-col">
         <p className="text-base text-[#939393]">
           Selecteer de gewenste hoogte van de zijwand. Het is na het selecteren

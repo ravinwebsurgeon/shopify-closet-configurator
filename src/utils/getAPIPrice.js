@@ -1,8 +1,3 @@
-import metal from '../prices/metal.json';
-import black from '../prices/black.json';
-import wood from '../prices/wood.json';
-import metal_new from '../prices/metal1.json'
-
 const getDynamicPrice =({
     priceData,
     material = "metal",
@@ -25,23 +20,11 @@ console.log("price Datazz -->",priceData);
     if(material == 'metal'){
         if(subtype){
             rawPrice = priceData[component]?.[subtype]?.[key];
+            console.log("price -->",component,subtype,rawPrice);
         }else{
             rawPrice =  priceData[component]?.[key];
+            console.log("price -->",component,rawPrice);
         }
-    }
-    if(material == 'black'){
-        if(subtype){
-            rawPrice = [component]?.[subtype]?.[key];
-        }else{
-            rawPrice =  black[component]?.[key];
-        }
-    }
-    if(material == 'wood'){
-        if(subtype){
-            rawPrice = wood[component]?.[subtype]?.[key];
-        }else{
-            rawPrice =  wood[component]?.[key];
-        } 
     }
 
     if(rawPrice != undefined){

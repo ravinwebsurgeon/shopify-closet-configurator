@@ -19,6 +19,7 @@ const initialState = {
   racks: {},
   deletedRevDoors: {},
   hideDoor: false,
+  sidewallSelected : "",
 };
 
 const executionObject = {
@@ -56,6 +57,7 @@ const createInitialSection = (width, height, shelves) => ({
   shelves,
   sideWall: sideWallObject,
   backWall: backwallObject,
+  
 });
 
 const showCounter = true;
@@ -68,6 +70,9 @@ const shelfDetailSlice = createSlice({
   reducers: {
     setAPIData:(state,action) =>{
       state.priceData = action.payload;
+    },
+    setSidewallSelected: (state,action) =>{
+      state.sidewallSelected = action.payload;
     },
     setActiveTab: (state, action) => {
       state.racks.activeTab = action.payload;
@@ -839,6 +844,7 @@ export const {
   setIsWardrobeHighlighted,
   updateWardrobePosition,
   setAPIData,
+  setSidewallSelected
 } = shelfDetailSlice.actions;
 
 // export default reducer

@@ -11,11 +11,13 @@ import {
 } from "../../../slices/shelfDetailSlice";
 import getComponentPrice from "../../../utils/getPrice";
 import ItemBlock from "../../Shared/ItemBlock/ItemBlock";
+import getDynamicPrice from "../../../utils/getAPIPrice";
 
 const SidesComponent = () => {
   const dispatch = useDispatch();
   const [sideWall, setSideWall] = useState("");
   const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const priceData = useSelector((state)=>state.shelfDetail.priceData);
   const editing = metalRacks?.isEditingSides;
   const selectedSection = metalRacks?.selectedSection;
   const height = metalRacks?.sections?.[selectedSection]?.height;
@@ -69,7 +71,15 @@ stellingcode aan te geven.
           image={data.imgSrc}
           itemAction={() => handleCardClick(data.id)}
           openModal={() => openModal(data)}
-          price={getComponentPrice({
+          // price={getComponentPrice({
+          //   material: color,
+          //   component: "sidewall",
+          //   subtype: data.id,
+          //   height,
+          //   depth,
+          // })}
+          price={getDynamicPrice({
+            priceData,
             material: color,
             component: "sidewall",
             subtype: data.id,

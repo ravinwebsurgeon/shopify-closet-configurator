@@ -28,6 +28,7 @@ const ConfigurationTab = () => {
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
   const metalShelfDetail = useSelector((state) => state.shelfDetail);
   const woodShelfDetail = useSelector((state) => state.woodShelfDetail);
+  const priceData = metalShelfDetail?.priceData;
   const material = metalRacks?.execution.material;
   const activeTab = material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
   const details = material == "metal" ? metalShelfDetail : woodShelfDetail;
@@ -129,7 +130,7 @@ const ConfigurationTab = () => {
             <div className="total-price-col-container">
               <div className="total-price-row-conatiner flex gap-2 items-center">
                 <span className="total-pricing font-inter text-base text-black block tracking-[-2%] leading-[150%] font-semibold text-right">
-                  {calculateTotalPrice(details)}
+                  {calculateTotalPrice(details,priceData)}
                 </span>
                 <FontAwesomeIcon icon={faCircleInfo} onClick={handleInfoClick} />
               </div>
@@ -154,7 +155,7 @@ const ConfigurationTab = () => {
       mainHeading={"Prijsoverzicht"}
       closeModal={()=>setIsModalOpen(prev => !prev)}
       >
-      <BOM data={bomData} totalPrice={calculateTotalPrice(details)}/>
+      <BOM data={bomData} totalPrice={calculateTotalPrice(details,priceData)}/>
       </Modal>
     )}
     </>

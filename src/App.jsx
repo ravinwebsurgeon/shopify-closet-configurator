@@ -3,9 +3,10 @@ import ConfigurationFrom from "./components/ConfigrationForm/ConfigurationFrom";
 import ShelvingConfigurator from "./components/ShelvingConfigurator/ShelvingConfigurator";
 import "./index.css";
 import "./App.css";
-import { setOpenModal } from "./slices/shelfDetailSlice";
+import { setOpenModal, setSidewallSelected } from "./slices/shelfDetailSlice";
 import Modal from "./components/Shared/Modal/Modal";
 import { ToastContainer } from 'react-toastify';
+import AddSide from "./components/ModalChildComponents/AddSideComponent/AddSide";
 
 function App() {
   const dispatch = useDispatch();
@@ -14,15 +15,27 @@ function App() {
   const showConfigurator = useSelector(
     (state) => state.shelfDetail.showConfigurator
   );
+  const sidewallSide = useSelector((state)=>state.shelfDetail.sidewallSelected);
+
+  const handleModalClose = () =>{
+    dispatch(setOpenModal(false));
+    if(sidewallSide != ""){
+      dispatch(setSidewallSelected(""));
+    }
+  };
+
   return (
     <>
+      
       {!showConfigurator ? <ConfigurationFrom /> : <ShelvingConfigurator />}
       {isModalOpen && (
         <Modal
           isModalOpen={isModalOpen}
           productInformation={productInformation}
-          closeModal={() => dispatch(setOpenModal(false))}
-        />
+          closeModal={handleModalClose}  
+        >
+          {sidewallSide != "" ?<AddSide side={sidewallSide}/>: null}
+        </Modal>
       )}
       <ToastContainer/>
     </>

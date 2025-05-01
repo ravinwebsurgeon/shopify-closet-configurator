@@ -258,7 +258,8 @@ const ImageConfigurator = () => {
         !event.target.closest(".AddRemove_button") &&
         !event.target.closest(".modal-content") &&
         !event.target.closest(".glb-remove-confirm")&&
-        !event.target.closest(".configuration-options")
+        !event.target.closest(".configuration-options")&&
+        !event.target.closest(".modal-container")
       ) {
         setSelectedShelf(null);
         setIsShelfSelected({
