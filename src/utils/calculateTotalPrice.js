@@ -130,6 +130,22 @@ export function calculateTotalPrice(details, priceData) {
         }
       });
 
+      // calculate wardrobe rod price
+      Object.entries(section.shelves).forEach(([key, item]) => {
+        if (key.includes('wardrobe_')) {
+          const width = section.width;
+          const price = getDynamicPrice({
+            priceData,
+            material: color,
+            component: 'wardrobe_rod',
+            width: Number(width),
+            depth
+          });
+          total += calculateFormattedTotalPrice(price, 1);
+        }
+      });
+      
+
       // drawers prices
       Object.values(section.shelves).forEach((item) => {
         let width = section.width;
@@ -261,7 +277,7 @@ export function calculateTotalPrice(details, priceData) {
     }
   });
 
-  // Calculate braces
+  // Calculate braces price
   const sectionItems = Object.keys(sections);
   const hasHighSection = sectionItems
     .map((key) => sections[key].height)
