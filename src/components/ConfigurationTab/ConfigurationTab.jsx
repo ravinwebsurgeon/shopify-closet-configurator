@@ -65,7 +65,7 @@ const ConfigurationTab = () => {
 
   const handleInfoClick = () =>{
     setIsModalOpen(true);
-    const data = generateBOM(details);
+    const data = generateBOM(details,priceData);
     setBomData(data);
   }
 

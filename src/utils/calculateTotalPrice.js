@@ -2,11 +2,76 @@ import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
 import getDynamicPrice from "./getAPIPrice";
 
-export function calculateTotalPrice(details,priceData) {
+export function calculateTotalPrice(details, priceData) {
   let total = 0;
   let color = details.racks.execution.color;
   let sections = details.racks.sections;
   let depth = details.racks.depth;
+
+  // Calculate poles
+  const polls = {};
+
+  Object.keys(sections).forEach((key, index) => {
+    const item = sections[key];
+    if (index == 0) {
+      if (item.standHeight == item.height) {
+        polls[item.height] = (polls[item.height] ? polls[item.height] : 0) + 4;
+      }
+      if (item.standHeight != item.height) {
+        polls[item.height] = (polls[item.height] ? polls[item.height] : 0) + 2;
+        polls[item.standHeight] =
+          (polls[item.standHeight] ? polls[item.standHeight] : 0) + 2;
+      }
+    } else {
+      polls[item.standHeight] =
+        (polls[item.standHeight] ? polls[item.standHeight] : 0) + 2;
+    }
+  });
+
+  // Add poles price to total
+  Object.entries(polls).forEach(([height, count]) => {
+    const price = getDynamicPrice({
+      priceData,
+      material: color,
+      component: "poles",
+      height: parseInt(height),
+      depth,
+    });
+
+    const totalPolePrice = calculateFormattedTotalPrice(price, count);
+    total += totalPolePrice;
+  });
+
+  // calculate the count of poles
+  const totalPoles = Object.values(polls).reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
+  // Add topcaps price
+  if (details.racks.execution.topCaps == "topCaps") {
+    const topcapPrice = getDynamicPrice({
+      priceData,
+      material: color,
+      component: "topCaps",
+      depth,
+    });
+    const totalTopcapPrice = calculateFormattedTotalPrice(
+      topcapPrice,
+      totalPoles
+    );
+    total += totalTopcapPrice;
+  }
+
+  // Add foot price
+  const footPrice = getDynamicPrice({
+    priceData,
+    material: color,
+    component: "foot",
+    depth,
+  });
+  const totalFootPrice = calculateFormattedTotalPrice(footPrice, totalPoles);
+  total += totalFootPrice;
 
   // calculate shelf price
   Object.values(sections).forEach((section) => {
@@ -115,7 +180,7 @@ export function calculateTotalPrice(details,priceData) {
         // if (section.sideWall.left.height == "50") {
         //   total += Math.floor(leftSideWallPrice / 2);
         // } else {
-          total += leftSideWallPrice;
+        total += leftSideWallPrice;
         // }
       }
       if (section.sideWall.right.isRight) {
@@ -142,7 +207,7 @@ export function calculateTotalPrice(details,priceData) {
         // if (section.sideWall.right.height == "50") {
         //   total += Math.floor(rightSideWallPrice / 2);
         // } else {
-          total += rightSideWallPrice;
+        total += rightSideWallPrice;
         //}
       }
     }
@@ -194,6 +259,33 @@ export function calculateTotalPrice(details,priceData) {
         total += revolvingDoorPrice;
       });
     }
+  });
+
+  // Calculate braces
+  const sectionItems = Object.keys(sections);
+  const hasHighSection = sectionItems
+    .map((key) => sections[key].height)
+    .find((item) => item > 220);
+
+  sectionItems.forEach((key, index) => {
+    const item = sections[key];
+    const width = item.width;
+    let braceType;
+
+    if (hasHighSection || (item?.height >= 120 && index % 4 === 0)) {
+      braceType = 'x-brace';
+    } else {
+      braceType = 'h-brace';
+    }
+
+    const price = getDynamicPrice({
+      priceData,
+      material: color,
+      component: 'braces',
+      subtype: braceType,
+      width: Number(width)
+    });
+    total += calculateFormattedTotalPrice(price, 1);
   });
 
   return new Intl.NumberFormat("nl-NL", {
