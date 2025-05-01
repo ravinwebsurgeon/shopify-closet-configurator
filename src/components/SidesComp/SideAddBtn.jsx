@@ -43,7 +43,6 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
      dispatch(setSidewallSelected("right"));
      dispatch(setOpenModal(true));
   };
-
   return (
     <>
       <div

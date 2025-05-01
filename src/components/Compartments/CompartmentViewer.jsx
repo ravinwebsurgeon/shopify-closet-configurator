@@ -14,7 +14,7 @@ const CompartmentViewer = ({
       key={shelfkey}
       data-key={shelfkey}
       data-type="compartment"
-      className={`Legbord_Legbord__Outer !absolute w-full Legbord__${shelf?.compartments?.type}`}
+      className={`Legbord_Legbord__Outer change__color !absolute w-full Legbord__${shelf?.compartments?.type}`}
       style={{
         zIndex: arr.length - index,
         top: shelf?.compartments.position.top,

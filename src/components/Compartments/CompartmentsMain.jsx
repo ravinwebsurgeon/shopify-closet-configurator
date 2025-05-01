@@ -87,7 +87,7 @@ const CompartmentsMain = () => {
           ? true
           : item?.compartments.type == "compartment_divider_set"
           ? false
-          : item?.compartments.count < 4;
+          : item?.compartments.count < 6;
       return (
         item.space >= gap && compartments && !item?.to?.includes("wardrobe_")
       );
@@ -103,7 +103,7 @@ const CompartmentsMain = () => {
             sectionId: selectedSectionKey,
             shelfKey: spaces.to,
             compartmentType: id,
-            compartmentCount: id == "compartment_divider_set" ? 1 : 4,
+            compartmentCount: id == "compartment_divider_set" ? 1 : 6,
           })
         );
       } else {
@@ -114,13 +114,17 @@ const CompartmentsMain = () => {
             shelfKey: spaces?.to,
             compartmentType: "sliding_partition",
             compartmentCount:
-              nextCount % 4 == 1
+              nextCount % 6 == 1
                 ? 1
-                : nextCount % 4 == 2
+                : nextCount % 6 == 2
                 ? 2
-                : nextCount % 4 == 3
+                : nextCount % 6 == 3
                 ? 3
-                : 4,
+                : nextCount % 6 == 4
+                ? 4
+                : nextCount % 6 == 5
+                ? 5
+                : 6,
           })
         );
         setCount(nextCount);
