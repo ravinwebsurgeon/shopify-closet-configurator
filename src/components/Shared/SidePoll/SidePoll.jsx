@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import DrawersDelete from "../../Drawers/DrawersDelete";
 import RevolvingDoorDelete from "../../RevolvingDoors/RevolvingDoorDelete";
 import RevolvingDoorSetShelves from "../../RevolvingDoors/RevolvingDoorSetShelves";
+import SlidingDoorDelete from "../../SlidingDoors/SlidingDoorDelete";
+import SlidingDoorSetShelves from "../../SlidingDoors/SlidingDoorSetShelves";
+import WardrobeRodsDelete from "../../WardrobeRods/WardrobeRodsDelete";
 
 const SidePoll = ({
   isShelfSelected,
@@ -25,7 +28,12 @@ const SidePoll = ({
   const isRevolvingDoorHighlighted = useSelector(
     (state) => state.shelfDetail.isRevolvingDoorHighlighted
   );
-
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
+  const isWardrobeHighlighted = useSelector(
+    (state) => state.shelfDetail.isWardrobeHighlighted
+  );
   return (
     <div>
       {isCompartmentHighlighted && sectionKey == selectedSection && (
@@ -44,8 +52,17 @@ const SidePoll = ({
           door={isRevolvingDoorHighlighted}
         />
       )}
+      {isSlidingDoorHighlighted && sectionKey == selectedSection && (
+        <SlidingDoorDelete door={isSlidingDoorHighlighted} section={section} />
+      )}
+      {isWardrobeHighlighted && sectionKey == selectedSection && (
+        <WardrobeRodsDelete section={section} door={isWardrobeHighlighted} />
+      )}
       {!isRevolvingDoorHighlighted && sectionKey == selectedSection && (
         <RevolvingDoorSetShelves section={section} />
+      )}
+      {!isSlidingDoorHighlighted && sectionKey == selectedSection && (
+        <SlidingDoorSetShelves section={section} />
       )}
       {isShelfSelected?.key != "" && sectionKey == selectedSection ? (
         <div
@@ -61,12 +78,12 @@ const SidePoll = ({
       ) : (
         ""
       )}
-      {isShelfSelected?.key != "" && sectionKey == selectedSection && (
+      {/* {isShelfSelected?.key != "" && sectionKey == selectedSection && (
         <ShelveChangeIndicator
           selectedShelfKey={isShelfSelected?.key}
           selectedSectionKey={selectedSection}
         />
-      )}
+      )} */}
     </div>
   );
 };

@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import "./SideAddBtn.css";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import AddSide from "../ModalChildComponents/AddSideComponent/AddSide";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SideRemoveBtn from "../SideRemoveBtn/SideRemoveBtn";
+import Modal from "../Shared/Modal/Modal";
+import { setOpenModal, setSidewallSelected } from "../../slices/shelfDetailSlice";
 
 
 const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [side, setSide] = useState("");
+  const dispatch = useDispatch();
   const currSection = useSelector(
     (state) => state.shelfDetail.racks.selectedSection
   );
@@ -27,16 +30,19 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
 
   const handleLeftSideClick = (e) => {
     e.preventDefault();
-    setIsModalOpen(true);
     setSide("left");
+    setIsModalOpen(true);
+     dispatch(setSidewallSelected("left"));
+     dispatch(setOpenModal(true));
   };
 
   const handleRightSideClick = (e) => {
     e.preventDefault();
-    setIsModalOpen(true);
     setSide("right");
+    setIsModalOpen(true);
+     dispatch(setSidewallSelected("right"));
+     dispatch(setOpenModal(true));
   };
-
   return (
     <>
       <div
@@ -88,9 +94,18 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
         sideType  == 'right' &&  <SideRemoveBtn  leftPrevSide={leftPrevSide} setisHighlighted={setisHighlighted} leftSide={false} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
         )}
       </div>
-      <ModalComponent isOpen={isModalOpen}>
-        <AddSide onClose={() => setIsModalOpen(false)} side={side} />
-      </ModalComponent>
+        {/* <ModalComponent
+          isOpen={isModalOpen}
+        >
+          <AddSide onClose={()=>setIsModalOpen(false)} side={side}/>
+        </ModalComponent> */}
+        {/* <Modal
+              isModalOpen={isModalOpen}
+              // mainHeading={"Prijsoverzicht"}
+              closeModal={()=>setIsModalOpen(prev => !prev)}
+              // children={<AddSide  side={side} />}
+        >
+        </Modal> */}
     </>
   );
 };

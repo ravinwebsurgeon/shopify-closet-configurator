@@ -8,7 +8,7 @@ import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
 import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
-import RevolvingDoors from "../RevolvingDoors/RevolvingDoors";
+
 import SlidingDoors from "../SlidingDoors/SlidingDoors";
 import Drawers from "../Drawers/Drawers";
 import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
@@ -16,11 +16,25 @@ import { calculateTotalPrice } from "../../utils/calculateTotalPrice";
 import { generateBOM } from "../../utils/generateBOM";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../Shared/Modal/Modal";
+import BOM from "../ModalChildComponents/BOMComponent/BOM";
+import { setWoodActiveTab, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
+import SustainComponent from "../ConfigurationTabSubComponents/SustainComponent/SustainComponent";
+import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/TopCapsComponent";
 
 
 const ConfigurationTab = () => {
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
-  const details = useSelector((state) => state.shelfDetail);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const metalShelfDetail = useSelector((state) => state.shelfDetail);
+  const woodShelfDetail = useSelector((state) => state.woodShelfDetail);
+  const priceData = metalShelfDetail?.priceData;
+  const material = metalRacks?.execution.material;
+  const activeTab = material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
+  const details = material == "metal" ? metalShelfDetail : woodShelfDetail;
+
+  const[isModalOpen,setIsModalOpen] = useState(false);
+  const[bomData,setBomData] = useState('');
 
   const dispatch = useDispatch();
 
@@ -32,45 +46,49 @@ const ConfigurationTab = () => {
   // }
 
   const handleSectionClick = (sectionKey) => {
-    dispatch(setActiveTab(sectionKey));
-    if (sectionKey == "shelves") dispatch(setShowCounter(true));
+
+    if(material == "metal"){
+      dispatch(setActiveTab(sectionKey));
+    }else{
+      dispatch(setWoodActiveTab(sectionKey));
+    }
+    
+    if (sectionKey == "shelves"){
+      if(material == "metal"){
+        dispatch(setShowCounter(true));
+      }else{
+        dispatch(setWoodShowCounter(true));
+      }
+    } 
+      
   };
+
+  const handleInfoClick = () =>{
+    setIsModalOpen(true);
+    const data = generateBOM(details);
+    setBomData(data);
+  }
+
   const configTabs = [
-    {
-      id: "dimensions",
-      label: "Afmetingen",
-      component: <DimensionsComponent />,
-    },
+    { id: "dimensions", label: "Afmetingen", component: <DimensionsComponent /> },
     { id: "execution", label: "Voeten", component: <ExecutionComponent /> },
-    { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
+    {id:"Sustain",label:"Schoren",component:<SustainComponent/>},
+    {id:"TopCaps",label:"Topdoppen",component:<TopCapsComponent/>},
+   // { id: "shelves", label: "Legborden", component: <ShelvesComponent /> },
     { id: "sides", label: "Zijwanden", component: <SidesComponent /> },
-    {
-      id: "backwalls",
-      label: "Achterwanden",
-      component: <BackwallComponent />,
-    },
-    {
-      id: "compartments",
-      label: "Vakverdeling",
-      component: <CompartmentsMain />,
-    },
-    {
-      id: "revolvingdoors",
-      label: "Draaideuren",
-      component: <RevolvingDoors />,
-    },
-    { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
-    { id: "drawers", label: "Lades", component: <Drawers /> },
-    {
-      id: "wardroberods",
-      label: "Garderobestangen",
-      component: <WardrobeComponent />,
-    },
+   // { id: "backwalls", label: "Achterwanden", component: <BackwallComponent /> },
+    { id: "compartments", label: "Vakverdeling", component: <CompartmentsMain /> },
+   // { id: "revolvingdoors", label: "Draaideuren",component: <RevolvingDoors /> },
+   // { id: "slidingdoors", label: "Schuifdeuren", component: <SlidingDoors /> },
+   // { id: "drawers", label: "Lades", component: <Drawers /> },
+    { id: "wardroberods", label: "Garderobestangen", component: <WardrobeComponent /> },
   ];
   const selectedTab = configTabs.find((tab) => tab.id === activeTab);
   return (
+    <>
+    <div className="flex flex-col max-w-[425px]">
     <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden">
-      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-377px)] overflow-auto">
+      <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-520px)] overflow-auto">
         <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
           {selectedTab.label}
         </h2>
@@ -84,7 +102,7 @@ const ConfigurationTab = () => {
           Extra opties
         </h2>
 
-        <div className="config-tabs grid grid-cols-3 gap-[10px] mt-[11px]">
+        <div className="config-tabs grid grid-cols-2 gap-[10px] mt-[11px]">
           {configTabs.map((tab) => (
             <button
               key={tab.id}
@@ -112,9 +130,9 @@ const ConfigurationTab = () => {
             <div className="total-price-col-container">
               <div className="total-price-row-conatiner flex gap-2 items-center">
                 <span className="total-pricing font-inter text-base text-black block tracking-[-2%] leading-[150%] font-semibold text-right">
-                  {calculateTotalPrice(details)}
+                  {calculateTotalPrice(details,priceData)}
                 </span>
-                <FontAwesomeIcon icon={faCircleInfo} onClick={()=>alert("Info Icon Clicked...")} />
+                <FontAwesomeIcon icon={faCircleInfo} onClick={handleInfoClick} />
               </div>
               <span className="total-vat-text  font-inter text-xs text-black hidden tracking-[-2%] leading-[150%] font-medium text-right">
                 Excluding VAT
@@ -124,6 +142,23 @@ const ConfigurationTab = () => {
         </div>
       </div>
     </div>
+    <div className=" flex flex-col bg-[#0665C5] text-[#fff] mt-[20px] py-[25px] px-[25px]">
+        <span className=" font-inter text-[16px] tracking-[-2%] leading-[150%] font-semibold">Heeft u een vraag over uw samenstelling?</span>
+        <span className="font-inter font-light tracking-[-2%] leading-[150%] text-[14px] mt-[5px]">
+        Neem dan contact met ons op via info@bedrijfsinrichtingnederland.nl en wij zullen uw vraag zo snel mogelijk behandelen.
+        </span>
+      </div>
+    </div>
+    {isModalOpen && (
+      <Modal
+      isModalOpen={isModalOpen}
+      mainHeading={"Prijsoverzicht"}
+      closeModal={()=>setIsModalOpen(prev => !prev)}
+      >
+      <BOM data={bomData} totalPrice={calculateTotalPrice(details,priceData)}/>
+      </Modal>
+    )}
+    </>
   );
 };
 

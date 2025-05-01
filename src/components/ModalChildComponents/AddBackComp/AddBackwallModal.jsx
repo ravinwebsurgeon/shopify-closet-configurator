@@ -2,20 +2,18 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setEditingBackwall, updateBackwall } from "../../../slices/shelfDetailSlice";
+import {
+  setEditingBackwall,
+  updateBackwall,
+} from "../../../slices/shelfDetailSlice";
+import { toast } from "react-toastify";
 
 const AddBackwallModal = ({ onClose }) => {
-
-    const dispatch = useDispatch();
-
+  const dispatch = useDispatch();
 
   const height = useSelector((state) => state.shelfDetail.options.height);
-  const currSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const currHeight = useSelector(
-    (state) => state.shelfDetail.racks.sections[currSection].height
-  );
+  const currSection = useSelector((state) => state.shelfDetail.racks.selectedSection);
+  const currHeight = useSelector((state) => state.shelfDetail.racks.sections[currSection].height);
   const currType = useSelector((state) => state.shelfDetail.selectedBackwall);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
   const heightOptions = [50, ...height];
@@ -28,11 +26,23 @@ const AddBackwallModal = ({ onClose }) => {
 
   const handleAddClick = (e) => {
     e.preventDefault();
-    if(!selectedHeight){
-        alert(`select a height first`);
-        return;
+    if (!selectedHeight) {
+      //alert(`select a height first`);
+      toast.info("Selecteer eerst de hoogte, alstublieft!!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        className: "!font-inter !text-[13px] ",
+      });
+      return;
     }
-    dispatch(updateBackwall({sectionId:currSection,type:currType,height:Number(selectedHeight)}));
+    dispatch(
+      updateBackwall({
+        sectionId: currSection,
+        type: currType,
+        height: Number(selectedHeight),
+      })
+    );
     //dispatch(setEditingBackwall(false));
     onClose();
   };

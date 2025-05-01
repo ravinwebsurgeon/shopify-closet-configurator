@@ -9,6 +9,7 @@ import {
 } from "../../slices/shelfDetailSlice";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import getComponentPrice from "../../utils/getPrice";
+import { toast } from "react-toastify";
 
 const CompartmentsMain = () => {
   const dispatch = useDispatch();
@@ -86,8 +87,10 @@ const CompartmentsMain = () => {
           ? true
           : item?.compartments.type == "compartment_divider_set"
           ? false
-          : item?.compartments.count < 4;
-      return item.space >= gap && compartments;
+          : item?.compartments.count < 6;
+      return (
+        item.space >= gap && compartments && !item?.to?.includes("wardrobe_")
+      );
     });
     return findAvailble || null;
   };
@@ -100,7 +103,7 @@ const CompartmentsMain = () => {
             sectionId: selectedSectionKey,
             shelfKey: spaces.to,
             compartmentType: id,
-            compartmentCount: id == "compartment_divider_set" ? 1 : 4,
+            compartmentCount: id == "compartment_divider_set" ? 1 : 6,
           })
         );
       } else {
@@ -111,19 +114,32 @@ const CompartmentsMain = () => {
             shelfKey: spaces?.to,
             compartmentType: "sliding_partition",
             compartmentCount:
-              nextCount % 4 == 1
+              nextCount % 6 == 1
                 ? 1
-                : nextCount % 4 == 2
+                : nextCount % 6 == 2
                 ? 2
-                : nextCount % 4 == 3
+                : nextCount % 6 == 3
                 ? 3
-                : 4,
+                : nextCount % 6 == 4
+                ? 4
+                : nextCount % 6 == 5
+                ? 5
+                : 6,
           })
         );
         setCount(nextCount);
       }
     } else {
-      alert("No more divider sets fit in this section.");
+      //alert("No more sliding partions/divider sets fit in this section.");
+      toast.info(
+        "Er passen geen extra schuifwanden of verdelersets meer in deze sectie",
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          className: "!font-inter !text-[13px] ",
+        }
+      );
     }
   };
 
@@ -139,7 +155,7 @@ const CompartmentsMain = () => {
                 productInfo={item}
                 key={item.id}
                 dimention={item.dimention}
-                image={color=="black"?item.black_image:item.image}
+                image={color == "black" ? item.black_image : item.image}
                 price={getComponentPrice({
                   material: color,
                   component: "compartment",
@@ -147,7 +163,7 @@ const CompartmentsMain = () => {
                   width: dimension.sections[selectedSectionKey].width,
                   depth: dimension.depth,
                 })}
-                title={item.title}
+                title={`${item.title} ${color === "black" ? "(zwart)" : ""}`}
                 itemAction={() => addCompartmentToShelve({ id: item.id })}
                 openModal={(e) => openModal(e)}
               />

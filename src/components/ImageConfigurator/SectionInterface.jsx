@@ -11,6 +11,10 @@ import ShelfCounter from "../ConfigurationTabSubComponents/ShelvesComponent/Shel
 import CompartmentsMoveButton from "../Compartments/CompartmentsMoveButton";
 import DrawerChangePosition from "../Drawers/DrawerChangePosition";
 import RevolvingDoorMoveButton from "../RevolvingDoors/RevolvingDoorMoveButton";
+import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
+import WardrobeRodsChangePosition from "../WardrobeRods/WardrobeRodsChangePosition";
+// import SlidingDoorMoveButton from "../SlidingDoors/SlidingDoorMoveButton";
+import { deleteWoodSection, setCurrSelectedWoodSection, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
 
 const SectionInterface = ({
   selectedSection,
@@ -23,17 +27,18 @@ const SectionInterface = ({
   isShelfSelected,
 }) => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state) => state.shelfDetail.racks.activeTab);
-  const isCompartmentHighlighted = useSelector(
-    (state) => state.shelfDetail.isCompartmentHighlighted
-  );
-  const isRevolvingDoorHighlighted = useSelector(
-    (state) => state.shelfDetail.isRevolvingDoorHighlighted
-  );
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const shelfDetail = useSelector((state) => state.shelfDetail);
+  const material = metalRacks?.execution?.material;
+  
+  const activeTab = material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
 
-  const showCounter = useSelector(
-    (state) => state.shelfDetail.racks.showCounter
-  );
+  const isCompartmentHighlighted = shelfDetail?.isCompartmentHighlighted;
+  const isRevolvingDoorHighlighted = shelfDetail?.isRevolvingDoorHighlighted;
+
+  const showCounter = material == "metal" ? metalRacks?.showCounter : woodRacks?.showCounter;
+  
   const handleSectionDelete = (e, sectionKey) => {
     const activeIndex = sectionKeys.indexOf(sectionKey);
     const nextSectionId =
@@ -57,24 +62,40 @@ const SectionInterface = ({
       );
     }
     dispatch(setCurrSelectedSection(prevSectionId));
-    dispatch(deleteSection(sectionKey));
+
+    if(material == "metal"){
+      dispatch(deleteSection(sectionKey));
+    }
+    else{
+      dispatch(setCurrSelectedWoodSection(prevSectionId))
+      dispatch(deleteWoodSection(sectionKey));
+    }
+
   };
-  const highlightedDrawer = useSelector(
-    (state) => state.shelfDetail.highlightedDrawer
+  const highlightedDrawer = shelfDetail?.highlightedDrawer;
+  
+  // const highlightedDrawer = useSelector(
+  //   (state) => state.shelfDetail.highlightedDrawer
+  // );
+  const isSlidingDoorHighlighted = useSelector(
+    (state) => state.shelfDetail.isSlidingDoorHighlighted
+  );
+  const isWardrobeHighlighted = useSelector(
+    (state) => state.shelfDetail.isWardrobeHighlighted
   );
   return (
     <div className="Section_sectionInterface">
-      <div className="Section_sectionNumberContainer sk_hide_on_print">
-        <button
+      <div className="Section_sectionNumberContainer">
+        {/* <button
           className={`Section_sectionNumber font-inter ${
             selectedSection === sectionKey ? "Section_sectionNumberActive" : ""
           }`}
           onClick={(e) => handleSectionClick(e, sectionKey)}
         >
           {index + 1}
-        </button>
+        </button> */}
 
-        {selectedSection === sectionKey && sectionKeys.length > 1 && (
+        {/* {selectedSection === sectionKey && sectionKeys.length > 1 && (
           <button
             type="button"
             className="AddRemove_button Section_removeButton z-[1] cursor-pointer"
@@ -94,32 +115,40 @@ const SectionInterface = ({
               </svg>
             </i>
           </button>
-        )}
+        )} */}
       </div>
+
+      {isSlidingDoorHighlighted && selectedSection == sectionKey && (
+        <SlidingDoorMoveButton selected={isSlidingDoorHighlighted} />
+      )}
       {isCompartmentHighlighted && selectedSection == sectionKey && (
         <CompartmentsMoveButton selected={isCompartmentHighlighted} />
       )}
       {isRevolvingDoorHighlighted && selectedSection == sectionKey && (
         <RevolvingDoorMoveButton selected={isRevolvingDoorHighlighted} />
       )}
-      {selectedSection == sectionKey && selectedShelf && (
+      {/* {selectedSection == sectionKey && selectedShelf && (
         <ShelveChangePosition
           sectionId={selectedSection}
           shelfKey={isShelfSelected?.key}
         />
-      )}
+      )} */}
       {selectedSection == sectionKey && highlightedDrawer && (
         <DrawerChangePosition
           sectionId={selectedSection}
           selected={highlightedDrawer}
         />
       )}
-      <ShelfCounter
+      {selectedSection == sectionKey && isWardrobeHighlighted && (
+        <WardrobeRodsChangePosition selected={isWardrobeHighlighted} />
+      )}
+      {/* <ShelfCounter
         showCounter={
           selectedSection == sectionKey && activeTab == "shelves" && showCounter
         }
-        onClick={() => dispatch(setShowCounter(false))}
-      />
+        onClick={() => material == "metal" ?
+          dispatch(setShowCounter(false)): dispatch(setWoodShowCounter(false))}
+      />  */}
     </div>
   );
 };

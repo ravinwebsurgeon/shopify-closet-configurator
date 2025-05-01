@@ -11,27 +11,24 @@ import {
 } from "../../../slices/shelfDetailSlice";
 import getComponentPrice from "../../../utils/getPrice";
 import ItemBlock from "../../Shared/ItemBlock/ItemBlock";
+import getDynamicPrice from "../../../utils/getAPIPrice";
 
 const SidesComponent = () => {
   const dispatch = useDispatch();
   const [sideWall, setSideWall] = useState("");
-  const editing = useSelector(
-    (state) => state.shelfDetail.racks.isEditingSides
-  );
-  const selectedSection = useSelector(
-    (state) => state.shelfDetail.racks.selectedSection
-  );
-  const height = useSelector(
-    (state) => state.shelfDetail.racks.sections[selectedSection].height
-  );
-  const depth = useSelector((state) => state.shelfDetail.racks.depth);
-  const color = useSelector((state) => state.shelfDetail.racks.execution.color);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const priceData = useSelector((state)=>state.shelfDetail.priceData);
+  const editing = metalRacks?.isEditingSides;
+  const selectedSection = metalRacks?.selectedSection;
+  const height = metalRacks?.sections?.[selectedSection]?.height;
+  const depth = metalRacks?.depth;
+  const color = metalRacks?.execution?.color;
 
   const cardData = [
     {
       id: "perfo",
       imgSrc: sidewallPerfo,
-      label: "Sidewall Perfo",
+      label: "Zijwand Perfo",
       productInformation: {
         title: "Zijwand Metaal (perfo)",
         description: `<ul><li>
@@ -44,7 +41,7 @@ stellingcode aan te geven.
     {
       id: "closed",
       imgSrc: sidewallClosed,
-      label: "Sidewall Closed ",
+      label: "Zijwand Dicht ",
       productInformation: {
         title: "Zijwand Metaal (dicht)",
         description: `<p>Zijwanden geven steun aan opslag (voorraad), daarnaast ziet het er ook netjes uit met de mogelijkheid middels bijvoorbeeld magneetband een stellingcode aan te geven.<br></p>`,
@@ -74,7 +71,15 @@ stellingcode aan te geven.
           image={data.imgSrc}
           itemAction={() => handleCardClick(data.id)}
           openModal={() => openModal(data)}
-          price={getComponentPrice({
+          // price={getComponentPrice({
+          //   material: color,
+          //   component: "sidewall",
+          //   subtype: data.id,
+          //   height,
+          //   depth,
+          // })}
+          price={getDynamicPrice({
+            priceData,
             material: color,
             component: "sidewall",
             subtype: data.id,
@@ -82,7 +87,7 @@ stellingcode aan te geven.
             depth,
           })}
           productInfo={data?.productInformation}
-          title={data.label}
+          title={`${data.label} ${color === "black" ? "(zwart)" : ""}`}
         />
       ))}
     </div>

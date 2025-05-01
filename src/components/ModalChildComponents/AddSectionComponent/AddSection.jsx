@@ -7,16 +7,25 @@ import {
   setSection,
   updateSectionDimensions,
 } from "../../../slices/shelfDetailSlice";
-import AddSectionDimensions from "./AddSectionDimensions";
 
-const AddSection = ({ children, onClose }) => {
-  const sections = useSelector((state) => state.shelfDetail.racks.sections);
-  const dimension = useSelector((state) => state.shelfDetail.racks);
+import AddSectionDimensions from "./AddSectionDimensions";
+import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
+
+const AddSection = ({ children, onClose ,translate,setTranslate }) => {
+  console.log("Current Translate -->",translate);
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
+  const sections = material == "metal"? metalRacks?.sections : woodRacks?.sections;
+  const dimension =  material == "metal" ? metalRacks : woodRacks;
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
 
+  console.log("Total Sections -->",Object.keys(sections).length)
+
   const heightArr = [
+    {90:"52"},
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },
@@ -27,12 +36,13 @@ const AddSection = ({ children, onClose }) => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
+    { 350: "182" },
   ];
 
   const [dimensions, setDimensions] = useState({
-    width: 55,
-    height: 100,
-    depth: 20,
+    width: material == "metal" ? 55 : 60,
+    height: material == "metal" ? 100 : 90,
+    depth: material == "metal" ? 20 : 30,
   });
   useEffect(() => {
     setDimensions((prev) => ({ ...prev, depth: dimension?.depth }));
@@ -56,23 +66,49 @@ const AddSection = ({ children, onClose }) => {
     const sectionsCount = Object.keys(sections);
     const lastSectionKey = sectionsCount[sectionsCount.length - 1];
     const lastSection = sections[lastSectionKey];
+    
     if (dimensions.height > lastSection.height) {
-      dispatch(
-        updateSectionDimensions({
-          sectionId: lastSectionKey,
-          dimension: "standHeight",
-          value: dimensions.height,
-        })
-      );
+      if(material == "metal"){
+        dispatch(
+          updateSectionDimensions({
+            sectionId: lastSectionKey,
+            dimension: "standHeight",
+            value: dimensions.height,
+          })
+        );
+      }else{
+        dispatch(
+          updateWoodSectionDimensions({
+            sectionId: lastSectionKey,
+            dimension: "standHeight",
+            value: dimensions.height,
+          })
+        );
+      }
     }
-    dispatch(
-      setSection({
+
+    if(material == "metal"){
+      dispatch(setSection({
         racksCount,
-        currShelfHeight: dimensions.height,
-        shelfDepth,
-        positions,
-      })
-    );
+          currShelfHeight: dimensions.height,
+          shelfDepth,
+          positions
+      }))
+    }else{
+      dispatch(setWoodSection({
+        racksCount,
+          currShelfHeight: dimensions.height,
+          shelfDepth,
+          positions,
+          fromSelect:false
+      }))
+    }
+    const totalSections = sectionsCount.length + 1;
+    const centerOffset = 50; 
+    const sectionWidth = 100 / totalSections;
+    const newTranslate = centerOffset - (totalSections * sectionWidth);
+    
+    setTranslate(newTranslate);
     onClose();
   };
 
@@ -98,36 +134,37 @@ const AddSection = ({ children, onClose }) => {
       <AddSectionDimensions
         dimensions={dimensions}
         setDimensions={setDimensions}
+        material = {material}
       />
-      <div className="dimension-note">
-        The depth indicated above applies to the entire cabinet. It is possible
-        that parts may be removed as a result of the resizing.
+      <div className="dimension-note font-inter !text-[12px] !border-[#0665C5] !text-[#fff] !bg-[#0665C5]">
+        De diepte die hierboven is aangegeven geldt voor de gehele kast. 
+        Het is mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen van de afmetingen.
       </div>
       <div className="counter-button-div">
-        <span className="add-shevles-label">Shelves</span>
-        <div className="counter-container-div">
+        <span className="add-shevles-label !font-inter">Legborden</span>
+        <div className="counter-container-div !bg-[#0665C5]">
           <button
-            className="counter-decreament-btn"
+            className="counter-decreament-btn !font-inter"
             disabled={shelfCount === initialShelfCount}
             onClick={handleSubShelfCount}
           >
             <FontAwesomeIcon icon={faMinus} />
           </button>
-          <span className="counter-span">{shelfCount}</span>
+          <span className="counter-span !font-inter">{shelfCount}</span>
           <button
-            className="counter-increament-btn"
+            className="counter-increament-btn !font-inter"
             onClick={handleAddShelfCount}
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
       </div>
-      <div className="button-div">
-        <button className="close-button" onClick={onClose}>
-          Cancel
+      <div className="button-div ">
+        <button className="close-button !font-inter" onClick={onClose}>
+          Annuleren
         </button>
-        <button className="add-button" onClick={handleAddSection}>
-          Add
+        <button className="add-button !font-inter" onClick={handleAddSection}>
+          Toevoegen
         </button>
       </div>
     </>

@@ -1,5 +1,5 @@
 import React from 'react'
-import SideAddBtn from '../../SidesComp/SideAddBtn'
+
 
 const EditingSides = ({sec,seckey}) => {
   return (
