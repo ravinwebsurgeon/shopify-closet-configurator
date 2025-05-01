@@ -34,7 +34,7 @@ function App() {
           productInformation={productInformation}
           closeModal={handleModalClose}  
         >
-          {sidewallSide != "" ?<AddSide side={sidewallSide}/>: null}
+          {sidewallSide != "" ?<AddSide  onClose={handleModalClose} side={sidewallSide}/>: null}
         </Modal>
       )}
       <ToastContainer/>

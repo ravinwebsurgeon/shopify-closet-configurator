@@ -1,8 +1,9 @@
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
+import getDynamicPrice from "./getAPIPrice";
 import { getRevDoorLabel } from "./getDoorLabel";
 import getComponentPrice from "./getPrice";
 
-export function generateBOM(details) {
+export function generateBOM(details,priceData) {
   const bomList = [];
   const regularShelfMap = new Map();
   const topSupportMap = new Map();
@@ -11,13 +12,42 @@ export function generateBOM(details) {
   const compartmentMap = new Map();
   const revolvingDoorMap = new Map();
   const drawerMap = new Map();
+  const poleMap = new Map();
+  const braceMap = new Map();
   const color = details.racks.execution.color;
   const depth = details.racks.depth;
   const sections = details.racks.sections;
   let leftRevDoorHeight = '';
   let rightRevDoorHeight = '';
 
+
+   // Calculate braces
+   const sectionItems = Object.keys(sections);
+   const heights = sectionItems
+     .map((key) => sections[key].height)
+     .find((item) => item > 220);
  
+   if (!heights) {
+     sectionItems.forEach((key, index) => {
+       const item = sections[key];
+       const width = item.width;
+       if (item?.height >= 120 && index % 4 === 0) {
+         const braceKey = `x_brace-${width}`;
+         braceMap.set(braceKey, (braceMap.get(braceKey) || 0) + 1);
+       } else {
+         const braceKey = `h_brace-${width}`;
+         braceMap.set(braceKey, (braceMap.get(braceKey) || 0) + 1);
+       }
+     });
+   } else {
+     sectionItems.forEach((key) => {
+       const width = sections[key].width;
+       const braceKey = `x_brace-${width}`;
+       braceMap.set(braceKey, (braceMap.get(braceKey) || 0) + 1);
+     });
+   }
+ 
+
   // Process each section
   Object.entries(sections).forEach(([sectionId, section]) => {
     const width = section.width;
@@ -69,7 +99,8 @@ export function generateBOM(details) {
   // Process regular shelves
   regularShelfMap.forEach((quantity, dimensions) => {
     const [width, depth] = dimensions.split("x").map(Number);
-    const price = getComponentPrice({
+    const price = getDynamicPrice({
+      priceData,
       material: color,
       component: "shelves",
       width,
@@ -88,7 +119,8 @@ export function generateBOM(details) {
   // Process top support shelves separately
   topSupportMap.forEach((quantity, dimensions) => {
     const [width, depth] = dimensions.split("x").map(Number);
-    const price = getComponentPrice({
+    const price = getDynamicPrice({
+      priceData,
       material: color,
       component: "shelves",
       width,
@@ -131,7 +163,8 @@ export function generateBOM(details) {
   sidewallMap.forEach((quantity, dimensions) => {
     const [heightDepth, subType] = dimensions.split("-");
     const [height, depth] = heightDepth.split("x").map(Number);
-    const price = getComponentPrice({
+    const price = getDynamicPrice({
+      priceData,
       material: color,
       component: "sidewall",
       subtype: subType,
@@ -191,7 +224,8 @@ export function generateBOM(details) {
     if (type === "sliding_partition") {
       component = "Sliding Partition";
       displayDimensions = `${sizePart} cm`;
-      price = getComponentPrice({
+      price = getDynamicPrice({
+        priceData,
         material: color,
         component: "compartment",
         subtype: type,
@@ -201,7 +235,8 @@ export function generateBOM(details) {
       const [width, depth] = sizePart.split("x").map(Number);
       component = "Compartment Divider Set";
       displayDimensions = `${width-2} x ${depth} cm`;
-      price = getComponentPrice({
+      price = getDynamicPrice({
+        priceData,
         material: color,
         component: "compartment",
         subtype: type,
@@ -276,6 +311,98 @@ export function generateBOM(details) {
       totalPrice: calculateFormattedTotalPrice(price, quantity),
     });
   });
+
+
+    // Process poles
+    Object.entries(sections).forEach(([key, item], index) => {
+      if (index === 0) {
+        if (item.standHeight === item.height) {
+          poleMap.set(item.height, (poleMap.get(item.height) || 0) + 4);
+        } else {
+          poleMap.set(item.height, (poleMap.get(item.height) || 0) + 2);
+          poleMap.set(item.standHeight, (poleMap.get(item.standHeight) || 0) + 2);
+        }
+      } else {
+        poleMap.set(item.standHeight, (poleMap.get(item.standHeight) || 0) + 2);
+      }
+    });
+  
+    // Add poles to BOM list
+    poleMap.forEach((quantity, height) => {
+      const price = getDynamicPrice({
+        priceData,
+        material: color,
+        component: "poles",
+        height: parseInt(height),
+        depth
+      });
+  
+      bomList.push({
+        component: `Staander ${color === "black" ? "(zwart)" : ""}`,
+        dimensions: `${height} cm`,
+        quantity,
+        unitPrice: price,
+        totalPrice: calculateFormattedTotalPrice(price, quantity)
+      });
+    });
+
+      // Calculate total poles for topcaps and foot
+  const totalPoles = Array.from(poleMap.values()).reduce((sum, count) => sum + count, 0);
+
+  // Add topcaps if specified
+  if (details.racks.execution.topCaps === "topCaps") {
+    const topcapPrice = getDynamicPrice({
+      priceData,
+      material: color,
+      component: "topCaps",
+      depth
+    });
+
+    bomList.push({
+      component: `Topdop`,
+      dimensions: "(plastic)",
+      quantity: totalPoles,
+      unitPrice: topcapPrice,
+      totalPrice: calculateFormattedTotalPrice(topcapPrice, totalPoles)
+    });
+  }
+
+  // Add foot components
+  const footPrice = getDynamicPrice({
+    priceData,
+    material: color,
+    component: "foot",
+    depth
+  });
+
+  bomList.push({
+    component: `Voetje`,
+    dimensions: "(plastic)",
+    quantity: totalPoles,
+    unitPrice: footPrice,
+    totalPrice: calculateFormattedTotalPrice(footPrice, totalPoles)
+  });
+
+
+    // Add braces to BOM list
+    braceMap.forEach((quantity, key) => {
+      const [braceType, width] = key.split('-');
+      const price = getDynamicPrice({
+        priceData,
+        material: color,
+        component: 'braces',
+        subtype: braceType === 'x_brace' ? 'x-brace' : 'h-brace',
+        width: Number(width)
+      });
+  
+      bomList.push({
+        component: `${braceType === 'x_brace' ? 'X-schoor' : 'H-schoor'} ${color === "black" ? "(zwart)" : ""}`,
+        dimensions: `${width} cm`,
+        quantity,
+        unitPrice: price,
+        totalPrice: calculateFormattedTotalPrice(price, quantity)
+      });
+    });
 
   // Sort BOM list by dimensions
   //bomList.sort((a, b) => a.dimensions.localeCompare(b.dimensions));

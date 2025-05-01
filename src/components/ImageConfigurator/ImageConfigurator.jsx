@@ -371,6 +371,30 @@ const ImageConfigurator = () => {
     setSelectedIndex(activeIndex);
   }, [selectedSection]);
 
+
+  useEffect(() => {
+    const polls = {};
+    sectionItems.map((key, index) => {
+      const item = sections[key];
+      if (index == 0) {
+        if (item.standHeight == item.height) {
+          polls[item.height] =
+            (polls[item.height] ? polls[item.height] : 0) + 2;
+        }
+        if (item.standHeight != item.height) {
+          polls[item.height] =
+            (polls[item.height] ? polls[item.height] : 0) + 2;
+          polls[item.standHeight] =
+            (polls[item.standHeight] ? polls[item.standHeight] : 0) + 2;
+        }
+      } else {
+        polls[item.standHeight] =
+          (polls[item.standHeight] ? polls[item.standHeight] : 0) + 2;
+      }
+    });
+    console.log("polls -->", polls);
+  }, [sections]);
+
   return (
     <>
       <div
