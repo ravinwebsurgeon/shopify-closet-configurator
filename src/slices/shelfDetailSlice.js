@@ -6,10 +6,10 @@ const initialState = {
   priceData: null,
   showConfigurator: false,
   options: {
-    height: [100, 120, 150, 200, 220, 250, 300,350],
+    height: [100, 120, 150, 200, 220, 250, 300, 350],
     width: [
       55, 70, 85, 100, 115, 130, 155, 170, 200, 230, 255, 260, 270, 285, 300,
-      355, 390, 400, 500, 600, 700, 800,900,1000
+      355, 390, 400, 500, 600, 700, 800, 900, 1000,
     ],
     depth: [20, 30, 40, 50, 60, 70, 80, 100],
     shelfCount: [3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -19,7 +19,7 @@ const initialState = {
   racks: {},
   deletedRevDoors: {},
   hideDoor: false,
-  sidewallSelected : "",
+  sidewallSelected: "",
 };
 
 const executionObject = {
@@ -57,7 +57,6 @@ const createInitialSection = (width, height, shelves) => ({
   shelves,
   sideWall: sideWallObject,
   backWall: backwallObject,
-  
 });
 
 const showCounter = true;
@@ -68,10 +67,10 @@ const shelfDetailSlice = createSlice({
   name: "shelfDetails",
   initialState,
   reducers: {
-    setAPIData:(state,action) =>{
+    setAPIData: (state, action) => {
       state.priceData = action.payload;
     },
-    setSidewallSelected: (state,action) =>{
+    setSidewallSelected: (state, action) => {
       state.sidewallSelected = action.payload;
     },
     setActiveTab: (state, action) => {
@@ -201,16 +200,45 @@ const shelfDetailSlice = createSlice({
       }
     },
     updateLastShelvePostion: (state, action) => {
-      const { sectionId, positions } = action.payload;
-
+      const { sectionId, positions, dimension, value } = action.payload;
+      const height = state.racks.sections[sectionId].height;
+      const heightArr = {
+        90: "52",
+        100: "57",
+        120: "67",
+        150: "82",
+        180: "97",
+        200: "107",
+        210: "112",
+        220: "117",
+        240: "127",
+        250: "132",
+        300: "157",
+        350: "182",
+      };
+      console.log(
+        height,
+        dimension,
+        value,
+        heightArr[value],
+        positions[positions.length - 1]
+      );
       if (positions?.length > 0) {
         const shelves = state.racks.sections[sectionId].shelves;
-        const shelfKeys = Object.keys(shelves).sort((a, b) => {
-          return parseInt(a.split("_")[1], 10) - parseInt(b.split("_")[1], 10);
-        });
+        const shelfKeys = Object.keys(shelves);
 
         if (shelfKeys.length > 0) {
           const lastShelfKey = shelfKeys[shelfKeys.length - 1];
+          const prevShelfKey = shelfKeys[shelfKeys.length - 2];
+          if (prevShelfKey.includes("compartment_")) {
+            shelves[prevShelfKey] = {
+              ...shelves[prevShelfKey],
+              compartments: {
+                ...shelves[prevShelfKey]?.compartments,
+                position: positions[positions.length - 1],
+              },
+            };
+          }
           shelves[lastShelfKey] = {
             ...shelves[lastShelfKey],
             position: positions[positions.length - 1],
@@ -844,7 +872,7 @@ export const {
   setIsWardrobeHighlighted,
   updateWardrobePosition,
   setAPIData,
-  setSidewallSelected
+  setSidewallSelected,
 } = shelfDetailSlice.actions;
 
 // export default reducer

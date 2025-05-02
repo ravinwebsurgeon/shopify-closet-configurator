@@ -5,13 +5,13 @@ import {
   setShowCounter,
   updateShelvesPosition,
 } from "../../../slices/shelfDetailSlice";
-import { 
-  setWoodShowCounter, 
-  updateWoodShelvesPosition 
+import {
+  setWoodShowCounter,
+  updateWoodShelvesPosition,
 } from "../../../slices/WoodShelfDetailSlice";
-import { 
-  shelfCountsAccHeight, 
-  woodShelfCountsAccHeight 
+import {
+  shelfCountsAccHeight,
+  woodShelfCountsAccHeight,
 } from "../../../assets/data/ConfigratorData";
 import "./ShelfCounter.css";
 
@@ -20,30 +20,35 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
   const dispatch = useDispatch();
   let positionArray = [];
 
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  const material = useSelector(
+    (state) => state.shelfDetail.racks.execution.material
+  );
 
-  const sectionData = material === "metal"
-    ? useSelector((state) => state.shelfDetail.racks.sections)
-    : useSelector((state) => state.woodShelfDetail.racks.sections);
+  const sectionData =
+    material === "metal"
+      ? useSelector((state) => state.shelfDetail.racks.sections)
+      : useSelector((state) => state.woodShelfDetail.racks.sections);
 
-  const sectionId = material === "metal"
-    ? useSelector((state) => state.shelfDetail.racks.selectedSection)
-    : useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+  const sectionId =
+    material === "metal"
+      ? useSelector((state) => state.shelfDetail.racks.selectedSection)
+      : useSelector((state) => state.woodShelfDetail.racks.selectedSection);
 
   const currentSection = sectionData[sectionId];
 
   const shelfHeight = currentSection?.height || 200;
+  const shelfKeys = Object.keys(currentSection.shelves);
+  const currentSection_shelves = shelfKeys.filter((key) =>
+    key.includes("shelve")
+  );
+  const initialShelfCount = currentSection ? currentSection_shelves.length : 3;
 
-  const initialShelfCount = currentSection
-    ? Object.keys(currentSection.shelves).length
-    : 3;
-
-  const maxShelfCount = material === "metal"
-    ? shelfCountsAccHeight[shelfHeight]?.max || 11
-    : woodShelfCountsAccHeight[shelfHeight]?.max || 11;
+  const maxShelfCount =
+    material === "metal"
+      ? shelfCountsAccHeight[shelfHeight]?.max || 11
+      : woodShelfCountsAccHeight[shelfHeight]?.max || 11;
 
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
-
 
   useEffect(() => {
     if (currentSection) {
@@ -69,7 +74,7 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
-    { 350: "182" }
+    { 350: "182" },
   ];
 
   // Generate shelf positions according to shelf count
@@ -89,16 +94,14 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
     return positions;
   };
 
-  useEffect(() => {
-    positionArray = GeneratePosArr(shelfHeight, shelfCount);
-    if (material === "metal") {
-      dispatch(updateShelvesPosition({ sectionId, positionArray }));
-    } else {
-      dispatch(updateWoodShelvesPosition({ sectionId, positionArray }));
-    }
-  }, [shelfCount]);
-
-  
+  // useEffect(() => {
+  //   positionArray = GeneratePosArr(shelfHeight, shelfCount);
+  //   if (material === "metal") {
+  //     dispatch(updateShelvesPosition({ sectionId, positionArray }));
+  //   } else {
+  //     dispatch(updateWoodShelvesPosition({ sectionId, positionArray }));
+  //   }
+  // }, [shelfCount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -122,32 +125,38 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
   // Handle slider change
   const handleShelfChange = (e) => {
     const newCount = parseInt(e.target.value);
+
+    positionArray = GeneratePosArr(shelfHeight, newCount);
+    if (material === "metal") {
+      dispatch(updateShelvesPosition({ sectionId, positionArray }));
+    } else {
+      dispatch(updateWoodShelvesPosition({ sectionId, positionArray }));
+    }
     setShelfCount(newCount);
   };
 
-
   return (
-      <div ref={counterRef} className="dimension-row">
-        <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal text-black font-normal leading-none justify-center flex items-center gap-3">
-          Borden
-          <span className="font-inter text-xs tracking-normal text-black font-semibold leading-none">
-            {shelfCount}
-          </span>
-        </label>
-        <div className="dimension-control">
-          <div className="slider-container">
-            <input
-              type="range"
-              min="3"
-              max={maxShelfCount}
-              value={shelfCount}
-              onChange={handleShelfChange}
-              className="dimension-slider"
-              style={calculateSliderStyle(shelfCount, maxShelfCount)}
-            />
-          </div>
+    <div ref={counterRef} className="dimension-row">
+      <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal text-black font-normal leading-none justify-center flex items-center gap-3">
+        Borden
+        <span className="font-inter text-xs tracking-normal text-black font-semibold leading-none">
+          {initialShelfCount}
+        </span>
+      </label>
+      <div className="dimension-control">
+        <div className="slider-container">
+          <input
+            type="range"
+            min="3"
+            max={maxShelfCount}
+            value={initialShelfCount}
+            onChange={handleShelfChange}
+            className="dimension-slider"
+            style={calculateSliderStyle(initialShelfCount, maxShelfCount)}
+          />
         </div>
       </div>
+    </div>
   );
 };
 

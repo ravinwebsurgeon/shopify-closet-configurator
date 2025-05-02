@@ -128,8 +128,7 @@ const ConfigurationFrom = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259');
-        setApiData(response.data);
-        console.log("API response -->",response.data);
+        setApiData(response.data);        
 
         const metafields = response.data.metafields;
 
@@ -151,8 +150,7 @@ const ConfigurationFrom = () => {
           wardrobe_rod: metafields.find(field => field.key === "wardrobe_rod")?.value || {},
           topCaps: metafields.find(field => field.key === "topcap_plastic_")?.value || {},
           foot:metafields.find(field => field.key === "foot_plastic_pricing")?.value || {},
-        };
-        console.log("Structured data -->",structuredPricing)
+        };        
         dispatch(setAPIData(structuredPricing));
       } catch (error) {
         console.error('Error fetching data:', error);
