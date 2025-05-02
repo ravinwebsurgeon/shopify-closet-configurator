@@ -43,7 +43,6 @@ const SlidingDoors = () => {
       .map((item, index, arr) => {
         if (index === 0) return null;
         const fromKey = arr[index - 1];
-        console.log(fromKey);
         const h =
           fromKey && fromKey?.key.includes("slidingDoors")
             ? 22.5
@@ -68,11 +67,9 @@ const SlidingDoors = () => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
-    console.log(spaceBetweenShelves);
     const findSpaceBetweenShelves = spaceBetweenShelves?.find(
       (item) => item.space >= 22.5
     );
-    console.log(findSpaceBetweenShelves);
     if (findSpaceBetweenShelves) {
       dispatch(
         addSlidingDoor({

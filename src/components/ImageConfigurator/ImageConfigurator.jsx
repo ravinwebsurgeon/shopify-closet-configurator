@@ -72,7 +72,10 @@ const ImageConfigurator = () => {
   const [translate, setTranslate] = useState(30);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const containerRef = useRef(null);
+  const selectSectionDivRef = useRef(null);
+
   const [isShelfSelected, setIsShelfSelected] = useState({
     key: "",
     top: "0",
@@ -90,6 +93,26 @@ const ImageConfigurator = () => {
       : woodRacks.selectedSection;
 
   const [selectedSection, setSelectedSection] = useState("");
+
+  const sectionz =
+  executionValues.material == "metal"
+    ? metalRacks.sections
+    : woodRacks.sections;
+
+  const sectionKeyz = Object.keys(sectionz)
+
+  const prevSectionKeysLength = useRef(sectionKeyz.length);
+
+  //calculate scale based on height
+  // const calculateScale = (height) => {
+  //   if (height > 300) return 0.7;
+  //   if (height > 200 && height <= 300) return 0.9;
+  //   return 1;
+  // };
+
+  // Get the current sections height
+  // const currentSectionHeight = sectionz[selectedSection]?.height || 200;
+  // const scale = calculateScale(currentSectionHeight);
 
   useEffect(() => {
     setSelectedSection(currentSelectedSection);
@@ -131,6 +154,13 @@ const ImageConfigurator = () => {
       } else {
         dispatch(setCurrSelectedWoodSection(newSectionKey));
       }
+
+      //  for scrolling section button into view
+      const sectionButtons = document.querySelector('.selectSectionDiv');
+      const targetButton = sectionButtons.children[newIndex];
+      if (targetButton) {
+        targetButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     }
   };
 
@@ -145,6 +175,13 @@ const ImageConfigurator = () => {
       } else {
         dispatch(setCurrSelectedWoodSection(newSectionKey));
       }
+
+       //  for scrolling section button into view
+       const sectionButtons = document.querySelector('.selectSectionDiv');
+       const targetButton = sectionButtons.children[newIndex];
+       if (targetButton) {
+         targetButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+       }
     }
   };
 
@@ -371,6 +408,21 @@ const ImageConfigurator = () => {
     setSelectedIndex(activeIndex);
   }, [selectedSection]);
 
+  useEffect(() => {
+    if (selectSectionDivRef.current && sectionKeyz.length > 0) {
+      // Only scroll if a new section was added (length increased)
+      const isNewSection = sectionKeyz.length > prevSectionKeysLength.current;
+      if (isNewSection) {
+        selectSectionDivRef.current.scrollTo({
+          left: selectSectionDivRef.current.scrollWidth,
+          behavior: 'smooth'
+        });
+      }
+      prevSectionKeysLength.current = sectionKeyz.length;
+    }
+
+  }, [sectionKeyz.length]);
+
   return (
     <>
       <div
@@ -382,11 +434,12 @@ const ImageConfigurator = () => {
             <span className="font-inter font-medium text-[12px]">
               Selecteer sectie:
             </span>
+            <div ref={selectSectionDivRef} className="selectSectionDiv flex gap-1 w-[440px] overflow-x-auto scrollbar-hidden">
             {sectionKeys.map((item, index) => (
               <button
                 onClick={(e) => handleSectionClick(e, item)}
                 key={item}
-                className={`${
+                className={` flex-shrink-0 ${
                   item == selectedSection
                     ? "_selected border-[#0665C5] !bg-[#0665C5] !text-[#fff]"
                     : "border-[rgba(0,0,0,0)]"
@@ -395,6 +448,7 @@ const ImageConfigurator = () => {
                 {index + 1}
               </button>
             ))}
+            </div>
           </div>
           <div
             className=" hidden flex items-center gap-4 justify-center w-[30%] cursor-pointer select-none 
@@ -439,7 +493,7 @@ const ImageConfigurator = () => {
         <div className="Demo-test flex justify-between gap-5 items-center">
           <button
             className={`selection-none border border-[#0665C5] rounded h-[30px] px-[10px] bg-[#0665C5] text-[#fff]
-        disabled:opacity-50 disabled:cursor-not-allowed`}
+                       disabled:opacity-50 disabled:cursor-not-allowed`}
             disabled={isPrevDisabled}
             onClick={handlePrev}
           >
@@ -447,10 +501,16 @@ const ImageConfigurator = () => {
           </button>
           <div
             ref={scrollRef}
-            className="demo-config w-[800px] overflow-x-hidden"
+            className="demo-config w-[800px] overflow-hidden "
             id="shelf-capture-area"
           >
-            <div className="main-wrapper__ relative ">
+            <div className="main-wrapper__ relative "
+            //   style={{
+            //   transform: `scale(${scale})`,
+            //   transformOrigin: 'center center',
+            //   transition: 'transform 0.3s ease-in-out'
+            // }}
+            >
               {/* <SectionDimensionsIndicator /> */}
               <div
                 className="Visual_container__tG7BQ Carousel_visual__FfW0p transition-all duration-500 ease-in-out"

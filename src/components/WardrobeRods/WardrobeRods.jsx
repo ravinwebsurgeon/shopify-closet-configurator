@@ -58,7 +58,6 @@ const WardrobeRods = ({ top, index, doorKey }) => {
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition)
       .filter((item) => item.from == doorKey);
-    console.log(spaceBetweenShelves);
     if (spaceBetweenShelves.length > 0) {
       const space = spaceBetweenShelves[0]?.space;
       if (space >= 52.5) {

@@ -25,7 +25,6 @@ const WardrobeRodsChangePosition = ({ selected }) => {
 
   const { filteredShelfs } = useMemo(() => {
     if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
-    console.log(sections[selectedSectionKey]?.shelves);
     const shelfs = Object.entries(
       sections[selectedSectionKey]?.shelves || {}
     ).map(([key, value]) => ({
@@ -53,7 +52,6 @@ const WardrobeRodsChangePosition = ({ selected }) => {
   }, [selected, shelves]);
   const handlePositionChange = (type) => {
     const position = parseFloat(selected?.position); 
-    // console.log("handlePositionChange", filteredShelfs);
     const spaceBetweenShelves = filteredShelfs
       .map((item, index, arr) => {
         if (index === 0) return null;
@@ -76,11 +74,9 @@ const WardrobeRodsChangePosition = ({ selected }) => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
-    console.log("spaceBetweenShelves", spaceBetweenShelves);
     const filterPrev = spaceBetweenShelves
       .filter((item) => item.type === "prev")
       .sort((a, b) => b.toPosition - a.toPosition);
-    // console.log(spaceBetweenDoors);
     const filterNext = spaceBetweenShelves
       .filter((item) => item.type === "next")
       .sort((a, b) => a.toPosition - b.toPosition);

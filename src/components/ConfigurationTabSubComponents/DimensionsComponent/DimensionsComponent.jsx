@@ -13,36 +13,50 @@ import {
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
 import { shelfCountsAccHeight } from "../../../assets/data/ConfigratorData";
-import { updateLastWoodShelvePostion, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
+import {
+  updateLastWoodShelvePostion,
+  updateWoodSectionDimensions,
+} from "../../../slices/WoodShelfDetailSlice";
 import SliderShelfCounter from "../ShelvesComponent/SliderShelfCounter";
+import { combineSlices } from "@reduxjs/toolkit";
 
 const DimensionsComponent = () => {
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
-  const material = useSelector((state) => state.shelfDetail.racks.execution.material);
+  const material = useSelector(
+    (state) => state.shelfDetail.racks.execution.material
+  );
   const metalRacks = useSelector((state) => state.shelfDetail.racks);
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
-  const sections = material== "metal" ? metalRacks?.sections : woodRacks?.sections;
-  const activeSectionId = material ==  "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
+  const sections =
+    material == "metal" ? metalRacks?.sections : woodRacks?.sections;
+  const activeSectionId =
+    material == "metal"
+      ? metalRacks?.selectedSection
+      : woodRacks?.selectedSection;
   const activeSection = sections[activeSectionId];
   const depth = material == "metal" ? metalRacks.depth : woodRacks.depth;
   const revDoor = activeSection.revolvingDoor;
 
   // Predefined values for each dimension
   const dimensionOptions = {
-    width: material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
-    height: material == "metal" ? [100, 120, 150, 200, 220, 250, 300, 350] :[90, 150, 180, 210, 240, 300],
-    depth: material == "metal" ?[20, 30, 40, 50, 60, 70, 80,100] : [30, 40, 50, 60],
+    width:
+      material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
+    height:
+      material == "metal"
+        ? [100, 120, 150, 200, 220, 250, 300, 350]
+        : [90, 150, 180, 210, 240, 300],
+    depth:
+      material == "metal"
+        ? [20, 30, 40, 50, 60, 70, 80, 100]
+        : [30, 40, 50, 60],
   };
-
 
   const [dimensions, setDimensions] = useState({
     width: activeSection?.width || dimensionOptions.width[0],
     height: activeSection?.height || dimensionOptions.height[0],
-    depth:  depth || dimensionOptions.depth[0],
+    depth: depth || dimensionOptions.depth[0],
   });
-
-
 
   useEffect(() => {
     if (activeSection) {
@@ -55,7 +69,7 @@ const DimensionsComponent = () => {
   }, [activeSectionId, activeSection]);
 
   const heightArr = [
-    {90:"52"},
+    { 90: "52" },
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },
@@ -87,37 +101,13 @@ const DimensionsComponent = () => {
 
   const shelves = activeSection?.shelves;
   const shelvesKeys = Object.keys(shelves) || [];
-  const handleDimensionChange = (dimension, value) => {
 
+  const handleDimensionChange = (dimension, value) => {
     const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
     const isRightSidewall = sections[activeSectionId].sideWall["right"].isRight;
     const isBackwall = sections[activeSectionId].backWall.type;
     const backWall = sections[activeSectionId].backWall;
 
-    if (dimension == "height") {
-      const items = [];
-      shelvesKeys.map((item) => {
-        const top = parseFloat(
-          shelves[item]?.drawer?.position?.top ||
-            shelves[item]?.compartments?.position?.top ||
-            shelves[item]?.position?.top
-        );
-        items.push({
-          key: item,
-          top: top,
-        });
-      });
-      items.map((item, index) => {
-        if (index === items?.length - 1) return null;
-        const maxTop = parseFloat(shelfCountsAccHeight[value]?.maxTop);
-        if (item?.top > maxTop && items?.length >= 3) {
-          console.log(item?.top, maxTop);
-          dispatch(
-            deleteShelf({ sectionId: activeSectionId, shelfId: item?.key })
-          );
-        }
-      });
-    }
     // checking if active section is having left ,right
     if (isLeftSidewall || isRightSidewall) {
       //checking weather there are multiple sections
@@ -227,7 +217,12 @@ const DimensionsComponent = () => {
       }
     }
 
-    if (isBackwall && dimension == "height" && backWall.height > value && material == "metal") {
+    if (
+      isBackwall &&
+      dimension == "height" &&
+      backWall.height > value &&
+      material == "metal"
+    ) {
       dispatch(
         updateBackwall({
           sectionId: activeSectionId,
@@ -237,74 +232,93 @@ const DimensionsComponent = () => {
       );
     }
     //  delete the section back wall when width > 100
-    if(isBackwall  && dimension == "width" && value > 100 && material == "metal"){
-      dispatch(updateBackwall({
-        sectionId: activeSectionId,
-        type: "",
-        height: "",
-      }))
+    if (
+      isBackwall &&
+      dimension == "width" &&
+      value > 100 &&
+      material == "metal"
+    ) {
+      dispatch(
+        updateBackwall({
+          sectionId: activeSectionId,
+          type: "",
+          height: "",
+        })
+      );
     }
 
     // delete revolving door from the selected section when width > 100
-    if(dimension == "width" && value > 100 && revDoor && Object.keys(revDoor).length>0 && material == "metal"){
-      dispatch(removeSectionDoors({sectionId:activeSectionId}))
+    if (
+      dimension == "width" &&
+      value > 100 &&
+      revDoor &&
+      Object.keys(revDoor).length > 0 &&
+      material == "metal"
+    ) {
+      dispatch(removeSectionDoors({ sectionId: activeSectionId }));
     }
-    // delete revolving door according to the height change (if doors exixts) 
-    if (dimension === "height" && revDoor && Object.keys(revDoor).length > 0 && material == "metal") {
+    // delete revolving door according to the height change (if doors exixts)
+    if (
+      dimension === "height" &&
+      revDoor &&
+      Object.keys(revDoor).length > 0 &&
+      material == "metal"
+    ) {
       const oldHeight = activeSection.height;
       const newHeight = value;
       let usedHeight = 0;
       let space = 0;
-    
+
       const doorList = Object.entries(revDoor).map(([key, door]) => {
-        const height = parseInt(door.type.split('_')[3]);
+        const height = parseInt(door.type.split("_")[3]);
         usedHeight += height;
         return { key, ...door, height };
       });
-    
+
       if (oldHeight > usedHeight) {
         space = oldHeight - usedHeight;
       }
-    
+
       const sortedByPosition = doorList.sort((a, b) => b.position - a.position);
       let currentHeight = usedHeight;
-    
+
       for (let i = 0; i < sortedByPosition.length; i++) {
         const door = sortedByPosition[i];
-    
-        const isOverflowing = door.position + door.height > newHeight/2;
-        
-          
-          if (isOverflowing || currentHeight > newHeight) {
-            dispatch(removeRevolvingDoor({
-              sectionId: activeSectionId,
-              doorKey: door.key
-            }));
 
-            currentHeight -= door.height;
-      
-            if (currentHeight <= newHeight) break;
-          }
-        
+        const isOverflowing = door.position + door.height > newHeight / 2;
+
+        if (isOverflowing || currentHeight > newHeight) {
+          dispatch(
+            removeRevolvingDoor({
+              sectionId: activeSectionId,
+              doorKey: door.key,
+            })
+          );
+
+          currentHeight -= door.height;
+
+          if (currentHeight <= newHeight) break;
+        }
       }
     }
 
     // delete drawers from section when width > 100
-    if((dimension == "width" && value > 100)||
-        (dimension == "depth" && (value < 40 || value > 50)) &&
-        material == "metal"
-      ){
+    if (
+      (dimension == "width" && value > 100) ||
+      (dimension == "depth" &&
+        (value < 40 || value > 50) &&
+        material == "metal")
+    ) {
       let currSection = activeSectionId;
-      let shelvesObject = activeSection.shelves
-      
+      let shelvesObject = activeSection.shelves;
+
       const hasDrawers = Object.keys(shelvesObject).some((key) =>
         key.includes("drawer")
       );
 
-      if(hasDrawers){
-        dispatch(removeDrawersFromSection({sectionId:currSection}))
+      if (hasDrawers) {
+        dispatch(removeDrawersFromSection({ sectionId: currSection }));
       }
-
     }
 
     const newValue = parseInt(value);
@@ -329,12 +343,13 @@ const DimensionsComponent = () => {
             : null;
         const nextSection = sections[nextSectionId];
         const prevSection = sections[previousSection];
-        const shelfCount = Object.keys(updatedSection.shelves).length;
+       // const shelfCount = Object.keys(updatedSection.shelves).length;
+       const shelfCount  = getShelfCount(updatedSection.shelves)
         positions = GeneratePosArr(newValue, shelfCount);
 
         if (prevSection) {
           if (prevSection.height <= newValue) {
-            if(material == "metal"){
+            if (material == "metal") {
               dispatch(
                 updateSectionDimensions({
                   sectionId: previousSection,
@@ -343,8 +358,7 @@ const DimensionsComponent = () => {
                   positions,
                 })
               );
-            }
-            else{
+            } else {
               dispatch(
                 updateWoodSectionDimensions({
                   sectionId: previousSection,
@@ -354,12 +368,11 @@ const DimensionsComponent = () => {
                 })
               );
             }
-
           }
         }
         if (updatedSection) {
           if (nextSection && nextSection.height <= newValue) {
-            if(material == "metal"){
+            if (material == "metal") {
               dispatch(
                 updateSectionDimensions({
                   sectionId: activeSectionId,
@@ -368,7 +381,7 @@ const DimensionsComponent = () => {
                   positions,
                 })
               );
-            }else{
+            } else {
               dispatch(
                 updateWoodSectionDimensions({
                   sectionId: activeSectionId,
@@ -378,10 +391,9 @@ const DimensionsComponent = () => {
                 })
               );
             }
-
           }
           if (!nextSection) {
-            if(material == "metal"){
+            if (material == "metal") {
               dispatch(
                 updateSectionDimensions({
                   sectionId: activeSectionId,
@@ -390,7 +402,7 @@ const DimensionsComponent = () => {
                   positions,
                 })
               );
-            }else{
+            } else {
               dispatch(
                 updateWoodSectionDimensions({
                   sectionId: activeSectionId,
@@ -400,42 +412,50 @@ const DimensionsComponent = () => {
                 })
               );
             }
-
           }
         }
       }
 
-      if(material == "metal"){
-
-        dispatch(
-          updateLastShelvePostion({
-            sectionId: activeSectionId,
-            positions,
-          })
-        );
-        dispatch(
-          updateSectionDimensions({
-            sectionId: activeSectionId,
-            dimension,
-            value: newValue,
-          })
-        );
-      }else{
-        dispatch(
-          updateLastWoodShelvePostion({
-            sectionId: activeSectionId,
-            positions,
-          })
-        );
-        dispatch(
-          updateWoodSectionDimensions({
-            sectionId: activeSectionId,
-            dimension,
-            value: newValue,
-          })
-        );
+      dispatch(
+        updateSectionDimensions({
+          sectionId: activeSectionId,
+          dimension,
+          value: newValue,
+        })
+      );
+      dispatch(
+        updateLastShelvePostion({
+          sectionId: activeSectionId,
+          positions,
+          dimension,
+          value: newValue,
+        })
+      );
+      if (dimension == "height") {
+        const items = [];
+        shelvesKeys.map((item) => {
+          const top = parseFloat(
+            shelves[item]?.drawer?.position?.top ||
+              shelves[item]?.compartments?.position?.top ||
+              shelves[item]?.position?.top
+          );
+          items.push({
+            key: item,
+            top: top,
+          });
+        });
+        items.map((item, index) => {
+          if (index === items?.length - 1) return null;
+          if (index === items?.length - 2 && item.key.includes("compartment"))
+            return null;
+          const maxTop = parseFloat(shelfCountsAccHeight[value]?.maxTop);
+          if (item?.top > maxTop && items?.length >= 3) {
+            dispatch(
+              deleteShelf({ sectionId: activeSectionId, shelfId: item?.key })
+            );
+          }
+        });
       }
-
     }
   };
 
@@ -492,7 +512,7 @@ const DimensionsComponent = () => {
                 type="range"
                 min="0"
                 max={dimensionOptions.width.length - 1}
-                value= {dimensionOptions.width.indexOf(dimensions.width)}
+                value={dimensionOptions.width.indexOf(dimensions.width)}
                 className="dimension-slider"
                 style={calculateSliderStyle(
                   dimensions.width,
@@ -538,7 +558,7 @@ const DimensionsComponent = () => {
             </div>
           </div>
         </div>
-        <SliderShelfCounter/>
+        <SliderShelfCounter />
       </div>
     </>
   );

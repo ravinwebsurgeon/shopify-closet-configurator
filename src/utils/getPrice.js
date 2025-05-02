@@ -15,10 +15,12 @@ const getComponentPrice =({
      let key = '';
      let rawPrice = '';
     if(subtype == 'sliding_partition') key = `${depth}`
+    else if(component == 'poles') key = `${height}`
     else if(subtype?.includes("sliding_door_")) key = `${width}`
     else if(height && width) key = `${height}x${width}`
     else if(height && depth) key = `${height}x${depth}`
     else if(width && depth) key = `${width}x${depth}`
+
 
     if(material == 'metal'){
         if(subtype){
