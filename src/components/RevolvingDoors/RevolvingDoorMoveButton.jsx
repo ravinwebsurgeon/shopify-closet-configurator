@@ -32,7 +32,7 @@ const RevolvingDoorMoveButton = () => {
 
   // const handlePositionChange = (type) => {
   //   if (!isRevolvingDoorHighlighted || !revolvingDoorsAll) return;
-  //   // console.log(isRevolvingDoorHighlighted);
+  //   
   //   const doorTypeHeight = isRevolvingDoorHighlighted?.type.includes("50")
   //     ? 25
   //     : 50;
@@ -71,7 +71,6 @@ const RevolvingDoorMoveButton = () => {
   //       const fromKey = arr[index - 1];
   //       const fromTop = fromKey?.position + arr[index - 1]?.height;
   //       const top = item?.position;
-  //       console.log(top, item?.key);
   //       return {
   //         type:
   //           fromTop <= isRevolvingDoorHighlighted?.position ? "prev" : "next",
@@ -286,10 +285,6 @@ const RevolvingDoorMoveButton = () => {
   //       }
   //     }
   //   }
-  //   // console.log("findPrev", findPrev);
-  //   // console.log("findNext", findNext);
-  //   // console.log("filterNext", filterNext);
-  //   // console.log("filterPrev", filterPrev);
   // };
 
   const { filteredShelfs, filteredDoors } = useMemo(() => {
@@ -412,7 +407,6 @@ const RevolvingDoorMoveButton = () => {
     const filterPrev = spaceBetweenDoors
       .filter((item) => item.type === "prev")
       .sort((a, b) => b.toPosition - a.toPosition);
-    // console.log(spaceBetweenDoors);
     const filterNext = spaceBetweenDoors
       .filter((item) => item.type === "next")
       .sort((a, b) => a.toPosition - b.toPosition);
@@ -497,7 +491,6 @@ const RevolvingDoorMoveButton = () => {
           newPosition =
             findPrev?.toPosition - isRevolvingDoorHighlighted?.height;
         }
-        console.log(findNext);
         if (
           !findACNext &&
           type == "bottomRight" &&
@@ -533,8 +526,7 @@ const RevolvingDoorMoveButton = () => {
         }
       }
     }
-    // console.log("findACNext", findACNext);
-    // console.log("findPrev", findPrev);
+
   };
   const buttonStyle =
     "mv_btns flex items-center border border-white text-sm font-medium py-[5px] px-4 min-w-[108px] justify-center font-inter ";

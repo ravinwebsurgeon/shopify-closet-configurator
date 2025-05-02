@@ -2,11 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setShowCounter,
   updateShelvesPosition,
 } from "../../../slices/shelfDetailSlice";
 import {
-  setWoodShowCounter,
   updateWoodShelvesPosition,
 } from "../../../slices/WoodShelfDetailSlice";
 import {
@@ -15,24 +13,24 @@ import {
 } from "../../../assets/data/ConfigratorData";
 import "./ShelfCounter.css";
 
-const SliderShelfCounter = ({ onClick, showCounter }) => {
+const SliderShelfCounter = () => {
   const counterRef = useRef(null);
   const dispatch = useDispatch();
   let positionArray = [];
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
 
   const material = useSelector(
     (state) => state.shelfDetail.racks.execution.material
   );
 
   const sectionData =
-    material === "metal"
-      ? useSelector((state) => state.shelfDetail.racks.sections)
-      : useSelector((state) => state.woodShelfDetail.racks.sections);
+    material === "metal" ? metalRacks?.sections : woodRacks?.sections;
 
   const sectionId =
     material === "metal"
-      ? useSelector((state) => state.shelfDetail.racks.selectedSection)
-      : useSelector((state) => state.woodShelfDetail.racks.selectedSection);
+      ? metalRacks?.selectedSection
+      : woodRacks?.selectedSection;
 
   const currentSection = sectionData[sectionId];
 
@@ -52,10 +50,38 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
 
   useEffect(() => {
     if (currentSection) {
-      const newShelfCount = Object.keys(currentSection.shelves).length;
-      setShelfCount(newShelfCount);
+      // const newCount = getShelfCount(currentSection.shelves);
+      // if (newCount !== shelfCount && newCount >= 3) {
+      //   setShelfCount(newCount);
+      // }
     }
-  }, [currentSection, sectionId, currentSection?.shelves]);
+  }, [sectionId]);
+
+  const updatePositions = (count) => {
+    const positions = GeneratePosArr(shelfHeight, count);
+    if (material === "metal") {
+      dispatch(updateShelvesPosition({ sectionId, positionArray: positions }));
+    } else {
+      dispatch(
+        updateWoodShelvesPosition({ sectionId, positionArray: positions })
+      );
+    }
+  };
+
+  // useEffect(() => {
+  //   if (currentSection) {
+
+  //     // const newShelfCount = Object.keys(currentSection.shelves)
+  //     // .filter(key => key.startsWith('shelves_'))
+  //     // .length;
+
+
+  //     const newShelfCount = Object.keys(currentSection.shelves).length;
+  //     if (newShelfCount !== shelfCount) {
+  //       setShelfCount(newShelfCount);
+  //     }
+  //   }
+  // }, [currentSection, sectionId]);
 
   const calculateSliderStyle = (value, max, min = 3) => {
     const percentage = ((value - min) / (max - min)) * 100;
@@ -103,24 +129,6 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
   //   }
   // }, [shelfCount]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        counterRef.current &&
-        !event.target.closest(".CounterWithAddRemove_container")
-      ) {
-        if (material === "metal") {
-          dispatch(setShowCounter(false));
-        } else {
-          dispatch(setWoodShowCounter(false));
-        }
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   // Handle slider change
   const handleShelfChange = (e) => {
@@ -133,6 +141,9 @@ const SliderShelfCounter = ({ onClick, showCounter }) => {
       dispatch(updateWoodShelvesPosition({ sectionId, positionArray }));
     }
     setShelfCount(newCount);
+    updatePositions(newCount);
+    // const positionArray = GeneratePosArr(shelfHeight, newCount);
+    // dispatch(updateShelvesPosition({ sectionId, positionArray }));
   };
 
   return (

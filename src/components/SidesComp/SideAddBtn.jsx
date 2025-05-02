@@ -94,18 +94,6 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
         sideType  == 'right' &&  <SideRemoveBtn  leftPrevSide={leftPrevSide} setisHighlighted={setisHighlighted} leftSide={false} sectionKey={leftPrevSide && prevKey ? prevKey : currSection}/>
         )}
       </div>
-        {/* <ModalComponent
-          isOpen={isModalOpen}
-        >
-          <AddSide onClose={()=>setIsModalOpen(false)} side={side}/>
-        </ModalComponent> */}
-        {/* <Modal
-              isModalOpen={isModalOpen}
-              // mainHeading={"Prijsoverzicht"}
-              closeModal={()=>setIsModalOpen(prev => !prev)}
-              // children={<AddSide  side={side} />}
-        >
-        </Modal> */}
     </>
   );
 };

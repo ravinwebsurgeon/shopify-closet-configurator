@@ -26,7 +26,6 @@ function App() {
 
   return (
     <>
-      
       {!showConfigurator ? <ConfigurationFrom /> : <ShelvingConfigurator />}
       {isModalOpen && (
         <Modal

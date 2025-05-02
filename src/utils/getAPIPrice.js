@@ -19,7 +19,6 @@ const getDynamicPrice =({
     if(material == 'metal'){
         if(subtype){
             rawPrice = priceData[component]?.[subtype]?.[key];
-            console.log("price -->",component,subtype,rawPrice);
         }else{
             if(component == "topCaps"){
                 rawPrice =  priceData[component];

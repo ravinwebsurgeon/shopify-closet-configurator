@@ -188,7 +188,6 @@ const RevolvingDoors = () => {
           };
         })
         .filter(Boolean);
-      console.log(spaces);
       if (spaces) {
         const findSpace = spaces.reduce((max, curr) => {
           return !max || curr.space > max.space ? curr : max;

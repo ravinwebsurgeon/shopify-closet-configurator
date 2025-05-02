@@ -46,7 +46,7 @@ const SlidingDoorSetShelves = ({ section }) => {
   //       data: shelfDetail,
   //     });
   //   }
-  //   // console.log(sections);
+  // 
   // }, [sections]);
   // const addOrUpdateShelve = ({ revolvingDoor, position }) => {
   //   const prevShelfMoveRange = position - 10;
@@ -76,7 +76,7 @@ const SlidingDoorSetShelves = ({ section }) => {
   //     });
   //   } else if (findSutiableShelf?.length == 1) {
   //     const key = findSutiableShelf[0]?.key;
-  //     // console.log(key, position);
+  //   
   //     dispatch(
   //       updateShelvePostion({
   //         sectionId: selectedSectionKey,
@@ -101,8 +101,7 @@ const SlidingDoorSetShelves = ({ section }) => {
   //         key: "shelves_" + shelfKeys.length,
   //       };
   //     }
-  //     // console.log(getShelf);
-  //     // console.log(shelfKeys.length);
+  //     
   //     for (let i = 0; i < shelfKeys.length; i++) {
   //       const key = shelfKeys[i];
   //       const shelf = sections?.shelves[key];
@@ -193,7 +192,6 @@ const SlidingDoorSetShelves = ({ section }) => {
       });
     } else if (findSutiableShelf?.length == 1) {
       const key = findSutiableShelf[0]?.key;
-      // console.log(key, position);
       dispatch(
         updateShelvePostion({
           sectionId: selectedSectionKey,
@@ -247,7 +245,6 @@ const SlidingDoorSetShelves = ({ section }) => {
         })
       );
     }
-    console.log(findSutiableShelf);
   };
   return (
     <div

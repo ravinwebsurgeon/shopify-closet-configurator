@@ -1,3 +1,4 @@
+
 export const compartmentData = [
   {
     id: "compartment_divider_set",
@@ -186,3 +187,14 @@ export const slidingDoors = [
     notActiveWidth:85
   }
 ];
+
+export const wardrobeRod = [
+  {
+    id: "wardrode_rod",
+    image: "../../assets/wardrobe-rod.png",
+    title: "Garderobestang met dragers",
+    dimention: "",
+    price: 10.10,
+    productInformation: false,
+  },
+]
