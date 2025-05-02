@@ -1062,6 +1062,29 @@ button.compartments_wrapper__slide:nth-child(6) {
   height: 52em;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
+.scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;    
+}
+
+.Staander_Staander__rAo9j.Staander_height300 .Stander_EditingSides {
+  background-size: cover;
+  top: -7em;
+  width: 137%;
+}
+
+.Staander_Staander__rAo9j.Staander_height350 .Stander_EditingSides {
+  background-size: cover;
+  top: -7em;
+  width: 137%;
+}
+
+.Staander_Staander__rAo9j.Staander_height250 .Stander_EditingSides {
+  background-size: cover;
+  width: 10em;
 }

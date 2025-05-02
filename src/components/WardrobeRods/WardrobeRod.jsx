@@ -25,7 +25,6 @@ const WardrobeRod = () => {
         const shelftop = parseFloat(shelves[shelf]?.position?.top);
         const compartments = shelves[shelf]?.compartments;
         const rodTop = parseFloat(shelves[fromKey]?.position?.top)+2;
-        console.log("from top -->",fromTop)
         let remainingSpace = shelftop - fromTop;
         if (index === 0) return null;
         if(compartments){
@@ -42,7 +41,6 @@ const WardrobeRod = () => {
         };
       })
       .filter(Boolean);
-    console.log("spaces-->",spaces)
     // const findAvailble = spaces.find(
     //   (item) => item.remainingSpace >= 2.0 && item?.compartments
     // );
@@ -62,7 +60,6 @@ const WardrobeRod = () => {
 
   const addWardrobeRod = ()=>{
     const spaces = getAvailbleShelve();
-    console.log("Spaacess-->",spaces);
     
     if(spaces){
       dispatch(setWardrobeRod({
@@ -78,10 +75,9 @@ const WardrobeRod = () => {
 
 
   const handleCardClick = (id) => {
-    console.log(id);
-    console.log(getAvailbleShelve());
     addWardrobeRod();
   };
+  
   const openModal = () => {};
   return (
     <div className="back-data-conatiner">

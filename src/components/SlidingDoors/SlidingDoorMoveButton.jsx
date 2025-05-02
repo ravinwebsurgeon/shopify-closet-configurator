@@ -50,7 +50,6 @@ const SlidingDoorMoveButton = () => {
             : fromKey && fromKey?.key.includes("revolvingDoors_")
             ? fromKey?.height
             : 0;
-            console.log(item?.position - fromKey?.position - h)
         return {
           from: fromKey?.key,
           to: item?.key,
@@ -65,7 +64,6 @@ const SlidingDoorMoveButton = () => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
-      console.log(spaceBetweenShelves)
     const findPrev = spaceBetweenShelves?.filter(
       (item) => item.type === "prev"
     );

@@ -42,7 +42,12 @@ const DimensionsComponent = () => {
     depth:  depth || dimensionOptions.depth[0],
   });
 
-
+  const getShelfCount = (shelves) => {
+    return (
+      Object.keys(shelves || {}).filter((key) => key.startsWith("shelves_"))
+        .length || 3
+    );
+  };
 
   useEffect(() => {
     if (activeSection) {
@@ -87,6 +92,7 @@ const DimensionsComponent = () => {
 
   const shelves = activeSection?.shelves;
   const shelvesKeys = Object.keys(shelves) || [];
+
   const handleDimensionChange = (dimension, value) => {
 
     const isLeftSidewall = sections[activeSectionId].sideWall["left"].isLeft;
@@ -111,7 +117,6 @@ const DimensionsComponent = () => {
         if (index === items?.length - 1) return null;
         const maxTop = parseFloat(shelfCountsAccHeight[value]?.maxTop);
         if (item?.top > maxTop && items?.length >= 3) {
-          console.log(item?.top, maxTop);
           dispatch(
             deleteShelf({ sectionId: activeSectionId, shelfId: item?.key })
           );
@@ -329,7 +334,8 @@ const DimensionsComponent = () => {
             : null;
         const nextSection = sections[nextSectionId];
         const prevSection = sections[previousSection];
-        const shelfCount = Object.keys(updatedSection.shelves).length;
+       // const shelfCount = Object.keys(updatedSection.shelves).length;
+       const shelfCount  = getShelfCount(updatedSection.shelves)
         positions = GeneratePosArr(newValue, shelfCount);
 
         if (prevSection) {
@@ -406,7 +412,6 @@ const DimensionsComponent = () => {
       }
 
       if(material == "metal"){
-
         dispatch(
           updateLastShelvePostion({
             sectionId: activeSectionId,

@@ -226,6 +226,14 @@ const shelfDetailSlice = createSlice({
       const section = state.racks.sections[sectionId];
       if (section) {
         const updatedShelves = {};
+        //
+        // const existingShelves = section.shelves;
+
+        // Object.entries(existingShelves).forEach(([key, value]) => {
+        //   if (key.startsWith('shelves')) {
+        //     updatedShelves[key] = value;
+        //   }
+        // });
 
         positionArray.forEach((position, index) => {
           updatedShelves[`shelves_${index + 1}`] = {
@@ -491,7 +499,6 @@ const shelfDetailSlice = createSlice({
         let current = { shelfKey: shelfKey, top: top };
         const sortedArray = newArray.sort((a, b) => a.top - b.top);
         sortedArray.map((item, index) => {
-          console.log(item);
           let key = `shelves_${index + 1}`;
           if (item?.item?.drawer) {
             key = `drawer_${index + 1}`;
@@ -765,7 +772,6 @@ const shelfDetailSlice = createSlice({
       //   let current = { shelfKey: shelfKey, top: top };
       //   const sortedArray = newArray.sort((a, b) => a.top - b.top);
       //   sortedArray.map((item, index) => {
-      //     console.log(item);
       //     let key = `shelves_${index + 1}`;
       //     if (item?.item?.drawer) {
       //       key = `drawer_${index + 1}`;

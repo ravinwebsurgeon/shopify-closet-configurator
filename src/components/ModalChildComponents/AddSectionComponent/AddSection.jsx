@@ -12,7 +12,6 @@ import AddSectionDimensions from "./AddSectionDimensions";
 import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
 
 const AddSection = ({ children, onClose ,translate,setTranslate }) => {
-  console.log("Current Translate -->",translate);
   const metalRacks = useSelector((state)=>state.shelfDetail.racks);
   const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
   const material = metalRacks?.execution?.material;
@@ -21,9 +20,7 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
-
-  console.log("Total Sections -->",Object.keys(sections).length)
-
+  
   const heightArr = [
     {90:"52"},
     { 100: "57" },

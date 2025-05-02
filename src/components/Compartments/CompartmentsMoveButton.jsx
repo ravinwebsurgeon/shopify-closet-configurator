@@ -69,9 +69,6 @@ const CompartmentsMoveButton = ({ selected }) => {
         (item) =>
           item.postions == "prev" && item.space >= 12.5 && !item?.compartments
       );
-    // console.log("getSpaces--->", getSpaces);
-    // console.log("findNext--->", findNext);
-    // console.log("findPrev--->", findPrev);
     setSpaces({
       spaces: spaces,
       findPrev: findPrev,

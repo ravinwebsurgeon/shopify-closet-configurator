@@ -7,7 +7,7 @@ import HeightIcon from "../../assets/Height.svg";
 const DimensionVisualizer = ({ height, width, depth }) => {
   return (
     <>
-      <div className=" dimension-visualizer border border-[#E5E5E5] h-[68px] flex">
+      <div className=" dimension-visualizer absolute bottom-[58px]  border border-[#E5E5E5] h-[68px]  flex">
         <div className="w-[151px] border-r border-[#E5E5E5] h-[68px] flex items-center justify-center">
           <div className="flex items-center gap-[10px]">
             <div className="h-[38px] w-[38px] bg-[#F5F5F5] rounded flex items-center justify-center">

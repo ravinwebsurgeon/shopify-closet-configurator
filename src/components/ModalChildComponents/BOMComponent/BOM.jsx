@@ -16,7 +16,7 @@ const BOM = ({data,totalPrice}) => {
       {data.map((item,index)=>(
             <div className="item-container flex justify-between mb-2" key={index}>
                 <div className='flex items-center gap-2'>
-                    <div className="countdiv bg-[#EB6200] px-[10px] py-[5px] rounded-[50%] font-inter font-medium text-[12px] text-[white]">{item.quantity}</div>
+                    <div className="countdiv flex items-center justify-center h-[32px] w-[32px] bg-[#EB6200]  rounded-[50%] font-inter font-medium text-[12px] text-[white]">{item.quantity}</div>
                     <span className='font-inter font-medium text-[12px]'> x </span>
                     <div className="compLabel flex gap-2 font-inter font-medium text-[12px] items-center">
                         <span className="comlabel">{item.component}</span>

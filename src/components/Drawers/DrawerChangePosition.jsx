@@ -22,7 +22,6 @@ const DrawerChangePosition = ({ selected }) => {
 
   const { filteredShelfs } = useMemo(() => {
     if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
-    console.log(sections[selectedSectionKey]?.shelves);
     const shelfs = Object.entries(
       sections[selectedSectionKey]?.shelves || {}
     ).map(([key, value]) => ({
@@ -50,8 +49,6 @@ const DrawerChangePosition = ({ selected }) => {
   }, [selected, shelves]);
   const handlePositionChange = (type) => {
     const position = parseFloat(selected?.top);
-    // console.log("handlePositionChange", filteredShelfs);
-    console.log(selected);
     const spaceBetweenShelves = filteredShelfs
       .map((item, index, arr) => {
         if (index === 0) return null;
@@ -72,15 +69,12 @@ const DrawerChangePosition = ({ selected }) => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
-    console.log("spaceBetweenShelves", spaceBetweenShelves);
     const filterPrev = spaceBetweenShelves
       .filter((item) => item.type === "prev")
       .sort((a, b) => b.toPosition - a.toPosition);
-    // console.log(spaceBetweenDoors);
     const filterNext = spaceBetweenShelves
       .filter((item) => item.type === "next")
       .sort((a, b) => a.toPosition - b.toPosition);
-    console.log(filterNext);
     const findNext = filterNext.find(
       (item) => item.type === "next" && item?.space >= 12.5
     );
@@ -112,8 +106,6 @@ const DrawerChangePosition = ({ selected }) => {
       const currentPostion = parseFloat(
         shelves[selected.shelfkey]?.drawer?.position?.top
       );
-      console.log("findACNext", findACNext);
-      console.log("findNext", findNext);
       if (type.includes("Left")) {
         let newPostion = type.includes("top")
           ? currentPostion - 1.25
@@ -179,7 +171,6 @@ const DrawerChangePosition = ({ selected }) => {
       //   ? currentPostion - 1.25
       //   : currentPostion + 1.25;
       // let gapBtwnPrevAndCur = newPostion - prevTop;
-      // console.log(topLeft?.space);
       // if (topLeft?.space < 5 && topLeft?.space > 3.75) {
       //   gapBtwnPrevAndCur = 3.75;
       //   newPostion = newPostion - topLeft?.space;
@@ -194,7 +185,6 @@ const DrawerChangePosition = ({ selected }) => {
       //   );
       // }
       // if (gapBtwnPrevAndCur < 3.75 && topRight?.space > 12.5) {
-      //   console.log(topRight);
       //   newPostion = topRight?.shelfTop - 6.25;
       //   dispatch(
       //     updateDrawerPosition({
@@ -208,9 +198,6 @@ const DrawerChangePosition = ({ selected }) => {
       // const maxTop = parseFloat(
       //   shelfCountsAccHeight[section?.height]?.maxTop
       // );
-      // console.log(topLeft);
-      // console.log(topRight);
-      // console.log("bottomRight--->", bottomRight);
       // const key = type.includes("top") ? topLeft?.to : bottomLeft?.to;
       // const minTop =
       //   shelves[key]?.drawer?.position?.top ||
@@ -221,7 +208,7 @@ const DrawerChangePosition = ({ selected }) => {
       // const checkPrevSpace = type.includes("top")
       //   ? jumpTop >= newPostion && newPostion > 0
       //   : newPostion < maxTop && jumpTop >= newPostion;
-      // console.log(jumpTop, newPostion);
+      // 
       // if (checkPrevSpace) {
       //   dispatch(
       //     updateDrawerPosition({

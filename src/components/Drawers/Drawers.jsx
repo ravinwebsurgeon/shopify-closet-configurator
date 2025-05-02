@@ -22,7 +22,6 @@ const Drawers = () => {
 
   const { filteredShelfs } = useMemo(() => {
     if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
-    console.log(sections[selectedSectionKey]?.shelves);
     const shelfs = Object.entries(
       sections[selectedSectionKey]?.shelves || {}
     ).map(([key, value]) => ({
@@ -64,11 +63,9 @@ const Drawers = () => {
       })
       .filter(Boolean)
       .sort((a, b) => b.toPosition - a.toPosition);
-    console.log("spaceBetweenShelves", spaceBetweenShelves);
     const findSuitable = spaceBetweenShelves?.find(
       (item) => item?.space >= 12.5
     );
-    console.log("findSuitable", findSuitable);
     if (findSuitable) {
       dispatch(
         addDrawer({

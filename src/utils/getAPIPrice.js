@@ -17,12 +17,11 @@ const getDynamicPrice =({
     else if(height && depth) key = `${height}x${depth}`
     else if(width && depth) key = `${width}x${depth}`
 
-console.log("price Datazz -->",priceData);
+
 
     if(material == 'metal'){
         if(subtype){
             rawPrice = priceData[component]?.[subtype]?.[key];
-            console.log("price -->",component,subtype,rawPrice);
         }else{
             if(component == "topCaps"){
                 rawPrice =  priceData[component];
@@ -32,7 +31,6 @@ console.log("price Datazz -->",priceData);
                 rawPrice =  priceData[component]?.[key];
             }
             
-            console.log("price -->",component,rawPrice);
         }
     }
 

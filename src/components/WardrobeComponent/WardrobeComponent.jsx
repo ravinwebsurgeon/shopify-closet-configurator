@@ -5,6 +5,8 @@ import getComponentPrice from "../../utils/getPrice";
 import { addWardrobe } from "../../slices/shelfDetailSlice";
 import { toast } from "react-toastify";
 import getDynamicPrice from "../../utils/getAPIPrice";
+//import { wardrobeRod } from "../../assets/data/Compartment";
+import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 const WardrobeComponent = () => {
   const dispatch = useDispatch();
   const [wardrobeRod, setWardrobeRod] = useState("");
@@ -91,45 +93,26 @@ const WardrobeComponent = () => {
       );
     }
   };
-  return (
-    <div className="back-data-conatiner">
-      {cardData.map((data) => {
-        // const price = getComponentPrice({
-        //   material: color,
-        //   component: "wardrobe_rod",
-        //   width,
-        //   depth,
-        // });
-        const price = getDynamicPrice({
-          priceData,
-          material: color,
-          component: "wardrobe_rod",
-          width,
-          depth,
-        })
-
-        return (
-          <div
-            key={data.id}
-            className={`back-data-card ${
-              data.id === wardrobeRod ? "selected" : ""
-            }`}
-            onClick={(e) => handleCardClick(data.id)}
-          >
-            <div className="back-img">
-              <img className="back-image" src={data.imgSrc} alt="shelf_image" />
-            </div>
-            <div className="back-detail-div">
-              <span className="back-label">{data.label}</span>
-              <span className="back-dimensions">{`${
-                width - 2
-              }x ${depth} cm`}</span>
-              <span className="back-price">{price}</span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+  return (    
+    <>
+          <ItemBlock
+          productInfo={false}
+          image={wardroberod}
+          dimention={`${width - 2}x${
+            depth
+          } cm `}
+          title={"Garderobestang met dragers"}
+          price={getDynamicPrice({
+            priceData,
+            material: color,
+            component: "wardrobe_rod",
+            width,
+            depth,
+          })}
+          itemAction={(e) => handleCardClick("wardrode_rod")}
+          openModal={(e) => openModal(e)}
+        />
+    </>
   );
 };
 
