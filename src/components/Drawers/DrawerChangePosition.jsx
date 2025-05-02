@@ -17,8 +17,7 @@ const DrawerChangePosition = ({ selected }) => {
     topRight: { active: false },
     bottomLeft: { active: false },
     bottomRight: { active: false },
-  });
-  const shelvesKeys = Object.keys(shelves) || [];
+  }); 
 
   const { filteredShelfs } = useMemo(() => {
     if (!sections || !selectedSectionKey) return { filteredShelfs: [] };
