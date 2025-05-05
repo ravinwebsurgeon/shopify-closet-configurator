@@ -131,8 +131,8 @@ const ImageConfigurator = () => {
 
   const isEdtingWall = metalRacks?.isEditingBackwall;
 
-  const shelfCount = initialShelfValue.shelfCount;
-  const currShelfHeight = initialShelfValue.height;
+  const shelfCount = initialShelfValue?.shelfCount;
+  const currShelfHeight = initialShelfValue?.height;
 
   const sections =
     executionValues.material == "metal"
