@@ -70,6 +70,7 @@ const ConfigurationTab = () => {
       //API call
       const response = await axios.post('https://shopify-closet-configurator-backend.vercel.app/api/products/create',productData);
       if(response.status == 200){
+        window.parent.postMessage({ action: "addToCart", productData: response?.data?.product }, "*");
         toast.success("product successfully added to cart",{
           position: "top-center",
           autoClose: 2000,
