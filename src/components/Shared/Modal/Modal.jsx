@@ -28,7 +28,7 @@ const Modal = ({
         isOpen ? "!opacity-100" : ""
       } opacity-0`}
     >
-      <div className="w-full h-full flex justify-center items-center">
+      <div className="w-full h-full flex justify-center items-center max-tab-md:px-4">
         <div className="modal-container max-w-[600px] w-full bg-white relative rounded-[2px]">
           <div className="flex justify-between items-center py-5 px-6 border-b border-[#f2f2f2]">
             <h2 className="text-[20px] font-inter text-light-1002 font-semibold">
@@ -39,7 +39,7 @@ const Modal = ({
               <IconClose className="w-6 h-6 fill-black" />
             </button>
           </div>
-          <div className="py-6 px-10 pb-8 max-h-[calc(100dvh-90px)] overflow-auto">
+          <div className="py-6 px-10 pb-8 max-h-[calc(100dvh-90px)] overflow-auto max-tab-sm:p-4">
             {children ? (
               children
             ) : (

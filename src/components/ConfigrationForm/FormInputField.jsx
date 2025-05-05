@@ -23,7 +23,7 @@ const FormInputField = ({
 
   return (
     <div className="form-field">
-      <div className={`field-content flex items-center justify-between gap-4 ${active ? '' : 'opacity-50'}`}>
+      <div className={`field-content flex items-center justify-between gap-4 max-dex-md:gap-2 max-tab-lg:flex-col max-tab-lg:items-start ${active ? '' : 'opacity-50'}`}>
         <label className="font-inter font-semibold leading-[150%] tracking-[-2%] text-base text-black">
           {label}
         </label>

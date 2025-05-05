@@ -244,25 +244,25 @@ const ConfigurationFrom = () => {
           </div>
         </div>
       )}
-      <div className="bg-[#FAFAFA] pt-[38px] pb-[37px] pl-[25px] pr-[99px]">
-        <div className="flex justify-between items-center max-w-[1512px] mx-auto">
-          <div className="flex items-center gap-5">
+      <div className="bg-[#FAFAFA] pt-[38px] pb-[37px] pl-[25px] pr-[99px] max-dex-md:px-6">
+        <div className="flex justify-between items-center max-w-[1512px] mx-auto max-dex-md:gap-6 max-tab-lg:flex-col">
+          <div className="flex items-center gap-5 max-tab-lg:flex-col">
             <div>
               <img src="/shared/stand.png" width={276} />
             </div>
             <div>
-              <h2 className="text-black max-w-[499px] font-inter text-[46px] leading-none tracking-[-2%] font-bold">
+              <h2 className="text-black max-w-[499px] font-inter text-[46px] leading-none tracking-[-2%] font-bold max-dex-md:text-4xl max-tab-lg:text-2xl max-tab-lg:text-center">
                 Stel je eigen legbordstelling samen!
               </h2>
-              <p className="text-black font-inter max-w-[420px] text-base leading-[150%] tracking-[-2%] font-normal mt-[27px]">
+              <p className="text-black font-inter max-w-[420px] text-base leading-[150%] tracking-[-2%] font-normal mt-[27px] max-tab-lg:text-center max-tab-lg:mt-4">
                 Stel je eigen legbordstelling samen via onze handige
                 configurator!
               </p>
             </div>
           </div>
-          <div className="max-w-[499px] w-full bg-white rounded-[10px] border border-[rgba(0,0,0,0.1)]">
+          <div className="max-w-[499px] max-tab-lg:max-w-full w-full bg-white rounded-[10px] border border-[rgba(0,0,0,0.1)] ">
             <form
-              className="form-card px-[30px] pt-[30px] pb-[39px]"
+              className="form-card px-[30px] pt-[30px] pb-[39px] max-tab-lg:p-4"
               onSubmit={handleSubmit}
             >
               <div className="form-fields flex flex-col gap-[15px]">

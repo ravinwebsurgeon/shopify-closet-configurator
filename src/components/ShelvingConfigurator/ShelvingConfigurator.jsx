@@ -8,7 +8,7 @@ import ImageConfigurator from "../ImageConfigurator/ImageConfigurator";
 const ShelvingConfigurator = () => {
   return (
     <>
-      <div className="configurator-main-container py-5 flex px-[25px] pl-[99px]">
+      <div className="configurator-main-container py-5 flex px-[25px] pl-[99px] max-dex-sm:p-5 max-tab-xl:flex-col">
         <div className="configurator-right-section flex-1">
           <ImageConfigurator />
         </div>
