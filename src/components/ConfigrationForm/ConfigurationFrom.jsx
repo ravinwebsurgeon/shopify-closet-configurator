@@ -9,13 +9,22 @@ import "./ConfiguraionForm.css";
 import FormInputField from "./FormInputField";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../../assets/pointing.png";
-import { setAPIData, setConfiguration, setSection } from "../../slices/shelfDetailSlice";
+import {
+  resetState,
+  setAPIData,
+  setConfiguration,
+  setSection,
+} from "../../slices/shelfDetailSlice";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ConfigurationFrom = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const options = useSelector((state) => state.shelfDetail.options);
-  const [apiData,setApiData] = useState(null);
+  const [apiData, setApiData] = useState(null);
   const [formData, setFormData] = useState({
     height: "",
     width: "",
@@ -34,7 +43,7 @@ const ConfigurationFrom = () => {
     { 240: "127" },
     { 250: "132" },
     { 300: "157" },
-    { 350: "182" }
+    { 350: "182" },
   ];
 
   const [positionArr, setPositionArr] = useState([]);
@@ -120,46 +129,83 @@ const ConfigurationFrom = () => {
           positions,
         })
       );
+
+      // navigate to configurator
+      navigate("/configurator");
+    }
+  };
+
+  // useEffect(() => {
+  //   if(location.pathname == '/'){
+  //     dispatch(resetState());
+  //   }
+  // }, [location]);
+
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259"
+      );
+      setApiData(response.data);
+      console.log("Fetched Data -->",response.data);
+
+      const metafields = response.data.metafields;
+
+      const structuredPricing = {
+        shelves:
+          metafields.find((field) => field.key === "shelves_pricing")
+            ?.value || {},
+        poles: metafields.find((field) => field.key === "poles")?.value || {},
+        sidewall: {
+          perfo:
+            metafields.find((field) => field.key === "sidewall_perfo")
+              ?.value || {},
+          closed:
+            metafields.find((field) => field.key === "sidewall_closed")
+              ?.value || {},
+        },
+        compartment: {
+          sliding_partition:
+            metafields.find(
+              (field) => field.key === "compartment_sliding_partition_pricing"
+            )?.value || {},
+          compartment_divider_set:
+            metafields.find(
+              (field) => field.key === "compartment_divider_set"
+            )?.value || {},
+        },
+        braces: {
+          "x-brace":
+            metafields.find(
+              (field) => field.key === "braces_x_braces_pricing"
+            )?.value || {},
+          "h-brace":
+            metafields.find(
+              (field) => field.key === "braces_h_braces_pricing"
+            )?.value || {},
+        },
+        wardrobe_rod:
+          metafields.find((field) => field.key === "wardrobe_rod")?.value ||
+          {},
+        topCaps:
+          metafields.find((field) => field.key === "topcap_plastic_")
+            ?.value || {},
+        foot:
+          metafields.find((field) => field.key === "foot_plastic_pricing")
+            ?.value || {},
+      };
+      dispatch(setAPIData(structuredPricing));
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
   // used to fetch the pricing data
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259');
-        setApiData(response.data);        
-
-        const metafields = response.data.metafields;
-
-        const structuredPricing = {
-          shelves: metafields.find(field => field.key === "shelves_pricing")?.value || {},
-          poles: metafields.find(field => field.key === "poles")?.value || {},
-          sidewall: {
-            perfo: metafields.find(field => field.key === "sidewall_perfo")?.value || {},
-            closed: metafields.find(field => field.key === "sidewall_closed")?.value || {}
-          },
-          compartment:{
-            sliding_partition: metafields.find(field => field.key === "compartment_sliding_partition_pricing")?.value || {},
-            compartment_divider_set: metafields.find(field => field.key === "compartment_divider_set")?.value || {}
-          },
-          braces:{
-            "x-brace": metafields.find(field => field.key === "braces_x_braces_pricing")?.value || {},
-            "h-brace": metafields.find(field => field.key === "braces_h_braces_pricing")?.value || {}
-          },
-          wardrobe_rod: metafields.find(field => field.key === "wardrobe_rod")?.value || {},
-          topCaps: metafields.find(field => field.key === "topcap_plastic_")?.value || {},
-          foot:metafields.find(field => field.key === "foot_plastic_pricing")?.value || {},
-        };        
-        dispatch(setAPIData(structuredPricing));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    dispatch(resetState());
     fetchData();
-   
   }, []);
-
 
 
   useEffect(() => {
@@ -172,6 +218,7 @@ const ConfigurationFrom = () => {
       handleSubmit();
     }
   }, [formData]);
+
   return (
     <>
       <div className="bg-[#FAFAFA] pt-[38px] pb-[37px] pl-[25px] pr-[99px]">

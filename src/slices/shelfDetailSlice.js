@@ -67,6 +67,9 @@ const shelfDetailSlice = createSlice({
   name: "shelfDetails",
   initialState,
   reducers: {
+    resetState : (state) =>{
+      return initialState;
+    },
     setAPIData: (state, action) => {
       state.priceData = action.payload;
     },
@@ -216,13 +219,6 @@ const shelfDetailSlice = createSlice({
         300: "157",
         350: "182",
       };
-      console.log(
-        height,
-        dimension,
-        value,
-        heightArr[value],
-        positions[positions.length - 1]
-      );
       if (positions?.length > 0) {
         const shelves = state.racks.sections[sectionId].shelves;
         const shelfKeys = Object.keys(shelves);
@@ -879,6 +875,7 @@ export const {
   updateWardrobePosition,
   setAPIData,
   setSidewallSelected,
+  resetState,
 } = shelfDetailSlice.actions;
 
 // export default reducer

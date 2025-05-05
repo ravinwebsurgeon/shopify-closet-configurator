@@ -56,8 +56,6 @@ const ImageConfigurator = () => {
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
   const scrollRef = useRef(null);
-  // const[scale,setScale] = useState(0.9);
-
   const [prevSection, setPrevSection] = useState({
     key: "",
   });
@@ -117,6 +115,7 @@ const ImageConfigurator = () => {
 
   // Get the current sections height
   // const currentSectionHeight = sectionz[selectedSection]?.height || 200;
+
    const scale = calculateScale();
 
   useEffect(() => {
@@ -191,9 +190,9 @@ const ImageConfigurator = () => {
   };
 
   useEffect(() => {
-    // Calculate center position based on selected index
+    // function used to calculate center position based on selected index
     const totalSections = sectionKeys.length;
-    const centerOffset = 50; // Center of viewport
+    const centerOffset = 50;
     const sectionOffset = selectedIndex * (100 / totalSections);
     const newTranslate = centerOffset - sectionOffset;
     setTranslate(newTranslate);
@@ -506,7 +505,7 @@ const ImageConfigurator = () => {
           </button>
           <div
             ref={scrollRef}
-            className="demo-config w-[800px] overflow-hidden "
+            className="demo-config w-[800px] overflow-hidden"
             id="shelf-capture-area"
           >
             <div className="main-wrapper__ relative "
@@ -569,7 +568,7 @@ const ImageConfigurator = () => {
                           }}
                           key={index}
                         >
-                          <div className="Staander_achter__8cpuX change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -596,7 +595,7 @@ const ImageConfigurator = () => {
                               highlighted={isHighlighted.left === sectionKey}
                             />
                           )}
-                          <div className="Staander_voor__AegR3 change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
@@ -723,6 +722,7 @@ const ImageConfigurator = () => {
                                               data-key={shelfkey}
                                               data-type="shelve"
                                               style={{
+                                                filter: "brightness(0.6)",
                                                 zIndex: arr.length - index,
                                                 top: shelf.position.top,
                                               }}
@@ -896,7 +896,7 @@ const ImageConfigurator = () => {
                             />
                           )}
 
-                          <div className="Staander_achter__8cpuX change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -913,7 +913,7 @@ const ImageConfigurator = () => {
                             !sections[selectedSection].sideWall.right
                               .isRight && <EditingSides />}
 
-                          <div className="Staander_voor__AegR3 change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>

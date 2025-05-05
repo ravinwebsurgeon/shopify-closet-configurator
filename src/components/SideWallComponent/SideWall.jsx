@@ -3,7 +3,7 @@ import React from "react";
 const SideWall = ({type,height,highlighted}) => {
 
   return (
-    <div className="stander-side-wall change__color"   style={{position:"absolute"}}>
+    <div className="stander-side-wall change__color"   style={{position:"absolute", filter: brightness(0.6)}}>
         <div
         className={`Staander_Staander__rAo9j Staander_height${height}`}
         // style={{top: "100%", transform: "translateY(-100%)"}}

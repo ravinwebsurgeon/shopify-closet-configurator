@@ -343,8 +343,8 @@ const DimensionsComponent = () => {
             : null;
         const nextSection = sections[nextSectionId];
         const prevSection = sections[previousSection];
-       // const shelfCount = Object.keys(updatedSection.shelves).length;
-       const shelfCount  = getShelfCount(updatedSection.shelves)
+       const shelfCount = Object.keys(updatedSection.shelves).length;
+       //const shelfCount  = getShelfCount(updatedSection.shelves)
         positions = GeneratePosArr(newValue, shelfCount);
 
         if (prevSection) {
