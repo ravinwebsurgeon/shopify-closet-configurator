@@ -104,15 +104,20 @@ const ImageConfigurator = () => {
   const prevSectionKeysLength = useRef(sectionKeyz.length);
 
   //calculate scale based on height
-  // const calculateScale = (height) => {
-  //   if (height > 300) return 0.7;
-  //   if (height > 200 && height <= 300) return 0.9;
-  //   return 1;
-  // };
+  const calculateScale = () => {
+    const maxSectionHeight = Object.values(sectionz).reduce((max, section) => {
+      const height = parseInt(section.height, 10);
+      return height > max ? height : max;
+    }, 0);
+
+    if (maxSectionHeight > 300) return 0.7;
+    if (maxSectionHeight > 200) return 0.9;
+    return 1;
+  };
 
   // Get the current sections height
   // const currentSectionHeight = sectionz[selectedSection]?.height || 200;
-  // const scale = calculateScale(currentSectionHeight);
+   const scale = calculateScale();
 
   useEffect(() => {
     setSelectedSection(currentSelectedSection);
@@ -505,11 +510,11 @@ const ImageConfigurator = () => {
             id="shelf-capture-area"
           >
             <div className="main-wrapper__ relative "
-            //   style={{
-            //   transform: `scale(${scale})`,
-            //   transformOrigin: 'center center',
-            //   transition: 'transform 0.3s ease-in-out'
-            // }}
+              style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'center center',
+              transition: 'transform 0.3s ease-in-out'
+            }}
             >
               {/* <SectionDimensionsIndicator /> */}
               <div
