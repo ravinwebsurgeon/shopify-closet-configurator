@@ -21,7 +21,11 @@ import BOM from "../ModalChildComponents/BOMComponent/BOM";
 import { setWoodActiveTab, setWoodShowCounter } from "../../slices/WoodShelfDetailSlice";
 import SustainComponent from "../ConfigurationTabSubComponents/SustainComponent/SustainComponent";
 import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/TopCapsComponent";
-
+import html2canvas from "html2canvas";
+import { saveAs } from 'file-saver';
+import axios from "axios";
+import { getFormattedPrice } from "../../utils/getFormattedPrice";
+import { toast } from "react-toastify";
 
 const ConfigurationTab = () => {
   const metalRacks = useSelector((state) => state.shelfDetail.racks);
@@ -38,12 +42,55 @@ const ConfigurationTab = () => {
 
   const dispatch = useDispatch();
 
-  // const handleAddToCart = async() =>{
+  const handleAddToCart = async() =>{
 
-  //   const canvas = await html2canvas(document.getElementById("shelf-capture-area"));
-  //   const imageData = canvas.toDataURL('image/png');
-  //   saveAs(imageData,'shelf-design.png')
-  // }
+    try {
+      const elementToHide = document.getElementById("exclude-this");
+      if(elementToHide){
+        elementToHide.style.display = "none";
+      }
+      const canvas = await html2canvas(document.getElementById("shelf-capture-area"));
+      
+      const imageData = canvas.toDataURL('image/png');
+      elementToHide.style.display = "block";
+
+      const totalPrice = calculateTotalPrice(details, priceData);
+      
+      // prepare product data
+      const productData = {
+        title: `Custom Shelf Configuration`,
+        price: getFormattedPrice(totalPrice),
+        metafields: {
+          customData: metalRacks,
+          lineItems: generateBOM(details, priceData)
+        },
+        image: imageData
+      };
+  
+      //API call
+      const response = await axios.post('https://shopify-closet-configurator-backend.vercel.app/api/products/create',productData);
+      if(response.status == 200){
+        toast.success("product successfully added to cart",{
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          className: "!font-inter !text-[13px] ",
+        })
+      }
+      //saveAs(imageData,'shelf-design.png')
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      toast.error("Failed to add product to cart. Please try again.",{
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        className: "!font-inter !text-[13px] ",
+      })
+    }
+
+
+  }
+
 
   const handleSectionClick = (sectionKey) => {
 
@@ -121,7 +168,7 @@ const ConfigurationTab = () => {
       <div className="leftsec-comp-3">
         <div className="left-comp3-row-container p-[25px] flex justify-between items-end border-t border-[#E5E5E5]">
           <button className="add-to-cart bg-[#EB6200] py-[7px] rounded-[5px] text-white font-inter text-xs tracking-[-2%] leading-[150%] font-semibold w-full max-w-[178px]"
-            onClick={()=>generateBOM(details)}
+            onClick={handleAddToCart}
           >
             Afrekenen
           </button>

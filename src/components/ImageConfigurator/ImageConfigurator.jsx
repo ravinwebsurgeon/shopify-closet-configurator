@@ -56,8 +56,6 @@ const ImageConfigurator = () => {
   const hideDoor = useSelector((state) => state.shelfDetail.hideDoor);
 
   const scrollRef = useRef(null);
-  // const[scale,setScale] = useState(0.9);
-
   const [prevSection, setPrevSection] = useState({
     key: "",
   });
@@ -104,15 +102,21 @@ const ImageConfigurator = () => {
   const prevSectionKeysLength = useRef(sectionKeyz.length);
 
   //calculate scale based on height
-  // const calculateScale = (height) => {
-  //   if (height > 300) return 0.7;
-  //   if (height > 200 && height <= 300) return 0.9;
-  //   return 1;
-  // };
+  const calculateScale = () => {
+    const maxSectionHeight = Object.values(sectionz).reduce((max, section) => {
+      const height = parseInt(section.height, 10);
+      return height > max ? height : max;
+    }, 0);
+
+    if (maxSectionHeight > 300) return 0.7;
+    if (maxSectionHeight > 200) return 0.9;
+    return 1;
+  };
 
   // Get the current sections height
   // const currentSectionHeight = sectionz[selectedSection]?.height || 200;
-  // const scale = calculateScale(currentSectionHeight);
+
+   const scale = calculateScale();
 
   useEffect(() => {
     setSelectedSection(currentSelectedSection);
@@ -186,9 +190,9 @@ const ImageConfigurator = () => {
   };
 
   useEffect(() => {
-    // Calculate center position based on selected index
+    // function used to calculate center position based on selected index
     const totalSections = sectionKeys.length;
-    const centerOffset = 50; // Center of viewport
+    const centerOffset = 50;
     const sectionOffset = selectedIndex * (100 / totalSections);
     const newTranslate = centerOffset - sectionOffset;
     setTranslate(newTranslate);
@@ -501,15 +505,15 @@ const ImageConfigurator = () => {
           </button>
           <div
             ref={scrollRef}
-            className="demo-config w-[800px] overflow-hidden "
+            className="demo-config w-[800px] overflow-hidden"
             id="shelf-capture-area"
           >
             <div className="main-wrapper__ relative "
-            //   style={{
-            //   transform: `scale(${scale})`,
-            //   transformOrigin: 'center center',
-            //   transition: 'transform 0.3s ease-in-out'
-            // }}
+              style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'center center',
+              transition: 'transform 0.3s ease-in-out'
+            }}
             >
               {/* <SectionDimensionsIndicator /> */}
               <div
@@ -564,7 +568,7 @@ const ImageConfigurator = () => {
                           }}
                           key={index}
                         >
-                          <div className="Staander_achter__8cpuX change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -591,7 +595,7 @@ const ImageConfigurator = () => {
                               highlighted={isHighlighted.left === sectionKey}
                             />
                           )}
-                          <div className="Staander_voor__AegR3 change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
@@ -718,6 +722,7 @@ const ImageConfigurator = () => {
                                               data-key={shelfkey}
                                               data-type="shelve"
                                               style={{
+                                                filter: "brightness(0.6)",
                                                 zIndex: arr.length - index,
                                                 top: shelf.position.top,
                                               }}
@@ -891,7 +896,7 @@ const ImageConfigurator = () => {
                             />
                           )}
 
-                          <div className="Staander_achter__8cpuX change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -908,7 +913,7 @@ const ImageConfigurator = () => {
                             !sections[selectedSection].sideWall.right
                               .isRight && <EditingSides />}
 
-                          <div className="Staander_voor__AegR3 change__color">
+                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
