@@ -163,3 +163,24 @@ width: 58.5em
 .shelfRemoveBtnOver.shelfRemove_width130 {
 width: 65em
 }
+
+
+.add-to-cart {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

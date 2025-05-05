@@ -1,8 +1,9 @@
 import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
 import getDynamicPrice from "./getAPIPrice";
+import getDynamicNmPrice from "./getNormalDynamicPricing";
 
-export function calculateTotalPrice(details, priceData, format = true) {
+export function calculateTotalPrice(details, priceData) {
   let total = 0;
   let color = details.racks.execution.color;
   let sections = details.racks.sections;
@@ -30,7 +31,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
 
   // Add poles price to total
   Object.entries(polls).forEach(([height, count]) => {
-    const price = getDynamicPrice({
+    const price = getDynamicNmPrice({
       priceData,
       material: color,
       component: "poles",
@@ -50,7 +51,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
 
   // Add topcaps price
   if (details.racks.execution.topCaps == "topCaps") {
-    const topcapPrice = getDynamicPrice({
+    const topcapPrice = getDynamicNmPrice({
       priceData,
       material: color,
       component: "topCaps",
@@ -64,7 +65,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
   }
 
   // Add foot price
-  const footPrice = getDynamicPrice({
+  const footPrice = getDynamicNmPrice({
     priceData,
     material: color,
     component: "foot",
@@ -83,7 +84,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
       //   width,
       //   depth,
       // });
-      const price = getDynamicPrice({
+      const price = getDynamicNmPrice({
         priceData,
         material: color,
         component: "shelves",
@@ -112,7 +113,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
             //   depth,
             // });
 
-            const price = getDynamicPrice({
+            const price = getDynamicNmPrice({
               priceData,
               material: color,
               component: "compartment",
@@ -134,7 +135,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
       Object.entries(section.shelves).forEach(([key, item]) => {
         if (key.includes('wardrobe_')) {
           const width = section.width;
-          const price = getDynamicPrice({
+          const price = getDynamicNmPrice({
             priceData,
             material: color,
             component: 'wardrobe_rod',
@@ -183,7 +184,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
         //   height: leftRevDoorHeight == "50" ? leftRevDoorHeight : height,
         //   depth,
         // });
-        const price = getDynamicPrice({
+        const price = getDynamicNmPrice({
           priceData,
           material: color,
           component: "sidewall",
@@ -210,7 +211,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
         //   depth,
         // });
 
-        const price = getDynamicPrice({
+        const price = getDynamicNmPrice({
           priceData,
           material: color,
           component: "sidewall",
@@ -294,7 +295,7 @@ export function calculateTotalPrice(details, priceData, format = true) {
       braceType = 'h-brace';
     }
 
-    const price = getDynamicPrice({
+    const price = getDynamicNmPrice({
       priceData,
       material: color,
       component: 'braces',
@@ -304,15 +305,10 @@ export function calculateTotalPrice(details, priceData, format = true) {
     total += calculateFormattedTotalPrice(price, 1);
   });
 
-  if(format){
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(total);
-  }
-
-  return Number(total.toFixed(2));
-  
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(total);
 }

@@ -1,6 +1,5 @@
-const getDynamicPrice =({
+const getDynamicNmPrice =({
     priceData,
-    format = true,
     material = "metal",
     component="shelves",
     subtype = null,
@@ -30,15 +29,9 @@ const getDynamicPrice =({
             }
         }
     }
-    if (rawPrice != undefined && format) {
-      return new Intl.NumberFormat("nl-NL", {
-        style: "currency",
-        currency: "EUR",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(rawPrice);
+    if (rawPrice != undefined) {
+      return rawPrice;
     }
-    return Number(rawPrice).toFixed(2);
   }
 
-export default getDynamicPrice;
+export default getDynamicNmPrice;
