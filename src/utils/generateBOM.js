@@ -3,7 +3,7 @@ import getDynamicPrice from "./getAPIPrice";
 import { getRevDoorLabel } from "./getDoorLabel";
 import getComponentPrice from "./getPrice";
 
-export function generateBOM(details, priceData) {
+export function generateBOM(details, priceData,format=true) {
   const bomList = [];
   const regularShelfMap = new Map();
   const topSupportMap = new Map();
@@ -108,6 +108,7 @@ export function generateBOM(details, priceData) {
     const [width, depth] = dimensions.split("x").map(Number);
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "shelves",
       width,
@@ -121,7 +122,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${width - 2} x ${depth} cm`,
       quantity: quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -130,6 +131,7 @@ export function generateBOM(details, priceData) {
     const [width, depth] = dimensions.split("x").map(Number);
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "shelves",
       width,
@@ -143,7 +145,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${width - 2} x ${depth} cm`,
       quantity: quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -176,6 +178,7 @@ export function generateBOM(details, priceData) {
     const [height, depth] = heightDepth.split("x").map(Number);
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "sidewall",
       subtype: subType,
@@ -192,7 +195,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${height} x ${depth} cm`,
       quantity: quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -227,7 +230,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${height} x ${width - 2} cm`,
       quantity: quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -241,6 +244,7 @@ export function generateBOM(details, priceData) {
       displayDimensions = `${sizePart} cm`;
       price = getDynamicPrice({
         priceData,
+        format,
         material: color,
         component: "compartment",
         subtype: type,
@@ -252,6 +256,7 @@ export function generateBOM(details, priceData) {
       displayDimensions = `${width - 2} x ${depth} cm`;
       price = getDynamicPrice({
         priceData,
+        format,
         material: color,
         component: "compartment",
         subtype: type,
@@ -269,7 +274,7 @@ export function generateBOM(details, priceData) {
       dimensions: displayDimensions,
       quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -352,6 +357,7 @@ export function generateBOM(details, priceData) {
   poleMap.forEach((quantity, height) => {
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "poles",
       height: parseInt(height),
@@ -363,7 +369,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${height} cm`,
       quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -377,6 +383,7 @@ export function generateBOM(details, priceData) {
   if (details.racks.execution.topCaps === "topCaps") {
     const topcapPrice = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "topCaps",
       depth,
@@ -387,13 +394,14 @@ export function generateBOM(details, priceData) {
       dimensions: "(plastic)",
       quantity: totalPoles,
       unitPrice: topcapPrice,
-      totalPrice: calculateFormattedTotalPrice(topcapPrice, totalPoles),
+      totalPrice: calculateFormattedTotalPrice(topcapPrice, totalPoles,format),
     });
   }
 
   // Add foot to BOM List
   const footPrice = getDynamicPrice({
     priceData,
+    format,
     material: color,
     component: "foot",
     depth,
@@ -404,7 +412,7 @@ export function generateBOM(details, priceData) {
     dimensions: "(plastic)",
     quantity: totalPoles,
     unitPrice: footPrice,
-    totalPrice: calculateFormattedTotalPrice(footPrice, totalPoles),
+    totalPrice: calculateFormattedTotalPrice(footPrice, totalPoles,format),
   });
 
   // Add braces to BOM list
@@ -412,6 +420,7 @@ export function generateBOM(details, priceData) {
     const [braceType, width] = key.split("-");
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "braces",
       subtype: braceType === "x_brace" ? "x-brace" : "h-brace",
@@ -425,7 +434,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${width} cm`,
       quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 
@@ -434,6 +443,7 @@ export function generateBOM(details, priceData) {
     const [width, depth] = dimensions.split("x").map(Number);
     const price = getDynamicPrice({
       priceData,
+      format,
       material: color,
       component: "wardrobe_rod",
       width: Number(width),
@@ -445,7 +455,7 @@ export function generateBOM(details, priceData) {
       dimensions: `${width - 2} x ${depth} cm`,
       quantity,
       unitPrice: price,
-      totalPrice: calculateFormattedTotalPrice(price, quantity),
+      totalPrice: calculateFormattedTotalPrice(price, quantity,format),
     });
   });
 

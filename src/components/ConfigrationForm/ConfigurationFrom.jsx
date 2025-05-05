@@ -23,6 +23,9 @@ const ConfigurationFrom = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchError,setFetchError] = useState(false);
+
   const options = useSelector((state) => state.shelfDetail.options);
   const [apiData, setApiData] = useState(null);
   const [formData, setFormData] = useState({
@@ -131,7 +134,14 @@ const ConfigurationFrom = () => {
       );
 
       // navigate to configurator
-      navigate("/configurator");
+      if(fetchError){
+        navigate("/");
+        setFetchError(false);
+      }
+      else{
+        navigate('/configurator');
+      }
+      
     }
   };
 
@@ -144,6 +154,7 @@ const ConfigurationFrom = () => {
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         "https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259"
       );
@@ -198,6 +209,9 @@ const ConfigurationFrom = () => {
       dispatch(setAPIData(structuredPricing));
     } catch (error) {
       console.error("Error fetching data:", error);
+      setFetchError(true);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -221,6 +235,15 @@ const ConfigurationFrom = () => {
 
   return (
     <>
+    {isLoading && (
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-md z-50 flex items-center justify-center">
+          {/* <div className=" bg-white p-5 rounded-lg flex items-center gap-3"> */}
+          <div className=" p-5 rounded-lg flex items-center gap-3">
+            <div className="w-8 h-8 border-4 border-[#EB6200] border-t-transparent rounded-full animate-spin"></div>
+            {/* <span className="text-lg font-inter">Loading...</span> */}
+          </div>
+        </div>
+      )}
       <div className="bg-[#FAFAFA] pt-[38px] pb-[37px] pl-[25px] pr-[99px]">
         <div className="flex justify-between items-center max-w-[1512px] mx-auto">
           <div className="flex items-center gap-5">

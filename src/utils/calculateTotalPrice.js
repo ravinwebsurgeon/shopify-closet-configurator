@@ -2,7 +2,7 @@ import getComponentPrice from "./getPrice";
 import { calculateFormattedTotalPrice } from "./calculateFormattedTotalPrice";
 import getDynamicPrice from "./getAPIPrice";
 
-export function calculateTotalPrice(details, priceData) {
+export function calculateTotalPrice(details, priceData, format = true) {
   let total = 0;
   let color = details.racks.execution.color;
   let sections = details.racks.sections;
@@ -304,10 +304,15 @@ export function calculateTotalPrice(details, priceData) {
     total += calculateFormattedTotalPrice(price, 1);
   });
 
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(total);
+  if(format){
+    return new Intl.NumberFormat("nl-NL", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(total);
+  }
+
+  return Number(total.toFixed(2));
+  
 }
