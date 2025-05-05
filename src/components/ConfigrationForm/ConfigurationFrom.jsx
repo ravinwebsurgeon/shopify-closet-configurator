@@ -110,13 +110,13 @@ const ConfigurationFrom = () => {
       // action is dispatch to reducer and reducer updates the state
       const height = formData.height;
       const depth = formData.depth;
-      const shelfCount = formData.shelfCount;
+      const shelfCount = formData?.shelfCount;
       dispatch(
         setConfiguration({
           height: parseInt(formData.height),
           width: parseInt(formData.width),
           depth: parseInt(formData.depth),
-          shelfCount: parseInt(formData.shelfCount),
+          shelfCount: parseInt(formData?.shelfCount),
         })
       );
 
@@ -227,7 +227,7 @@ const ConfigurationFrom = () => {
       formData.height &&
       formData.width &&
       formData.depth &&
-      formData.shelfCount
+      formData?.shelfCount
     ) {
       handleSubmit();
     }
@@ -304,8 +304,8 @@ const ConfigurationFrom = () => {
                   icon={faLayerGroup}
                   label="Legborden"
                   name="shelfCount"
-                  value={formData.shelfCount}
-                  options={options.shelfCount}
+                  value={formData?.shelfCount}
+                  options={options?.shelfCount}
                   onChange={handleChange}
                   active={
                     formData.height && formData.width && formData.depth

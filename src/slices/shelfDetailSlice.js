@@ -86,6 +86,10 @@ const shelfDetailSlice = createSlice({
     setShowConfigurator: (state, action) => {
       state.showConfigurator = action.payload;
     },
+    setDefault: (state, action) => {
+      console.log(action.payload)
+      state.racks = action.payload;
+    },
     setSection: (state, action) => {
       const { racksCount, currShelfHeight, shelfDepth, positions } =
         action.payload;
@@ -876,6 +880,7 @@ export const {
   setAPIData,
   setSidewallSelected,
   resetState,
+  setDefault
 } = shelfDetailSlice.actions;
 
 // export default reducer
