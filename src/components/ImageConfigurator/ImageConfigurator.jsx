@@ -568,7 +568,7 @@ const ImageConfigurator = () => {
                           }}
                           key={index}
                         >
-                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
+                          <div className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -595,7 +595,7 @@ const ImageConfigurator = () => {
                               highlighted={isHighlighted.left === sectionKey}
                             />
                           )}
-                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
+                          <div className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
@@ -722,7 +722,6 @@ const ImageConfigurator = () => {
                                               data-key={shelfkey}
                                               data-type="shelve"
                                               style={{
-                                                filter: "brightness(0.6)",
                                                 zIndex: arr.length - index,
                                                 top: shelf.position.top,
                                               }}
@@ -896,7 +895,7 @@ const ImageConfigurator = () => {
                             />
                           )}
 
-                          <div style={{filter: "brightness(0.6)"}} className="Staander_achter__8cpuX change__color">
+                          <div className="Staander_achter__8cpuX change__color">
                             <div className="Staander_achterTop__nQ0aW"></div>
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
@@ -913,7 +912,7 @@ const ImageConfigurator = () => {
                             !sections[selectedSection].sideWall.right
                               .isRight && <EditingSides />}
 
-                          <div style={{filter: "brightness(0.6)"}} className="Staander_voor__AegR3 change__color">
+                          <div className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>
                             <div className="Staander_voorMiddle__O-Po9"></div>
                             <div className="Staander_voorBottom__dVzsj"></div>
