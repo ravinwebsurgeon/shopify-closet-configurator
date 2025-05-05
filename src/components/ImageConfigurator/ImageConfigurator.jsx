@@ -433,12 +433,12 @@ const ImageConfigurator = () => {
         ref={containerRef}
         className="visualFrame_container ConfiguratorEditView_visualFrame__5OS3U"
       >
-        <div className="row-container visualFrame-top">
-          <div className="addsection-div flex gap-[5px] !justify-start items-center">
-            <span className="font-inter font-medium text-[12px]">
+        <div className="row-container visualFrame-top max-dex-sm:flex-col max-dex-sm:gap-4 max-tab-sm:items-center">
+          <div className="addsection-div flex gap-[5px] !justify-start items-center ">
+            <span className="font-inter font-medium text-[12px] whitespace-nowrap">
               Selecteer sectie:
             </span>
-            <div ref={selectSectionDivRef} className="selectSectionDiv flex gap-1 w-[440px] overflow-x-auto scrollbar-hidden">
+            <div ref={selectSectionDivRef} className="selectSectionDiv flex gap-1 w-[440px] max-dex-md:max-w-[220px] max-dex-sm:max-w-[90vw] flex-1 max-dex-md:w-full overflow-x-auto scrollbar-hidden">
             {sectionKeys.map((item, index) => (
               <button
                 onClick={(e) => handleSectionClick(e, item)}
@@ -473,7 +473,7 @@ const ImageConfigurator = () => {
           </div>
           <div className="flex">
             <button
-              className=" h-[30px] mr-[10px]  py-[10px] px-[15px] cursor-pointer border border-[#C50606] bg-[#C50606] flex gap-2 items-center justify-center font-medium font-inter rounded-[5px] text-[#fff] text-[10px] disabled:cursor-not-allowed disabled:opacity-50 "
+              className=" h-[30px] mr-[10px]  py-[10px] px-[15px] whitespace-nowrap cursor-pointer border border-[#C50606] bg-[#C50606] flex gap-2 items-center justify-center font-medium font-inter rounded-[5px] text-[#fff] text-[10px] disabled:cursor-not-allowed disabled:opacity-50 "
               disabled={sectionKeys.length <= 1}
               onClick={handleSectionDelete}
             >
@@ -484,7 +484,7 @@ const ImageConfigurator = () => {
             </button>
 
             <button
-              className=" h-[30px] mr-[94px]  py-[10px] px-[15px] cursor-pointer border border-[#0665C5] bg-[#0665C5] flex gap-2 items-center justify-center font-medium font-inter rounded-[5px] text-[#fff] text-[10px]"
+              className=" h-[30px] mr-[94px] max-dex-md:mr-[45px] max-tab-sm:mr-0  py-[10px] px-[15px] whitespace-nowrap cursor-pointer border border-[#0665C5] bg-[#0665C5] flex gap-2 items-center justify-center font-medium font-inter rounded-[5px] text-[#fff] text-[10px]"
               onClick={() => setIsModalOpen(true)}
             >
               <span className="">Setie toevoegen</span>{" "}
@@ -505,7 +505,7 @@ const ImageConfigurator = () => {
           </button>
           <div
             ref={scrollRef}
-            className="demo-config w-[800px] overflow-hidden"
+            className="demo-config w-[800px] overflow-hidden max-dex-xl:w-full max-dex-xl:flex-1"
             id="shelf-capture-area"
           >
             <div className="main-wrapper__ relative "
