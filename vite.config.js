@@ -13,4 +13,8 @@ export default defineConfig({
     strictPort: true, // Ensures Vite does not switch ports
     allowedHosts: ['.ngrok-free.app'], // Allow any ngrok subdomain
   },
+  build: {
+    outDir: 'dist'
+  },
+  base: './',
 })
