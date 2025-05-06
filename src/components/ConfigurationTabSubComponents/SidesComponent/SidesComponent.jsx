@@ -63,33 +63,50 @@ stellingcode aan te geven.
     dispatch(setProductInfoModalContent(item.productInformation));
   };
   return (
-    <div className="flex flex-wrap gap-2">
-      {cardData.map((data) => (
-        <ItemBlock
-          key={data.id}
-          dimention={`${height} x ${depth} cm`}
-          image={data.imgSrc}
-          itemAction={() => handleCardClick(data.id)}
-          openModal={() => openModal(data)}
-          // price={getComponentPrice({
-          //   material: color,
-          //   component: "sidewall",
-          //   subtype: data.id,
-          //   height,
-          //   depth,
-          // })}
-          price={getDynamicPrice({
-            priceData,
-            material: color,
-            component: "sidewall",
-            subtype: data.id,
-            height,
-            depth,
-          })}
-          productInfo={data?.productInformation}
-          title={`${data.label} ${color === "black" ? "(zwart)" : ""}`}
-        />
-      ))}
+    <div className="back-data-conatainer">
+      {height < 300 && height != 120 && height != 220 ? 
+        (
+          <div className="flex flex-wrap gap-2">
+          {cardData.map((data) => (
+            <ItemBlock
+              key={data.id}
+              dimention={`${height} x ${depth} cm`}
+              image={data.imgSrc}
+              itemAction={() => handleCardClick(data.id)}
+              openModal={() => openModal(data)}
+              // price={getComponentPrice({
+              //   material: color,
+              //   component: "sidewall",
+              //   subtype: data.id,
+              //   height,
+              //   depth,
+              // })}
+              price={getDynamicPrice({
+                priceData,
+                material: color,
+                component: "sidewall",
+                subtype: data.id,
+                height,
+                depth,
+              })}
+              productInfo={data?.productInformation}
+              title={`${data.label} ${color === "black" ? "(zwart)" : ""}`}
+            />
+          ))}
+        </div>
+        )
+        :
+        (
+          <div className="sidepanel-warning font-inter font-medium">
+            <strong>Geen zijwanden beschikbaar bij deze afmeting</strong>
+            <br />
+            <p>Zijwanden zijn alleen beschikbaar bij een hoogte van:</p>
+            <br />
+            <strong>100cm - 150cm - 200cm - 250cm</strong>
+          </div>
+        )
+      }
+
     </div>
   );
 };

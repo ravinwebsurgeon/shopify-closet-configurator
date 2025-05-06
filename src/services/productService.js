@@ -45,7 +45,6 @@ export const getPriceProductById = async (id) => {
           metafields.find((field) => field.key === "foot_plastic_pricing")
             ?.value || {},
       };
-
       return { rawData: response.data, structuredPricing}
     }
   } catch (error) {

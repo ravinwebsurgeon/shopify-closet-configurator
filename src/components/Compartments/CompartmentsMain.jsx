@@ -148,7 +148,7 @@ const CompartmentsMain = () => {
       <div className="flex flex-wrap gap-2">
         {compartmentData &&
           compartmentData.map((item) =>
-            item.id == "compartment_divider_set" && dimension.depth <= 20 ? (
+            item.id == "compartment_divider_set" && (dimension.depth <= 20 ||dimension.depth > 80)  ? (
               ""
             ) : (
               <ItemBlock

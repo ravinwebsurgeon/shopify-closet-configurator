@@ -72,6 +72,7 @@ const SectionInterface = ({
     }
 
   };
+  
   const highlightedDrawer = shelfDetail?.highlightedDrawer;
   
   // const highlightedDrawer = useSelector(

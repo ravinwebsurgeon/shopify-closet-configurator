@@ -219,7 +219,7 @@ const ConfigurationFrom = () => {
   const fetchData = async() =>{
     try {
       setIsLoading(true);
-      const {rawData, structuredPricing} = await getPriceProductById("8069243011259")
+      const {rawData, structuredPricing} = await getPriceProductById("15386352714077")
       dispatch(setAPIData(structuredPricing));
     } catch (error) {
       setFetchError(true);
