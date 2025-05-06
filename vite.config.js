@@ -7,6 +7,7 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig({
   plugins: [react(), tailwindcss(),svgr()],
   server: {
+    historyApiFallback: true,
     host: true, // Ensures the server binds to all network interfaces
     port: 5173, // Use your Vite port
     strictPort: true, // Ensures Vite does not switch ports
