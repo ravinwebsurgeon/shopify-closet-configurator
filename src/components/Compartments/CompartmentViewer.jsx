@@ -16,7 +16,6 @@ const CompartmentViewer = ({
       data-type="compartment"
       className={`Legbord_Legbord__Outer change__color !absolute w-full Legbord__${shelf?.compartments?.type}`}
       style={{
-        filter: brightness(0.6),
         zIndex: arr.length - index,
         top: shelf?.compartments.position.top,
       }}

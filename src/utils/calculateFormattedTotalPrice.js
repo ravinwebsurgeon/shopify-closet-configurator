@@ -15,7 +15,10 @@ export function calculateFormattedTotalPrice(formattedPrice, quantity ,format= t
   
     const total = rawNumber * quantity;
   
+    if(format){
+      return total
+    }
+    return parseFloat(total).toFixed(2)
     
-    return total
   }
   

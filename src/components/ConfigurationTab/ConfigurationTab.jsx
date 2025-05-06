@@ -29,6 +29,7 @@ import { saveAs } from "file-saver";
 import axios from "axios";
 import { getFormattedPrice } from "../../utils/getFormattedPrice";
 import { toast } from "react-toastify";
+import { createProduct } from "../../services/productService";
 
 const ConfigurationTab = () => {
   const [loading, setLoading] = useState(false);
@@ -74,13 +75,14 @@ const ConfigurationTab = () => {
         },
         image: imageData,
       };
-     // console.log("PRODUCT DATA -->",productData)
+      console.log("PRODUCT DATA -->",productData)
       //API call
-      const response = await axios.post(
-        "https://shopify-closet-configurator-backend.vercel.app/api/products/create",
-        productData
-      );
-      if (response.status == 200) {
+      // const response = await axios.post(
+      //   "https://shopify-closet-configurator-backend.vercel.app/api/products/create",
+      //   productData
+      // );
+      const response = await createProduct(productData);
+      if (response?.status == 200) {
         window.parent.postMessage(
           { action: "addToCart", productData: response?.data?.product },
           "*"
