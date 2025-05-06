@@ -13,8 +13,10 @@ const ShelvingConfigurator = () => {
   const [searchParams] = useSearchParams();
   const term = searchParams.get("data");
   if(term){
+    console.log(term)
   const parsedData = JSON.parse(term);
-
+  console.log(parsedData)  
+  
   dispatch(setDefault(parsedData?.data));
   }
 
