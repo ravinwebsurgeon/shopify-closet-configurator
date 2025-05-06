@@ -11,6 +11,8 @@ import {
   setEditingBackwall,
   setEditingSides,
   setHideDoor,
+  setIsWardrobeHighlighted,
+  updateSectionDimensions,
   updateSideWall,
 } from "../../slices/shelfDetailSlice";
 import SectionDimensionsIndicator from "../SectionDimensionsIndicator/SectionDimensionsIndicator";
@@ -235,11 +237,29 @@ const ImageConfigurator = () => {
         })
       );
     }
+    dispatch(deleteSection(currentSelectedSection));
+
+    if(prevSectionId){
+
+        if(sections[prevSectionId].height < selectedSection.standHeight){
+
+          const nextSectionExists = nextSectionId && sections[nextSectionId];
+
+          const newHeight = nextSectionExists && sections[nextSectionId].height > selectedSection.height
+            ? sections[nextSectionId].height
+            : sections[prevSectionId].height;
+
+          dispatch(updateSectionDimensions({
+            sectionId: prevSectionId,
+            dimension: "standHeight",
+            value: newHeight
+          }))
+        }
+    }
     dispatch(
       setCurrSelectedSection(prevSectionId ? prevSectionId : nextSectionId)
     );
 
-    dispatch(deleteSection(currentSelectedSection));
   };
 
   const handleSidewallLeftBtnClick = (e, sectionkey) => {
@@ -323,6 +343,7 @@ const ImageConfigurator = () => {
         setBackWallSelectedSection("");
         dispatch(setCompartmentHighlighted(""));
         dispatch(setDrawerHighlighted(""));
+        dispatch(setIsWardrobeHighlighted(""));
         dispatch(setHideDoor(false));
       }
     };
@@ -478,7 +499,7 @@ const ImageConfigurator = () => {
               onClick={handleSectionDelete}
             >
               <span className="">Deze sectie verwijderen</span>{" "}
-              <span className="font-inter font-light leading-none tracking-normal text-[#fff] mt-[-5px]">
+              <span className="font-inter font-light leading-none tracking-normal text-[#fff]">
                 <FontAwesomeIcon icon={faTrash} />
               </span>
             </button>
@@ -900,17 +921,31 @@ const ImageConfigurator = () => {
                             <div className="Staander_achterMiddle__XrxPJ"></div>
                             <div className="Staander_achterBottom__YRp6n"></div>
                           </div>
-                          {prevSection.key == sectionKey &&
+                          {/* {prevSection.key == sectionKey &&
                             editingSides &&
                             !sections[selectedSection].sideWall.right.isRight &&
                             !(
                               prevSection?.key &&
                               sections[prevSection.key]?.sideWall.right.isRight
-                            ) && <EditingSides />}
-                          {selectedSection == sectionKey &&
+                            ) && <EditingSides />} */}
+                            {prevSection.key == sectionKey &&
+                              prevSection?.key &&
+                              editingSides &&
+                              !sections[prevSection.key]?.sideWall.right.isRight &&
+                              <EditingSides />
+                            }
+                            {
+                              selectedSection === sectionKey &&
+                              editingSides &&
+                              !sections[selectedSection]?.sideWall.right.isRight &&
+                              <EditingSides />
+                            }
+
+
+                          {/* {selectedSection == sectionKey &&
                             editingSides &&
-                            !sections[selectedSection].sideWall.right
-                              .isRight && <EditingSides />}
+                            (!sections[selectedSection].sideWall.right
+                              .isRight) && <EditingSides />} */}
 
                           <div className="Staander_voor__AegR3 change__color">
                             <div className="Staander_voorTop__1m0QA"></div>

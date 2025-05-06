@@ -17,7 +17,8 @@ const AddSide = ({ onClose, side }) => {
   );
   const currType = useSelector((state) => state.shelfDetail.selectedSideWall);
   const sections = useSelector((state) => state.shelfDetail.racks.sections);
-  const heightOptions = [50, ...height];
+  // const heightOptions = [50, ...height];
+  const heightOptions = [100,150,200,250]
   const [selectedHeight, setSelectedHeight] = useState(null);
 
   const handleSelectedHeight = (e, height) => {

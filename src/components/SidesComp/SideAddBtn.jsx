@@ -52,7 +52,7 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
           <button
             type="button"
             className="AddRemove_button arrow_cstm leftArrow Section_removeAccessoireButtonLeft"
-            style={{ top: "25em", left: "-62px" }}
+            style={{ top: height > 300 ? "-87em":"25em", left: height>300? "-74px" :"-62px" }}
             onClick={(e) => handleLeftSideClick(e)}
           >
             <i
@@ -75,7 +75,7 @@ const SideAddBtn = ({ height, width, prevKey, sideType, setisHighlighted }) => {
           <button
             type="button"
             className="AddRemove_button arrow_cstm rightArrow Section_removeAccessoireButton"
-            style={{ top: "25em", right: "-14px" }}
+            style={{ top: height > 300 ? "-87em":"25em", right: "-14px" }}
             onClick={(e) => handleRightSideClick(e)}
           >
             <i
