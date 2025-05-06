@@ -72,7 +72,7 @@ const ExecutionComponent = () => {
           topCapsOptions[0]
       );
       setSelectedMaterial(
-        materialOptions.find((mat) => mat.type === executionDetails.material) ||
+        materialOptions.find((mat) => mat.type === executionDetails?.material) ||
           materialOptions[0]
       );
       setSelectedColor(
@@ -134,7 +134,7 @@ const ExecutionComponent = () => {
   return (
     <>
       <div className="execution-content">
-        {executionDetails.material == "metal" && (
+        {executionDetails?.material == "metal" && (
                   <div className="feet-container">
                   <span className="feet-label execution-label">Voetjes</span>
                   <div className="grid grid-cols-2 gap-2">
@@ -178,7 +178,7 @@ const ExecutionComponent = () => {
           </div>
         </div> */}
         {/* top caps component */}
-        {/* {executionDetails.material == "metal" && (
+        {/* {executionDetails?.material == "metal" && (
                   <div className="topcaps-container">
                   <span className="topcaps-label execution-label">Topdoppen</span>
                   <div className="topcaps-label-div mt-2">
@@ -222,7 +222,7 @@ const ExecutionComponent = () => {
         </div> */}
 
         {/* Color select component */}
-        {/* {executionDetails.material == "metal" && (
+        {/* {executionDetails?.material == "metal" && (
                   <div className="color-cotainer execution-select-container">
                   <span className="color-label execution-label">Kleur</span>
                   <select
