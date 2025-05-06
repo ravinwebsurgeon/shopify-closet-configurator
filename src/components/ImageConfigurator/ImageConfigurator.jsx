@@ -83,17 +83,17 @@ const ImageConfigurator = () => {
   const executionValues = metalRacks?.execution;
 
   const initialShelfValue =
-    executionValues.material == "metal" ? metalConfig : woodConfig;
+    executionValues?.material == "metal" ? metalConfig : woodConfig;
 
   const currentSelectedSection =
-    executionValues.material == "metal"
+    executionValues?.material == "metal"
       ? metalRacks.selectedSection
       : woodRacks.selectedSection;
 
   const [selectedSection, setSelectedSection] = useState("");
 
   const sectionz =
-  executionValues.material == "metal"
+  executionValues?.material == "metal"
     ? metalRacks.sections
     : woodRacks.sections;
 
@@ -125,7 +125,7 @@ const ImageConfigurator = () => {
   const [selectedShelf, setSelectedShelf] = useState(null);
 
   const newInitialValue =
-    executionValues.material == "metal" ? metalRacks : woodRacks;
+    executionValues?.material == "metal" ? metalRacks : woodRacks;
 
   const editingSides = metalRacks?.isEditingSides;
 
@@ -135,7 +135,7 @@ const ImageConfigurator = () => {
   const currShelfHeight = initialShelfValue?.height;
 
   const sections =
-    executionValues.material == "metal"
+    executionValues?.material == "metal"
       ? metalRacks.sections
       : woodRacks.sections;
 
@@ -153,7 +153,7 @@ const ImageConfigurator = () => {
       const newSectionKey = sectionKeys[newIndex];
       setSelectedSection(newSectionKey);
 
-      if (executionValues.material === "metal") {
+      if (executionValues?.material === "metal") {
         dispatch(setCurrSelectedSection(newSectionKey));
       } else {
         dispatch(setCurrSelectedWoodSection(newSectionKey));
@@ -174,7 +174,7 @@ const ImageConfigurator = () => {
       setSelectedIndex(newIndex);
       const newSectionKey = sectionKeys[newIndex];
       setSelectedSection(newSectionKey);
-      if (executionValues.material === "metal") {
+      if (executionValues?.material === "metal") {
         dispatch(setCurrSelectedSection(newSectionKey));
       } else {
         dispatch(setCurrSelectedWoodSection(newSectionKey));
@@ -350,7 +350,7 @@ const ImageConfigurator = () => {
       setSelectedIndex(index);
     }
 
-    if (executionValues.material == "metal") {
+    if (executionValues?.material == "metal") {
       dispatch(setCurrSelectedSection(sectionKey));
     } else {
       dispatch(setCurrSelectedWoodSection(sectionKey));
@@ -395,7 +395,7 @@ const ImageConfigurator = () => {
     .sort((a, b) => b - a)[0];
 
   const depth =
-    executionValues.material == "metal" ? metalRacks.depth : woodRacks.depth;
+    executionValues?.material == "metal" ? metalRacks.depth : woodRacks.depth;
 
   useEffect(() => {
     setIsShelfSelected((prev) => ({
@@ -542,18 +542,18 @@ const ImageConfigurator = () => {
                           className={`Staander_Staander__rAo9j Visual_animating__a8ZaU 
                                       ${
                                         executionValues.color === "black" &&
-                                        executionValues.material == "metal"
+                                        executionValues?.material == "metal"
                                           ? "Staander_black"
                                           : ""
                                       } 
                                       ${
                                         executionValues.topCaps === "topCaps" &&
-                                        executionValues.material == "metal"
+                                        executionValues?.material == "metal"
                                           ? "Staander_hasTopdoppen"
                                           : ""
                                       } 
                                       ${
-                                        executionValues.material == "metal"
+                                        executionValues?.material == "metal"
                                           ? "Staander_metal "
                                           : "Staander_wood"
                                       }
@@ -650,7 +650,7 @@ const ImageConfigurator = () => {
                                   : ""
                               } 
                               ${
-                                executionValues.material == "metal"
+                                executionValues?.material == "metal"
                                   ? "Section_metal__c "
                                   : "Section_wood"
                               }
@@ -729,7 +729,7 @@ const ImageConfigurator = () => {
                                               <button
                                                 className={`Legbord_Legbord__k51II Section_legbord__n3SHS  
                                                           ${
-                                                            executionValues.material ==
+                                                            executionValues?.material ==
                                                             "wood"
                                                               ? "Legboard_wood"
                                                               : ""
@@ -737,7 +737,7 @@ const ImageConfigurator = () => {
                                                           ${
                                                             executionValues.color ===
                                                               "black" &&
-                                                            executionValues.material ==
+                                                            executionValues?.material ==
                                                               "metal"
                                                               ? "Legbord_black"
                                                               : "Legbord_metal"
@@ -807,7 +807,7 @@ const ImageConfigurator = () => {
                                 <EditingBack />
                               )}
 
-                            {(executionValues.material == "wood" ||
+                            {(executionValues?.material == "wood" ||
                               ((getMaxHeight() ||
                                 (index % 4 === 0 &&
                                   sections[sectionKey].height > 100)) &&
@@ -867,7 +867,7 @@ const ImageConfigurator = () => {
                       : ""
                   }
                   ${
-                    executionValues.material == "metal"
+                    executionValues?.material == "metal"
                       ? "Staander_metal "
                       : "Staander_wood"
                   } 

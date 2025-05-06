@@ -37,7 +37,7 @@ const ConfigurationTab = () => {
   const metalShelfDetail = useSelector((state) => state.shelfDetail);
   const woodShelfDetail = useSelector((state) => state.woodShelfDetail);
   const priceData = metalShelfDetail?.priceData;
-  const material = metalRacks?.execution.material;
+  const material = metalRacks?.execution?.material;
   const activeTab =
     material == "metal" ? metalRacks?.activeTab : woodRacks?.activeTab;
   const details = material == "metal" ? metalShelfDetail : woodShelfDetail;

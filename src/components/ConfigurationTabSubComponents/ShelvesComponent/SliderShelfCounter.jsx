@@ -21,7 +21,7 @@ const SliderShelfCounter = () => {
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
 
   const material = useSelector(
-    (state) => state.shelfDetail.racks.execution.material
+    (state) => state.shelfDetail.racks.execution?.material
   );
 
   const sectionData =

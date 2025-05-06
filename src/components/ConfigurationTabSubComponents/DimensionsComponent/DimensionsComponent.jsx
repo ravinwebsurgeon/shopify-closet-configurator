@@ -24,7 +24,7 @@ const DimensionsComponent = () => {
   const dispatch = useDispatch();
   const configuration = useSelector((state) => state.shelfDetail.configuration);
   const material = useSelector(
-    (state) => state.shelfDetail.racks.execution.material
+    (state) => state.shelfDetail.racks.execution?.material
   );
   const metalRacks = useSelector((state) => state.shelfDetail.racks);
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
