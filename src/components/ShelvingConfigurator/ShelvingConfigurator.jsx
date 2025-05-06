@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setDefault } from "../../slices/shelfDetailSlice";
 
 const ShelvingConfigurator = () => {
+  console.log("ShelvingConfigurator component rendered");
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const term = searchParams.get("data");
