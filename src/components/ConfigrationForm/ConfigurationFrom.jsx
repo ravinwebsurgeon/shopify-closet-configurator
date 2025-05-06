@@ -17,6 +17,7 @@ import {
 } from "../../slices/shelfDetailSlice";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getPriceProductById } from "../../services/productService";
 
 const ConfigurationFrom = () => {
   const dispatch = useDispatch();
@@ -152,71 +153,84 @@ const ConfigurationFrom = () => {
   // }, [location]);
 
 
-  const fetchData = async () => {
+  // const fetchData = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await axios.get(
+  //       "https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259"
+  //     );
+  //     setApiData(response.data);
+  //     console.log("Fetched Data -->",response.data);
+
+  //     const metafields = response.data.metafields;
+
+  //     const structuredPricing = {
+  //       shelves:
+  //         metafields.find((field) => field.key === "shelves_pricing")
+  //           ?.value || {},
+  //       poles: metafields.find((field) => field.key === "poles")?.value || {},
+  //       sidewall: {
+  //         perfo:
+  //           metafields.find((field) => field.key === "sidewall_perfo")
+  //             ?.value || {},
+  //         closed:
+  //           metafields.find((field) => field.key === "sidewall_closed")
+  //             ?.value || {},
+  //       },
+  //       compartment: {
+  //         sliding_partition:
+  //           metafields.find(
+  //             (field) => field.key === "compartment_sliding_partition_pricing"
+  //           )?.value || {},
+  //         compartment_divider_set:
+  //           metafields.find(
+  //             (field) => field.key === "compartment_divider_set"
+  //           )?.value || {},
+  //       },
+  //       braces: {
+  //         "x-brace":
+  //           metafields.find(
+  //             (field) => field.key === "braces_x_braces_pricing"
+  //           )?.value || {},
+  //         "h-brace":
+  //           metafields.find(
+  //             (field) => field.key === "braces_h_braces_pricing"
+  //           )?.value || {},
+  //       },
+  //       wardrobe_rod:
+  //         metafields.find((field) => field.key === "wardrobe_rod")?.value ||
+  //         {},
+  //       topCaps:
+  //         metafields.find((field) => field.key === "topcap_plastic_")
+  //           ?.value || {},
+  //       foot:
+  //         metafields.find((field) => field.key === "foot_plastic_pricing")
+  //           ?.value || {},
+  //     };
+  //     dispatch(setAPIData(structuredPricing));
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setFetchError(true);
+  //   }finally{
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const fetchData = async() =>{
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        "https://shopify-closet-configurator-backend.vercel.app/api/products/8069243011259"
-      );
-      setApiData(response.data);
-      console.log("Fetched Data -->",response.data);
-
-      const metafields = response.data.metafields;
-
-      const structuredPricing = {
-        shelves:
-          metafields.find((field) => field.key === "shelves_pricing")
-            ?.value || {},
-        poles: metafields.find((field) => field.key === "poles")?.value || {},
-        sidewall: {
-          perfo:
-            metafields.find((field) => field.key === "sidewall_perfo")
-              ?.value || {},
-          closed:
-            metafields.find((field) => field.key === "sidewall_closed")
-              ?.value || {},
-        },
-        compartment: {
-          sliding_partition:
-            metafields.find(
-              (field) => field.key === "compartment_sliding_partition_pricing"
-            )?.value || {},
-          compartment_divider_set:
-            metafields.find(
-              (field) => field.key === "compartment_divider_set"
-            )?.value || {},
-        },
-        braces: {
-          "x-brace":
-            metafields.find(
-              (field) => field.key === "braces_x_braces_pricing"
-            )?.value || {},
-          "h-brace":
-            metafields.find(
-              (field) => field.key === "braces_h_braces_pricing"
-            )?.value || {},
-        },
-        wardrobe_rod:
-          metafields.find((field) => field.key === "wardrobe_rod")?.value ||
-          {},
-        topCaps:
-          metafields.find((field) => field.key === "topcap_plastic_")
-            ?.value || {},
-        foot:
-          metafields.find((field) => field.key === "foot_plastic_pricing")
-            ?.value || {},
-      };
+      const {rawData, structuredPricing} = await getPriceProductById("8069243011259")
       dispatch(setAPIData(structuredPricing));
     } catch (error) {
-      console.error("Error fetching data:", error);
       setFetchError(true);
     }finally{
       setIsLoading(false);
     }
-  };
+  }
 
   // used to fetch the pricing data
   useEffect(() => {
+    setFetchError(false);
     dispatch(resetState());
     fetchData();
   }, []);
