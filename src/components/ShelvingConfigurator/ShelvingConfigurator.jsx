@@ -9,16 +9,11 @@ import { useDispatch } from "react-redux";
 import { setDefault } from "../../slices/shelfDetailSlice";
 
 const ShelvingConfigurator = () => {
-  console.log("ShelvingConfigurator component rendered");
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const term = searchParams.get("data");
-  console.log(term)
   if(term){
- 
   const parsedData = JSON.parse(term);
-  console.log(parsedData)  
-  
   dispatch(setDefault(parsedData?.data));
   }
 

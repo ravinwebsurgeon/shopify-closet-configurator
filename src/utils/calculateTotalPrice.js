@@ -215,7 +215,8 @@ export function calculateTotalPrice(details, priceData, format = true) {
           material: color,
           component: "sidewall",
           subtype: subType,
-          height: rightRevDoorHeight == "50" ? rightRevDoorHeight : height,
+          // height: rightRevDoorHeight == "50" ? rightRevDoorHeight : height,
+          height: rightRevDoorHeight < height ? rightRevDoorHeight : height,
           depth,
         });
 

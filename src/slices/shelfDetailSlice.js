@@ -4,9 +4,10 @@ import cryptoRandomString from "crypto-random-string";
 const initialState = {
   configuration: null,
   priceData: null,
+  isDeleteModalOpen:false,
   showConfigurator: false,
   options: {
-    height: [100, 120, 150, 200, 220, 250, 300, 350],
+    height: [100, 120, 150,180, 200, 220, 250, 300, 350],
     width: [
       55, 70, 85, 100, 115, 130, 155, 170, 200, 230, 255, 260, 270, 285, 300,
       355, 390, 400, 500, 600, 700, 800, 900, 1000,
@@ -70,6 +71,9 @@ const shelfDetailSlice = createSlice({
     resetState : (state) =>{
       return initialState;
     },
+    openDeleteModal:(state,action)=>{
+      state.isDeleteModalOpen = action.payload;
+    },
     setAPIData: (state, action) => {
       state.priceData = action.payload;
     },
@@ -87,7 +91,6 @@ const shelfDetailSlice = createSlice({
       state.showConfigurator = action.payload;
     },
     setDefault: (state, action) => {
-      console.log(action.payload)
       state.racks = action.payload;
     },
     setSection: (state, action) => {
@@ -160,7 +163,7 @@ const shelfDetailSlice = createSlice({
       const { sectionId, dimension, value, positions } = action.payload;
       if (dimension === "depth") {
         state.racks.depth = value;
-        if (value <= 20) {
+        if (value <= 20 ) {
           const shelves = state.racks.sections[sectionId].shelves;
           const shelfKeys = Object.keys(shelves).sort((a, b) => {
             return (
@@ -173,12 +176,13 @@ const shelfDetailSlice = createSlice({
 
             if (
               key.startsWith("compartment_") &&
-              item?.compartments?.type == "compartment_divider_set"
+              item?.compartments?.type == "compartment_divider_set" ||
+              item?.compartments?.type == "sliding_partition"
             ) {
               delete shelves[key];
             }
           });
-        } else if (value > 60) {
+        } else if (value > 80) {
           const shelves = state.racks.sections[sectionId].shelves;
           const shelfKeys = Object.keys(shelves).sort((a, b) => {
             return (
@@ -821,6 +825,17 @@ const shelfDetailSlice = createSlice({
       //   };
       // }
     },
+    removeAllWardrobeRods: (state, action) => {
+      const { sectionId } = action.payload;
+      const shelves = state.racks.sections[sectionId].shelves;
+      if (shelves) {
+        Object.keys(shelves).forEach((key) => {
+          if (key.startsWith("wardrobe_")) {
+            delete shelves[key];
+          }
+        });
+      }
+    },
   },
 });
 
@@ -880,7 +895,9 @@ export const {
   setAPIData,
   setSidewallSelected,
   resetState,
-  setDefault
+  setDefault,
+  removeAllWardrobeRods,
+  openDeleteModal
 } = shelfDetailSlice.actions;
 
 // export default reducer
