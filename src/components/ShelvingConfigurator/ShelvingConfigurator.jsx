@@ -12,11 +12,14 @@ const ShelvingConfigurator = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const term = searchParams.get("data");
-  if(term){
-  const parsedData = JSON.parse(term);
-  dispatch(setDefault(parsedData?.data));
+  const defaultData = searchParams.get("default");
+  if (term) {
+    const parsedData = JSON.parse(term);
+    dispatch(setDefault(parsedData?.data));
   }
-
+  if (defaultData) {
+    console.log(defaultData);
+  }
   return (
     <>
       <div className="configurator-main-container py-5 flex px-[25px] pl-[99px] max-dex-sm:p-5 max-tab-xl:flex-col">

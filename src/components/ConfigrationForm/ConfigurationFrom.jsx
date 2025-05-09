@@ -25,7 +25,7 @@ const ConfigurationFrom = () => {
   const location = useLocation();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [fetchError,setFetchError] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   const options = useSelector((state) => state.shelfDetail.options);
   const [apiData, setApiData] = useState(null);
@@ -135,14 +135,12 @@ const ConfigurationFrom = () => {
       );
 
       // navigate to configurator
-      if(fetchError){
+      if (fetchError) {
         navigate("/");
         setFetchError(false);
+      } else {
+        navigate("/configurator");
       }
-      else{
-        navigate('/configurator');
-      }
-      
     }
   };
 
@@ -151,7 +149,6 @@ const ConfigurationFrom = () => {
   //     dispatch(resetState());
   //   }
   // }, [location]);
-
 
   // const fetchData = async () => {
   //   try {
@@ -216,17 +213,19 @@ const ConfigurationFrom = () => {
   //   }
   // };
 
-  const fetchData = async() =>{
+  const fetchData = async () => {
     try {
       setIsLoading(true);
-      const {rawData, structuredPricing} = await getPriceProductById("15386352714077")
+      const { rawData, structuredPricing } = await getPriceProductById(
+        "15386352714077"
+      );
       dispatch(setAPIData(structuredPricing));
     } catch (error) {
       setFetchError(true);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   // used to fetch the pricing data
   useEffect(() => {
@@ -235,7 +234,6 @@ const ConfigurationFrom = () => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     if (
       formData.height &&
@@ -243,13 +241,23 @@ const ConfigurationFrom = () => {
       formData.depth &&
       formData?.shelfCount
     ) {
-      handleSubmit();
+      window.parent.postMessage(
+        {
+          action: "hitLink",
+          height: formData.height,
+          width: formData.width,
+          depth: formData.depth,
+          shelfCount: formData.shelfCount,
+        },
+        "*"
+      );
+      // handleSubmit();
     }
   }, [formData]);
 
   return (
     <>
-    {isLoading && (
+      {isLoading && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-md z-50 flex items-center justify-center">
           {/* <div className=" bg-white p-5 rounded-lg flex items-center gap-3"> */}
           <div className=" p-5 rounded-lg flex items-center gap-3">
