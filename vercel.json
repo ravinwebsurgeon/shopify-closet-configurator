@@ -1,16 +1,10 @@
 {
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
-  ],
-  "headers": [
+    { "src": "/.*", "dest": "/index.html" },
     {
-      "source": "/(.*)",
+      "src": "/(.*)",
       "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "ALLOWALL"
-        },
+        { "key": "X-Frame-Options", "value": "ALLOWALL" },
         {
           "key": "Content-Security-Policy",
           "value": "frame-ancestors https://www.bedrijfsinrichtingnederland.nl"
