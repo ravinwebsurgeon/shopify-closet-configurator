@@ -84,7 +84,7 @@ const ShelvingConfigurator = () => {
           }
         }
       };
-
+ 
       findCombination(totalWidth);
 
       if (Number(totalWidth) === 230) return [115, 115];
