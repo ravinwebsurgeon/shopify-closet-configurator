@@ -244,10 +244,10 @@ const ConfigurationFrom = () => {
       window.parent.postMessage(
         {
           action: "hitLink",
-          height: formData.height,
+          data: {height: formData.height,
           width: formData.width,
           depth: formData.depth,
-          shelfCount: formData.shelfCount,
+          shelfCount: formData.shelfCount,}
         },
         "*"
       );
