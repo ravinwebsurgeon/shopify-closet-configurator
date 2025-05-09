@@ -89,18 +89,18 @@ const WardrobeComponent = () => {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: true,
+          className: "!font-inter !text-[13px] ",
         }
       );
     }
   };
-  return (    
+  return (
     <>
-          <ItemBlock
+      {(width > 70 && width != 115) && depth > 20 ? (
+        <ItemBlock
           productInfo={false}
           image={wardroberod}
-          dimention={`${width - 2}x${
-            depth
-          } cm `}
+          dimention={`${width - 2}x${depth} cm `}
           title={"Garderobestang met dragers"}
           price={getDynamicPrice({
             priceData,
@@ -112,6 +112,25 @@ const WardrobeComponent = () => {
           itemAction={(e) => handleCardClick("wardrode_rod")}
           openModal={(e) => openModal(e)}
         />
+      ) : (
+        <div className="sidepanel-warning font-inter text-[14px] font-medium">
+          <strong>
+            Geen garderobestangen beschikbaar bij deze afmeting (d.w.z. de
+            huidige breedte en diepte).
+          </strong>
+          <br />
+          <p>
+            Garderobestangen zijn alleen beschikbaar bij specifieke dieptes en
+            breedtes:
+          </p>
+          <br />
+          <strong>
+            Dieptes: 30cm - 40cm - 50cm - 60cm - 70cm - 80cm - 100cm
+          </strong>
+          <br />
+          <strong>Breedtes: 85cm - 100cm - 130cm</strong>
+        </div>
+      )}
     </>
   );
 };

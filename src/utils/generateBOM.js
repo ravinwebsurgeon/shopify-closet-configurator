@@ -164,7 +164,7 @@ export function generateBOM(details, priceData,format=true) {
       if (section.sideWall.right.isRight) {
         const subType = section.sideWall.right.type;
         rightRevDoorHeight = section.sideWall.right.height;
-        const heightToUse = rightRevDoorHeight == "50" ? 50 : section.height;
+        const heightToUse = rightRevDoorHeight <section.height ? rightRevDoorHeight : section.height;
         const dimensionKey = `${heightToUse}x${depth}-${subType}`;
         const count = sidewallMap.get(dimensionKey) || 0;
         sidewallMap.set(dimensionKey, count + 1);

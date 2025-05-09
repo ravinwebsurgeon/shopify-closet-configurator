@@ -64,7 +64,7 @@ stellingcode aan te geven.
   };
   return (
     <div className="back-data-conatainer">
-      {height < 300 && height != 120 && height != 220 ? 
+      {height < 300 && height != 120 && height != 180 && height != 220  && depth > 20 ? 
         (
           <div className="flex flex-wrap gap-2">
           {cardData.map((data) => (
@@ -97,12 +97,16 @@ stellingcode aan te geven.
         )
         :
         (
-          <div className="sidepanel-warning font-inter font-medium">
+          <div className="sidepanel-warning font-inter text-[14px] font-medium">
             <strong>Geen zijwanden beschikbaar bij deze afmeting</strong>
             <br />
             <p>Zijwanden zijn alleen beschikbaar bij een hoogte van:</p>
             <br />
-            <strong>100cm - 150cm - 200cm - 250cm</strong>
+            <strong> Hootges: 100cm - 150cm - 200cm - 250cm</strong>
+            <br />
+            <strong className=" block mt-2">
+              Dieptes: 30cm - 40cm - 50cm - 60cm - 70cm - 80cm - 100cm
+            </strong>
           </div>
         )
       }

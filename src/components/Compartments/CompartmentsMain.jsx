@@ -148,8 +148,12 @@ const CompartmentsMain = () => {
       <div className="flex flex-wrap gap-2">
         {compartmentData &&
           compartmentData.map((item) =>
-            item.id == "compartment_divider_set" && (dimension.depth <= 20 ||dimension.depth > 80)  ? (
-              ""
+            item.id == "sliding_partition" && (dimension.depth <= 20 || dimension.depth > 80)  ? (
+              <div className="sidepanel-warning font-inter text-[14px] font-medium">
+                <strong>Geen Vakverdeling beschikbaar voor deze afmeting</strong>
+                <p>Vakverdeling is alleen beschikbaar bij de volgende dieptes:</p>
+                <strong>30cm - 40cm - 50cm - 60cm - 70cm - 80cm</strong>
+              </div>
             ) : (
               <ItemBlock
                 productInfo={item}
