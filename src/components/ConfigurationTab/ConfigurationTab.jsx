@@ -75,7 +75,6 @@ const ConfigurationTab = () => {
         },
         image: imageData,
       };
-      console.log("PRODUCT DATA -->",productData)
       //API call
       // const response = await axios.post(
       //   "https://shopify-closet-configurator-backend.vercel.app/api/products/create",

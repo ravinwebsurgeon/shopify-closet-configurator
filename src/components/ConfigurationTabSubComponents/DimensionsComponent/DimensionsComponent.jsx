@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteShelf,
+  deleteSideWall,
+  removeAllWardrobeRods,
   removeDrawersFromSection,
   removeRevolvingDoor,
   removeSectionDoors,
@@ -44,7 +46,7 @@ const DimensionsComponent = () => {
       material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
     height:
       material == "metal"
-        ? [100, 120, 150, 200, 220, 250, 300, 350]
+        ? [100, 120, 150,180, 200, 220, 250, 300, 350]
         : [90, 150, 180, 210, 240, 300],
     depth:
       material == "metal"
@@ -457,7 +459,91 @@ const DimensionsComponent = () => {
         });
       }
     }
+    // delete Wardrobe rods on the depth < 30
+    if(dimension == "depth" &&  value < 30){
+      dispatch(removeAllWardrobeRods({sectionId:activeSectionId}));
+    }
+
+    /* delete wardrobe rods from selected section if
+    width < 85 or width == 115*/
+    if(dimension == "width" && (value < 85 || value == 115)){
+      dispatch(removeAllWardrobeRods({sectionId:activeSectionId}));
+
+    };
+
+    /* delete sidewalls at depth < 30  */
+    if(dimension == "depth" && value < 30){
+
+      const sectionKeys = Object.keys(sections).sort((a, b) => {
+        return parseInt(a.split("_")[1]) - parseInt(b.split("_")[1]);
+      });
+      const currentSection = activeSectionId;
+      const activeIndex = sectionKeys.indexOf(activeSectionId);
+      const previousSection = activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+      if(previousSection){
+        const rightSidewall = sections?.[previousSection]?.sideWall?.right?.isRight;
+        if(rightSidewall){
+          dispatch(deleteSideWall({
+            sectionId:previousSection,
+            side:"right"
+          }))
+        }
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"right"
+        }))
+      }
+      else if(activeIndex == 0){
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"left"
+        }));
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"right"
+        }));
+      } 
+    };
+
+    /* delete sidewall  */
+    if(dimension == "height" && value != 100 && 
+      value!=150 && value != 200 && value != 250){
+        const sectionKeys = Object.keys(sections).sort((a, b) => {
+        return parseInt(a.split("_")[1]) - parseInt(b.split("_")[1]);
+      });
+      const currentSection = activeSectionId;
+      const activeIndex = sectionKeys.indexOf(activeSectionId);
+      const previousSection = activeIndex > 0 ? sectionKeys[activeIndex - 1] : null;
+      if(previousSection){
+        const rightSidewall = sections?.[previousSection]?.sideWall?.right?.isRight;
+        if(rightSidewall){
+          dispatch(deleteSideWall({
+            sectionId:previousSection,
+            side:"right"
+          }))
+        }
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"right"
+        }))
+      }
+      else if(activeIndex == 0){
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"left"
+        }));
+        dispatch(deleteSideWall({
+          sectionId:currentSection,
+          side:"right"
+        }));
+      }
+      }
+
+      /* delete */
+
+      /**========* */
   };
+  
 
   const calculateSliderStyle = (value, options) => {
     const index = options.indexOf(Number(value));

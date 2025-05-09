@@ -1,18 +1,18 @@
 
 export const compartmentData = [
-  {
-    id: "compartment_divider_set",
-    image: "/compartment/vakverdeelset-metal-medium.png",
-    black_image:"/compartment/compartment-divider-set-black.png",
-    title: "Vakverdeelset",
-    dimention: "98x30 cm",
-    price: 46.11,
-    productInformation: {
-      title: "Vakverdeelset (Metaal)",
-      description:
-        "<p>Flexibel in te delen vakverdeling. De voorzetrand (10cm hoog) en de achterzetrand (20cm hoog) worden op een legbord geplaatst, de verdeelschotten dan naar wens op maat indelen. Het geheel valt mooi tussen de staanders wat ook stevigheid geeft.</p><p>De vakverdeelsets zijn beschikbaar voor legborden van 30cm tot 60cm diep en voor elke breedte.</p>",
-    },
-  },
+  // {
+  //   id: "compartment_divider_set",
+  //   image: "/compartment/vakverdeelset-metal-medium.png",
+  //   black_image:"/compartment/compartment-divider-set-black.png",
+  //   title: "Vakverdeelset",
+  //   dimention: "98x30 cm",
+  //   price: 46.11,
+  //   productInformation: {
+  //     title: "Vakverdeelset (Metaal)",
+  //     description:
+  //       "<p>Flexibel in te delen vakverdeling. De voorzetrand (10cm hoog) en de achterzetrand (20cm hoog) worden op een legbord geplaatst, de verdeelschotten dan naar wens op maat indelen. Het geheel valt mooi tussen de staanders wat ook stevigheid geeft.</p><p>De vakverdeelsets zijn beschikbaar voor legborden van 30cm tot 60cm diep en voor elke breedte.</p>",
+  //   },
+  // },
   {
     id: "sliding_partition",
     image: "/compartment/schuifschot-metal.png",

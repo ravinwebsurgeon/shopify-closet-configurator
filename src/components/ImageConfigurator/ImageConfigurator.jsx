@@ -5,6 +5,8 @@ import "./ImageConfigurator.css";
 import AddSection from "../ModalChildComponents/AddSectionComponent/AddSection";
 import {
   deleteSection,
+  deleteSideWall,
+  openDeleteModal,
   setCompartmentHighlighted,
   setCurrSelectedSection,
   setDrawerHighlighted,
@@ -12,6 +14,7 @@ import {
   setEditingSides,
   setHideDoor,
   setIsWardrobeHighlighted,
+  setOpenModal,
   updateSectionDimensions,
   updateSideWall,
 } from "../../slices/shelfDetailSlice";
@@ -215,6 +218,11 @@ const ImageConfigurator = () => {
     { 350: "182" },
   ];
 
+  const handleDeleteConfirmation = () =>{
+    dispatch(openDeleteModal(true));
+    dispatch(setOpenModal(true));
+  }
+
   const handleSectionDelete = () => {
     const activeIndex = sectionKeys.indexOf(currentSelectedSection);
     const nextSectionId =
@@ -229,13 +237,57 @@ const ImageConfigurator = () => {
       nextSection
     ) {
       const rightSideWall = selectedSection.sideWall.right;
-      dispatch(
-        updateSideWall({
-          sectionId: nextSectionId,
-          side: "left",
-          ...rightSideWall,
-        })
-      );
+       if(prevSectionId && nextSectionId){
+        if(sections[prevSectionId].height == 100  ||
+          sections[prevSectionId].height == 150 ||
+          sections[prevSectionId].height == 200 ||
+          sections[prevSectionId].height == 250){
+          dispatch(updateSideWall({
+            sectionId:prevSectionId,
+            side:"right",
+            type: rightSideWall.type,
+            height:sections[prevSectionId].height
+          }))
+        }
+
+      }else{
+        if(sections[nextSectionId].height == 100  ||
+          sections[nextSectionId].height == 150 ||
+          sections[nextSectionId].height == 200 ||
+          sections[nextSectionId].height == 250
+         ){
+          dispatch(
+            updateSideWall({
+              sectionId: nextSectionId,
+              side: "left",
+              ...rightSideWall,
+            })
+          );
+         }
+      }
+
+    }
+    else if(prevSectionId){
+      const rightSideWall = sections[prevSectionId].sideWall.right;
+      if(rightSideWall.isRight){
+        if(sections[prevSectionId].height == 100  ||
+          sections[prevSectionId].height == 150 ||
+          sections[prevSectionId].height == 200 ||
+          sections[prevSectionId].height == 250
+         ){
+          dispatch(updateSideWall({ 
+            sectionId:prevSectionId,
+            side:"right",
+            type:rightSideWall.type,
+            height:sections[prevSectionId].height,
+          }))
+        }else{
+          dispatch(deleteSideWall({
+            sectionId:prevSectionId,
+            side:"right"
+          }))
+        }
+      }
     }
     dispatch(deleteSection(currentSelectedSection));
 
@@ -259,6 +311,8 @@ const ImageConfigurator = () => {
     dispatch(
       setCurrSelectedSection(prevSectionId ? prevSectionId : nextSectionId)
     );
+
+    dispatch(openDeleteModal(false));
 
   };
 
@@ -496,7 +550,7 @@ const ImageConfigurator = () => {
             <button
               className=" h-[30px] mr-[10px]  py-[10px] px-[15px] whitespace-nowrap cursor-pointer border border-[#C50606] bg-[#C50606] flex gap-2 items-center justify-center font-medium font-inter rounded-[5px] text-[#fff] text-[10px] disabled:cursor-not-allowed disabled:opacity-50 "
               disabled={sectionKeys.length <= 1}
-              onClick={handleSectionDelete}
+              onClick={handleDeleteConfirmation}
             >
               <span className="">Deze sectie verwijderen</span>{" "}
               <span className="font-inter font-light leading-none tracking-normal text-[#fff]">

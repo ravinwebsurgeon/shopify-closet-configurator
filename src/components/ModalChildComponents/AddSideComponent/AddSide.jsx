@@ -89,7 +89,7 @@ const AddSide = ({ onClose, side }) => {
           Selecteer de gewenste hoogte van de zijwand. Het is na het selecteren
           mogelijk de zijwand naar de gewenste hoogte te verplaatsen.
         </p>
-        <p className="text-base text-[#939393]">
+        <p className="text-base text-[#939393] mt-2">
           Bij het selecteren van een kleinere hoogte zijwand is het mogelijk
           meerdere wanden te stapelen.
         </p>
@@ -118,10 +118,10 @@ const AddSide = ({ onClose, side }) => {
         </div>
         <div className="button-div mt-3">
           <button className="close-button" onClick={onClose}>
-            Cancel
+              Annuleren
           </button>
           <button className="add-button" onClick={(e) => handleAddSideClick(e)}>
-            Apply
+              Toepassen
           </button>
         </div>
       </div>

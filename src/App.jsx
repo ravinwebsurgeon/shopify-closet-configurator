@@ -3,12 +3,13 @@ import ConfigurationFrom from "./components/ConfigrationForm/ConfigurationFrom";
 import ShelvingConfigurator from "./components/ShelvingConfigurator/ShelvingConfigurator";
 import "./index.css";
 import "./App.css";
-import { setOpenModal, setSidewallSelected } from "./slices/shelfDetailSlice";
+import { openDeleteModal, setOpenModal, setSidewallSelected } from "./slices/shelfDetailSlice";
 import Modal from "./components/Shared/Modal/Modal";
 import { ToastContainer } from 'react-toastify';
 import AddSide from "./components/ModalChildComponents/AddSideComponent/AddSide";
 import { BrowserRouter, Route, Router, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import SectionDelete from "./components/SectionDeleteComponent/SectionDelete";
 
 function App() {
 
@@ -21,11 +22,15 @@ function App() {
     (state) => state.shelfDetail.showConfigurator
   );
   const sidewallSide = useSelector((state)=>state.shelfDetail.sidewallSelected);
+  const deleteModal = useSelector((state)=>state.shelfDetail.isDeleteModalOpen);
 
   const handleModalClose = () =>{
     dispatch(setOpenModal(false));
     if(sidewallSide != ""){
       dispatch(setSidewallSelected(""));
+    }
+    else if(deleteModal){
+      dispatch(openDeleteModal(false));
     }
   };
 
@@ -49,9 +54,11 @@ function App() {
         <Modal
           isModalOpen={isModalOpen}
           productInformation={productInformation}
-          closeModal={handleModalClose}  
+          closeModal={handleModalClose} 
+          mainHeading={sidewallSide != "" ? "Wil je doorgaan met deze wijziging?" : deleteModal ? "deleteModal" : ""} 
         >
           {sidewallSide != "" ?<AddSide  onClose={handleModalClose} side={sidewallSide}/>: null}
+          {deleteModal ? <SectionDelete onClose={handleModalClose}/>:null}
         </Modal>
       )}
       <ToastContainer/>
