@@ -132,7 +132,9 @@ const ConfigurationFrom = () => {
         router.push("/");
         setFetchError(false);
       } else {
-        router.push("/configurator");
+        setTimeout(() => {
+          router.push("/configurator");
+        }, 2500);
       }
     }
   };
@@ -176,10 +178,12 @@ const ConfigurationFrom = () => {
         },
         "https://www.bedrijfsinrichtingnederland.nl"
       );
-      console.log(`/configurator?width=${formData.width}&height=${formData.height}&depth=${formData.depth}&shelfCount=${formData.shelfCount}`)
-      router.push(
-        `/configurator?width=${formData.width}&height=${formData.height}&depth=${formData.depth}&shelfCount=${formData.shelfCount}`
-      );
+
+      setTimeout(() => {
+        router.push(
+          `/configurator?width=${formData.width}&height=${formData.height}&depth=${formData.depth}&shelfCount=${formData.shelfCount}`
+        );
+      }, 3000);
     }
   }, [formData]);
 
