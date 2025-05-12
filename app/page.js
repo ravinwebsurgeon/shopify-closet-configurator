@@ -1,4 +1,4 @@
-import Index from "@/components/ConfigrationForm";
+import Index from "../components/ConfigrationForm";
 
 export default function Home() {
   return (

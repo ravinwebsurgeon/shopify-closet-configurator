@@ -7,7 +7,7 @@ import {
   setProductInfoModalContent,
 } from "../../slices/shelfDetailSlice";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
-import { revolvingDoors } from "@/app/assets/data/ConfigratorData";
+import { revolvingDoors } from "../../../app/assets/data/ConfigratorData";
 import getComponentPrice from "../../utils/getPrice";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import DoorConfirm from "../ModalChildComponents/DoorComp/DoorConfirm";

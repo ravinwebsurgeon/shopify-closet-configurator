@@ -11,7 +11,7 @@ import {
 import {
   shelfCountsAccHeight,
   woodShelfCountsAccHeight,
-} from "@/app/assets/data/ConfigratorData";
+} from "../../../app/assets/data/ConfigratorData";
 import "./ShelfCounter.css";
 
 const SliderShelfCounter = () => {

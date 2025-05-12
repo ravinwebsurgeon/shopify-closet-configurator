@@ -11,7 +11,7 @@ import {
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import getComponentPrice from "../../utils/getPrice";
 import { toast } from "react-toastify";
-import { compartmentData } from "@/app/assets/data/Compartment";
+import { compartmentData } from "../../app/assets/data/Compartment";
 
 const CompartmentsMain = () => {
   const dispatch = useDispatch();

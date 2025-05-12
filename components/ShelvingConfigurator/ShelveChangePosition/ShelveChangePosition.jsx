@@ -7,7 +7,7 @@ import {
   updateShelvePostion,
 } from "../../../slices/shelfDetailSlice";
 import { updateWoodShelveIndexAndPostion, updateWoodShelvePostion, updateWoodShelvesPosition } from "../../../slices/WoodShelfDetailSlice";
-import { woodShelfCountsAccHeight, shelfCountsAccHeight } from "@/app/assets/data/ConfigratorData";
+import { woodShelfCountsAccHeight, shelfCountsAccHeight } from "../../../app/assets/data/ConfigratorData";
 
 const ShelveChangePosition = ({ sectionId, shelfKey }) => {
   const [btnType, setBtnType] = useState("intial");

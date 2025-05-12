@@ -16,7 +16,7 @@ const DimensionVisualizer = ({ height, width, depth }) => {
         <div className="w-[151px] border-r border-[#E5E5E5] h-[68px] flex items-center justify-center max-tab-xl:flex-1 max-tab-xl:border-1  max-tab-xl:border-[#E5E5E5]">
           <div className="flex items-center gap-[10px]">
             <div className="h-[38px] w-[38px] bg-[#F5F5F5] rounded flex items-center justify-center">
-              <Image unoptimized src={EditIcon} alt="" className="w-6 h-6" width={24} height={24} />
+              <Image unoptimized src={EditIcon} alt="EditIcon" className="w-6 h-6" width={24} height={24} />
             </div>
             <span className="font-inter font-medium text-[12px] leading-none tracking-[0%]">
               Afmetingen

@@ -1,4 +1,4 @@
-import ShelvingConfigurator from "@/components/ShelvingConfigurator/ShelvingConfigurator";
+import ShelvingConfigurator from "../../components/ShelvingConfigurator/ShelvingConfigurator";
 import React from "react";
 
 const page = () => {

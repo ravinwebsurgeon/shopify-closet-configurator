@@ -15,7 +15,7 @@ import {
   updateSideWall,
 } from "../../../slices/shelfDetailSlice";
 import "./DimensionsComponent.css";
-import { shelfCountsAccHeight } from "@/app/assets/data/ConfigratorData";
+import { shelfCountsAccHeight } from "../../../app/assets/data/ConfigratorData";
 import {
   updateLastWoodShelvePostion,
   updateWoodSectionDimensions,

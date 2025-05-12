@@ -10,7 +10,7 @@ import {
   updateShelvesPosition,
 } from "../../../slices/shelfDetailSlice";
 import { setWoodShowCounter , updateWoodShelvesPosition } from "../../../slices/WoodShelfDetailSlice";
-import { shelfCountsAccHeight, woodShelfCountsAccHeight } from "@/app/assets/data/ConfigratorData";
+import { shelfCountsAccHeight, woodShelfCountsAccHeight } from "../../../app/assets/data/ConfigratorData";
 
 const ShelfCounter = ({ onClick, showCounter }) => {
   const counterRef = useRef(null);

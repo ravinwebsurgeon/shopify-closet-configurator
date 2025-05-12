@@ -1,12 +1,12 @@
 "use client";
-import AddSide from "@/components/ModalChildComponents/AddSideComponent/AddSide";
-import SectionDelete from "@/components/SectionDeleteComponent/SectionDelete";
-import Modal from "@/components/Shared/Modal/Modal";
+import AddSide from "../../components/ModalChildComponents/AddSideComponent/AddSide";
+import SectionDelete from "../../components/SectionDeleteComponent/SectionDelete";
+import Modal from "../../components/Shared/Modal/Modal";
 import {
   openDeleteModal,
   setOpenModal,
   setSidewallSelected,
-} from "@/slices/shelfDetailSlice";
+} from "../../slices/shelfDetailSlice";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -31,7 +31,7 @@ const ReduxWrapper = () => {
     } else if (deleteModal) {
       dispatch(openDeleteModal(false));
     }
-  };
+  };  
   return (
     <div>
       {isModalOpen && (
@@ -47,10 +47,10 @@ const ReduxWrapper = () => {
               : ""
           }
         >
-          {sidewallSide != "" ? (
+          {sidewallSide != "" && (
             <AddSide onClose={handleModalClose} side={sidewallSide} />
-          ) : null}
-          {deleteModal ? <SectionDelete onClose={handleModalClose} /> : null}
+          )}
+          {deleteModal && <SectionDelete onClose={handleModalClose} />}
         </Modal>
       )}
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
-import IconInfo from "@/app/assets/icons/IconInfo";
+import IconInfo from "../../../app/assets/icons/IconInfo";
 
 
 const ItemBlock = ({
@@ -27,7 +27,7 @@ const ItemBlock = ({
         className="border block w-full  border-[#d4d4d4] border-solid rounded-[5px] group-hover/item:border-red-1000"
       >
         <div className="px-3 pt-4">
-          <Image unoptimized src={image} className="max-w-full w-auto h-auto" width={300} height={300} />
+          <Image unoptimized src={image} alt="image" className="max-w-full w-auto h-auto" width={300} height={300} />
         </div>
         <div className="px-3 pt-3 pb-4">
           <h2 className="font-inter font-semibold  group-hover/item:whitespace-normal text-left text-light-1002 text-sm tracking-normal whitespace-nowrap text-ellipsis overflow-hidden">

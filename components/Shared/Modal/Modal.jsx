@@ -1,5 +1,5 @@
-'use client';
-import IconClose from "@/app/assets/icons/IconClose";
+"use client";
+import IconClose from "../../../app/assets/icons/IconClose";
 import React, { useEffect, useState } from "react";
 
 const Modal = ({
@@ -23,6 +23,7 @@ const Modal = ({
       closeModal();
     }, 500);
   };
+  console.log("children", children);
   return (
     <div
       className={`fixed modal-wrapper w-full h-full top-0 left-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-md z-50 flex justify-center items-center transition-all duration-500 ${
@@ -41,7 +42,7 @@ const Modal = ({
             </button>
           </div>
           <div className="py-6 px-10 pb-8 max-h-[calc(100dvh-90px)] overflow-auto max-tab-sm:p-4">
-            {children ? (
+            {children && (children[0] != false || children[1] != false) ? (
               children
             ) : (
               <div>

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ItemBlock from "../Shared/ItemBlock/ItemBlock";
 import getComponentPrice from "../../utils/getPrice";
 import { toast } from "react-toastify";
-import { slidingDoors } from "@/app/assets/data/Compartment";
+import { slidingDoors } from "../../app/assets/data/Compartment";
 
 
 const SlidingDoors = () => {
