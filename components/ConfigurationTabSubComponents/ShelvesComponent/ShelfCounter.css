@@ -1,0 +1,61 @@
+/*  */
+.shelfRemoveBtn {
+  position: absolute;
+  top: 0%;
+  right: -40px;
+  z-index: 9;
+}
+
+.shelfRemoveBtnOver {
+  bottom: 0;
+  height: 0;
+  position: absolute;
+  z-index: 1000;
+}
+.CounterWithAddRemove_container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  height: 32px;
+  align-items: center;
+}
+
+.CounterWithAddRemove_counter {
+  text-wrap: nowrap;
+  align-items: center;
+  background-color: #3c9cea;
+  border-radius: 2px;
+  display: flex;
+  padding: 0px;
+  gap: 5px;
+}
+
+span.shelf-counter {
+  font-family: "Ubuntu";
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+button.shelf-decreament-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.shelf-increament-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.shelf-confirm-btn {
+  padding: 5px;
+  border-color: #c2c2c2;
+  background: transparent;
+  border-radius: 3px;
+  border: 1px solid #c2c2c2;
+  cursor: pointer;
+}

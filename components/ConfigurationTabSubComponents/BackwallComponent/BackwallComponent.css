@@ -1,0 +1,56 @@
+.back-data-conatiner{
+    display: flex;
+}
+
+.back-data-card {
+    border: 1px solid #c2c2c2;
+    width: fit-content;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-left: 10px;
+}
+
+.back-data-card.selected{
+    border: 1px solid #3c9cea;
+}
+
+.back-img {
+    padding: 16px;
+}
+
+.back-image{
+    height: 90px;
+    margin: auto;
+}
+
+.back-detail-div {
+    display: flex;
+    flex-direction: column;
+    font-family: "Ubuntu";
+    padding: 5px 15px;
+}
+
+span.back-label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #5c5c5c;
+    text-wrap: wrap;
+    width:140px;
+}
+
+span.back-dimensions {
+    color: #c2c2c2;
+}
+
+span.back-price {
+    color: #5c5c5c;
+}
+
+.back-data-card:hover{
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+.backwall-warning {
+    display: flex;
+    flex-direction: column;
+}

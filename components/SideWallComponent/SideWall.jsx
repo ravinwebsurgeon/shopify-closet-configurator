@@ -1,0 +1,23 @@
+import React from "react";
+
+const SideWall = ({type,height,highlighted}) => {
+
+  return (
+    <div className="stander-side-wall change__color"   style={{position:"absolute"}}>
+        <div
+        className={`Staander_Staander__rAo9j Staander_height${height}`}
+        // style={{top: "100%", transform: "translateY(-100%)"}}
+        >
+        <div className={`Staander_side Staander_side_${type} 
+        ${highlighted ? "Staander_isHighlighted" : ""}
+        `}>
+            <div className="Staander_sideTop"></div>
+            <div className="Staander_sideMiddle"></div>
+            <div className="Staander_sideBottom"></div>
+        </div>
+        </div>
+    </div>
+  );
+};
+
+export default SideWall;

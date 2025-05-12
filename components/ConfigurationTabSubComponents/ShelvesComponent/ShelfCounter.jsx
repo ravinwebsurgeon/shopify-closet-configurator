@@ -1,0 +1,200 @@
+'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import "./ShelfCounter.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setShowCounter,
+  updateShelvesPosition,
+} from "../../../slices/shelfDetailSlice";
+import { setWoodShowCounter , updateWoodShelvesPosition } from "../../../slices/WoodShelfDetailSlice";
+import { shelfCountsAccHeight, woodShelfCountsAccHeight } from "@/app/assets/data/ConfigratorData";
+
+const ShelfCounter = ({ onClick, showCounter }) => {
+  const counterRef = useRef(null);
+  const dispatch = useDispatch();
+  let positionArray = [];
+
+  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
+  const material = metalRacks?.execution?.material;
+  const sectionData = material == "metal" ? metalRacks?.sections : woodRacks?.sections;
+  const sectionId =  material == "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
+
+  const currentSection = sectionData[sectionId];
+
+  let shelf_count = currentSection
+    ? Object.keys(currentSection.shelves).length
+    : 3;
+
+  const shelfHeight = currentSection["height"];
+
+  const [shelfCount, setShelfCount] = useState(shelf_count);
+  //const [isUserAction,setIsUserAction] = useState(false);
+
+  const heightArr = [
+    {90:"52"},
+    { 100: "57" },
+    { 120: "67" },
+    { 150: "82" },
+    { 180: "97" },
+    { 200: "107" },
+    { 210: "112" },
+    { 220: "117" },
+    { 240: "127" },
+    { 250: "132" },
+    { 300: "157" },
+    { 350: "182" }
+  ];
+
+  // function used to set shelves at a specific height
+  const GeneratePosArr = (currShelfHeight, shelfCount) => {
+    const Result = heightArr.find((obj) => obj[currShelfHeight] !== undefined);
+    const heightResult = parseInt(Object.values(Result)[0]);
+
+    const positions = [];
+
+    for (let i = 0; i < shelfCount; i++) {
+      const topPosition = ((heightResult - 9.5) / (shelfCount - 1)) * i;
+      positions.push({
+        zIndex: shelfCount - i,
+        top: `${topPosition}em`,
+      });
+    }
+    return positions;
+  };
+
+
+ 
+  // useEffect(() => {
+  //   setShelfCount(shelf_count);
+  // }, [shelf_count, sectionId]);
+
+  useEffect(() => {
+      positionArray = GeneratePosArr(shelfHeight, shelfCount);
+      if(material == "metal"){
+        dispatch(updateShelvesPosition({ sectionId, positionArray }));
+      }
+      else{
+        dispatch(updateWoodShelvesPosition({sectionId,positionArray}))
+      }
+      
+     // setIsUserAction(false);
+    
+  }, [shelfCount]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        counterRef.current &&
+        !event.target.closest(".CounterWithAddRemove_container")
+      ) {
+        if(material == "metal"){
+          dispatch(setShowCounter(false));
+        }else{
+          dispatch(setWoodShowCounter(false));
+        }
+        
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleAddShelf = (e) => {
+    e.preventDefault();
+    const maxShelfCount =  material == "metal" ? 
+    shelfCountsAccHeight[shelfHeight]["max"]:
+    woodShelfCountsAccHeight[shelfHeight]["max"];
+
+    if (shelfCount >= maxShelfCount) {
+      setShelfCount(maxShelfCount);
+      return;
+    } else {
+      setShelfCount((prevData) => prevData + 1);
+      //setIsUserAction(true);
+    }
+  };
+
+  const handleRemoveShelf = (e) => {
+    e.preventDefault();
+    setShelfCount((prevData) => prevData - 1);    
+   // setIsUserAction(true);
+  };
+
+  return (
+    showCounter && (
+      <div
+        ref={counterRef}
+        className="CounterWithAddRemove_container justify-center"
+      >
+        <div className="CounterWithAddRemove_counter">
+          <button
+            className="shelf-decreament-btn py-2 pl-3 pr-6"
+            disabled={shelfCount === 3}
+            onClick={handleRemoveShelf}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.25 5.25C8.66421 5.25 9 5.58579 9 6C9 6.41421 8.66421 6.75 8.25 6.75H3.75C3.33579 6.75 3 6.41421 3 6C3 5.58579 3.33579 5.25 3.75 5.25H8.25Z"
+                fill="white"
+              ></path>
+            </svg>{" "}
+          </button>
+          <span className="shelf-counter !text-sm font-inter">
+            {shelfCount}
+          </span>
+          <button
+            className="shelf-increament-btn py-2 pr-3 pl-6"
+            onClick={handleAddShelf}
+          >
+            {" "}
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 10.5C6.31066 10.5 6.5625 10.2482 6.5625 9.9375V6.5625H9.9375C10.2482 6.5625 10.5 6.31066 10.5 6C10.5 5.68934 10.2482 5.4375 9.9375 5.4375H6.5625V2.0625C6.5625 1.75184 6.31066 1.5 6 1.5C5.68934 1.5 5.4375 1.75184 5.4375 2.0625V5.4375H2.0625C1.75184 5.4375 1.5 5.68934 1.5 6C1.5 6.31066 1.75184 6.5625 2.0625 6.5625H5.4375V9.9375C5.4375 10.2482 5.68934 10.5 6 10.5Z"
+                fill="white"
+              ></path>
+            </svg>{" "}
+          </button>
+        </div>
+        <div className="shelf-confirm-btn-div">
+          <button className="shelf-confirm-btn" onClick={onClick}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.5 7.50017L7.49989 13.5001L13.9997 3.00024"
+                stroke="#5C5C5C"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    )
+  );
+};
+
+export default ShelfCounter;

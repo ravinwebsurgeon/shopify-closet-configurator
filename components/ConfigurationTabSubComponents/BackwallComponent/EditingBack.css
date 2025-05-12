@@ -1,0 +1,24 @@
+.Section_Section__3MCIu .Section_isEditingWall{
+    background-image: url(/EditBackwalls.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 7em;
+    flex-direction: row;
+    left: 6.5em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+/* .Section_isEditingWall{
+    background-image: url(/EditBackwalls.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 7em;
+    flex-direction: row;
+    left: 6.5em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+} */
