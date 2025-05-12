@@ -86,7 +86,7 @@ const ConfigurationTab = () => {
       if (response?.status == 200) {
         window.parent.postMessage(
           { action: "addToCart", productData: response?.data?.product },
-          "https://configurator.bedrijfsinrichtingnederland.nl"
+          "https://www.bedrijfsinrichtingnederland.nl"
         );
         toast.success("product successfully added to cart", {
           position: "top-center",
