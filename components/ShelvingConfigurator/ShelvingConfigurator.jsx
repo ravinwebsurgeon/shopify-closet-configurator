@@ -15,6 +15,7 @@ const ShelvingConfigurator = () => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const [data, setData] = useState(false);
+      const prevData = searchParams.get("data");
   useEffect(() => {
     const term = searchParams.get("data");
     const width = parseInt(searchParams.get("width"));
@@ -118,7 +119,7 @@ const ShelvingConfigurator = () => {
           <div className="configurator-right-section flex-1">
             <ImageConfigurator />
           </div>
-          <ConfigurationTab />
+          <ConfigurationTab prevData={prevData || null} />
         </div>
       )}
     </>

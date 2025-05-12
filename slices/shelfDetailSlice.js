@@ -34,10 +34,12 @@ const executionObject = {
 const sideWallObject = {
   left: {
     isLeft: false,
+        isRight: false,
     type: "",
     height: "",
   },
   right: {
+       isLeft: false,
     isRight: false,
     type: "",
     height: "",

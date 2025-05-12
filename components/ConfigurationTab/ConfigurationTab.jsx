@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
 import "./Configurationtab.css";
 import DimensionsComponent from "../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent";
@@ -26,14 +26,10 @@ import {
 import SustainComponent from "../ConfigurationTabSubComponents/SustainComponent/SustainComponent";
 import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/TopCapsComponent";
 import html2canvas from "html2canvas";
-import { saveAs } from "file-saver";
-import axios from "axios";
-import { getFormattedPrice } from "../../utils/getFormattedPrice";
 import { toast } from "react-toastify";
-import { createProduct } from "../../services/productService";
+import checkObjDiffernce from "../../utils/deep";
 
-const ConfigurationTab = () => {
-  
+const ConfigurationTab = ({ prevData }) => {
   const [loading, setLoading] = useState(false);
   const metalRacks = useSelector((state) => state.shelfDetail.racks);
   const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
@@ -65,15 +61,24 @@ const ConfigurationTab = () => {
       const imageData = canvas.toDataURL("image/png");
       elementToHide.style.display = "block";
 
-      const totalPrice = calculateTotalPrice(details, priceData,format=false);
+      const totalPrice = calculateTotalPrice(
+        details,
+        priceData,
+        (format = false)
+      );
+      let data = "";
+      if (prevData) {
+        const prvData = JSON.parse(prevData);
+        data = checkObjDiffernce(prvData?.data, metalRacks);
+      }
 
-      // product data object 
+      // product data object
       const productData = {
         title: `Custom Shelf Configuration`,
-        price:totalPrice,
+        price: totalPrice,
         metafields: {
           customData: metalRacks,
-          lineItems: generateBOM(details, priceData,format=false),
+          lineItems: generateBOM(details, priceData, (format = false)),
         },
         image: imageData,
       };
@@ -95,7 +100,7 @@ const ConfigurationTab = () => {
           className: "!font-inter !text-[13px] ",
         });
       }
-     // saveAs(imageData,'shelf-design.png')
+      // saveAs(imageData,'shelf-design.png')
     } catch (error) {
       console.error("Error adding product to cart:", error);
       toast.error("Failed to add product to cart. Please try again.", {
