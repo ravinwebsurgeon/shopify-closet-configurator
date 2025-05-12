@@ -32,7 +32,7 @@ console.log("top---1>", top)
       className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${
         leftSide || leftPrevSide ? "left-enabled" : "rightArrow"
       }`}
-      style={{ top: `${top}` }}
+
     >
       <button
         type="button"
