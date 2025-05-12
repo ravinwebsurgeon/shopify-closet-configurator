@@ -709,14 +709,14 @@ const ImageConfigurator = () => {
                             />
                           )}
                         </div>
-                        {sections[sectionKey].sideWall.left.isLeft && (
+                        {/* {sections[sectionKey].sideWall.left.isLeft && (
                           <button
                             className="stander-side-wall-btn"
                             onClick={(e) =>
                               handleSidewallLeftBtnClick(e, sectionKey)
                             }
                           ></button>
-                        )}
+                        )} */}
                         {/* shelf section */}
                         <div>
                           <div
@@ -922,7 +922,7 @@ const ImageConfigurator = () => {
                           )}
                         </div>
 
-                        {sections[sectionKey].sideWall.right.isRight && (
+                        {/* {sections[sectionKey].sideWall.right.isRight && (
                           <button
                             className="stander-side-wall-btn"
                             onClick={(e) =>
@@ -934,7 +934,7 @@ const ImageConfigurator = () => {
                               )
                             }
                           ></button>
-                        )}
+                        )} */}
                         {/* next two poles */}
                         <div
                           className={`Staander_Staander__rAo9j Visual_animating__a8ZaU Staander_notFirst__FSKKl  
