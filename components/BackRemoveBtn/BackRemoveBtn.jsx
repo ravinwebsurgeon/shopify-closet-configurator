@@ -17,7 +17,7 @@ const BackRemoveBtn = ({width ,id}) => {
         dispatch(setEditingBackwall(false));
     }
 
-
+  console.log("top---3>", top);
   return (
     <div
       className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn `}

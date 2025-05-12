@@ -5,38 +5,46 @@ import { deleteShelf } from "../../slices/shelfDetailSlice";
 import { deleteWoodShelf } from "../../slices/WoodShelfDetailSlice";
 
 const ShelfRemoveBtn = ({ top, shelfId, onClick, onClose }) => {
-
   const dispatch = useDispatch();
 
-  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
-  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
   const material = metalRacks?.execution?.material;
 
-  const sectionId = material  == "metal" ? metalRacks?.selectedSection : woodRacks?.selectedSection;
-  const section =  material  == "metal" ?  metalRacks?.sections?.[sectionId] : woodRacks?.sections?.[sectionId];
+  const sectionId =
+    material == "metal"
+      ? metalRacks?.selectedSection
+      : woodRacks?.selectedSection;
+  const section =
+    material == "metal"
+      ? metalRacks?.sections?.[sectionId]
+      : woodRacks?.sections?.[sectionId];
 
-  const shelfKeys = section ? Object.keys(section.shelves || {}).filter((key)=> key.includes("shelves_")) : [];
+  const shelfKeys = section
+    ? Object.keys(section.shelves || {}).filter((key) =>
+        key.includes("shelves_")
+      )
+    : [];
   const shelfCount = shelfKeys.length;
 
   const handleDeleteShelf = (e) => {
     e.preventDefault();
     if (shelfCount > 3) {
-      if(material == "metal"){
+      if (material == "metal") {
         dispatch(deleteShelf({ sectionId, shelfId }));
+      } else {
+        dispatch(deleteWoodShelf({ sectionId, shelfId }));
       }
-      else{
-        dispatch(deleteWoodShelf({sectionId, shelfId}));
-      }
-      
+
       onClose();
     }
     onClick();
   };
-
+  console.log("top---2>", top);
   return (
     <div
       className="Section_removeConfirmAccessoireButton AddRemove_doubleButton shelfRemoveBtn"
-      style={{ top: String(top) }}
+      style={{ top: `${top}` }}
     >
       <button
         type="button"

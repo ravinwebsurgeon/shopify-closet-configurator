@@ -26,7 +26,7 @@ const SideRemoveBtn = ({
     dispatch(setEditingSides(false));
     setisHighlighted({ left: "", right: "" });
   };
-
+console.log("top---1>", top)
   return (
     <div
       className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${
