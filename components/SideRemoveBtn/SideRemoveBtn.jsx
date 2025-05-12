@@ -1,39 +1,43 @@
-import React from 'react'
-import './SideRemoveBtn.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { deleteSideWall, setEditingSides } from '../../slices/shelfDetailSlice';
+import React from "react";
+import "./SideRemoveBtn.css";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteSideWall, setEditingSides } from "../../slices/shelfDetailSlice";
 
-const SideRemoveBtn = ({leftSide, sectionKey, leftPrevSide, setisHighlighted}) => {
+const SideRemoveBtn = ({
+  leftSide,
+  sectionKey,
+  leftPrevSide,
+  setisHighlighted,
+}) => {
+  const dispatch = useDispatch();
+  const sectionId = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
+  const side = leftSide ? "left" : leftPrevSide ? "right" : "right";
 
-    const dispatch = useDispatch();
-    const sectionId = useSelector((state)=>state.shelfDetail.racks.selectedSection);
-    const side = (leftSide ? "left" : leftPrevSide ? "right" : "right");
+  const handleDelete = (e) => {
+    e.preventDefault();
+    dispatch(deleteSideWall({ sectionId: sectionKey, side }));
+    setisHighlighted({ left: "", right: "" });
+  };
 
-    const handleDelete = (e) =>{
-        e.preventDefault();    
-        dispatch(deleteSideWall({sectionId:sectionKey,side}));
-        setisHighlighted({    left:'',
-          right:''})
-    }
-
-    const handleConfirm = (e) =>{
-        e.preventDefault();
-        dispatch(setEditingSides(false));
-        setisHighlighted({    left:'',
-          right:''})
-        
-    }
-
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    dispatch(setEditingSides(false));
+    setisHighlighted({ left: "", right: "" });
+  };
 
   return (
     <div
-      className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${leftSide || leftPrevSide ? 'left-enabled' : 'rightArrow'}`}
-      style={{ top: String(top) }}
+      className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn ${
+        leftSide || leftPrevSide ? "left-enabled" : "rightArrow"
+      }`}
+      style={{ top: `${top}` }}
     >
       <button
         type="button"
         className={`AddRemove_buttonHalf`}
-        onClick={(e)=>handleDelete(e)}
+        onClick={(e) => handleDelete(e)}
       >
         <i
           className="Icon_container AddRemove_icon AddRemove_trashIcon"
@@ -49,7 +53,11 @@ const SideRemoveBtn = ({leftSide, sectionKey, leftPrevSide, setisHighlighted}) =
         </i>
       </button>
 
-      <button type="button" className="AddRemove_buttonHalf" onClick={(e)=>handleConfirm(e)}>
+      <button
+        type="button"
+        className="AddRemove_buttonHalf"
+        onClick={(e) => handleConfirm(e)}
+      >
         <i
           className="Icon_container AddRemove_icon AddRemove_checkIcon"
           style={{ width: "16px", height: "16px" }}
@@ -63,7 +71,7 @@ const SideRemoveBtn = ({leftSide, sectionKey, leftPrevSide, setisHighlighted}) =
         </i>
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default SideRemoveBtn
+export default SideRemoveBtn;

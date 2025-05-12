@@ -21,7 +21,7 @@ const BackRemoveBtn = ({width ,id}) => {
   return (
     <div
       className={`Section_removeConfirmAccessoireButton AddRemove_doubleButton sideRemoveBtn `}
-      style={{ top: String(top),left:` ${width}px` } }
+      style={{ top: `${top}`,left:` ${width}px` } }
     >
         <button
         type="button"
