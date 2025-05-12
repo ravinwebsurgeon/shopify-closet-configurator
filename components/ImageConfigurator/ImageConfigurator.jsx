@@ -647,7 +647,7 @@ const ImageConfigurator = () => {
                             zIndex: index,
                             opacity: selectedSection === sectionKey ? 1 : 0.5,
                             transition:
-                              "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
+                              "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
                           }}
                           key={index}
                         >
@@ -743,7 +743,7 @@ const ImageConfigurator = () => {
                             style={{
                               zIndex: index,
                               opacity: selectedSection === sectionKey ? 1 : 0.5,
-                              transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
+                              transition: "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
                             }}
                           >
                             {/* {selectedSection === sectionKey &&
@@ -965,7 +965,7 @@ const ImageConfigurator = () => {
                               selectedSection === sectionKey
                                 ? 1
                                 : 0.5,
-                            transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
+                            transition: "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
                           }}
                         >
                           {sections[sectionKey].sideWall.right.isRight && (
