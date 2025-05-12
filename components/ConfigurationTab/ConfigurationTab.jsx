@@ -3,15 +3,11 @@ import React, { useEffect, useState } from "react";
 import "./Configurationtab.css";
 import DimensionsComponent from "../ConfigurationTabSubComponents/DimensionsComponent/DimensionsComponent";
 import ExecutionComponent from "../ConfigurationTabSubComponents/ExecutionComponent/ExecutionComponent";
-import ShelvesComponent from "../ConfigurationTabSubComponents/ShelvesComponent/ShelvesComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveTab, setShowCounter } from "../../slices/shelfDetailSlice";
 import SidesComponent from "../ConfigurationTabSubComponents/SidesComponent/SidesComponent";
-import BackwallComponent from "../ConfigurationTabSubComponents/BackwallComponent/BackwallComponent";
 import CompartmentsMain from "../Compartments/CompartmentsMain";
 
-import SlidingDoors from "../SlidingDoors/SlidingDoors";
-import Drawers from "../Drawers/Drawers";
 import WardrobeComponent from "../WardrobeComponent/WardrobeComponent";
 import { calculateTotalPrice } from "../../utils/calculateTotalPrice";
 import { generateBOM } from "../../utils/generateBOM";
@@ -27,7 +23,7 @@ import SustainComponent from "../ConfigurationTabSubComponents/SustainComponent/
 import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/TopCapsComponent";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
-import checkObjDiffernce from "../../utils/deep";
+import checkObjDiffernce, { isObjNotEmpty } from "../../utils/deep";
 import { createProduct } from "../../services/productService";
 
 const ConfigurationTab = ({ prevData }) => {
@@ -67,12 +63,20 @@ const ConfigurationTab = ({ prevData }) => {
         priceData,
         (format = false)
       );
-      let data = "";
+      let data = false;
       if (prevData) {
         const prvData = JSON.parse(prevData);
-        data = checkObjDiffernce(prvData?.data, metalRacks);
+        data = isObjNotEmpty(checkObjDiffernce(prvData?.data, metalRacks));
       }
-
+      if (prevData && !data) {
+        window.parent.postMessage(
+          {
+            action: "sameProduct",
+          },
+          "https://www.bedrijfsinrichtingnederland.nl"
+        );
+        return null;
+      }      
       // product data object
       const productData = {
         title: `Custom Shelf Configuration`,

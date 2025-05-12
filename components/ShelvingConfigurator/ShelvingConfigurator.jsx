@@ -4,18 +4,23 @@ import ConfigurationTab from "../ConfigurationTab/ConfigurationTab";
 import ImageConfigurator from "../ImageConfigurator/ImageConfigurator";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setAPIData,
   setConfiguration,
   setDefault,
   setSection,
 } from "../../slices/shelfDetailSlice";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getPriceProductById } from "../../services/productService";
 
 const ShelvingConfigurator = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const metalShelfDetail = useSelector((state) => state.shelfDetail);
+  const priceData = metalShelfDetail?.priceData;
   const searchParams = useSearchParams();
   const [data, setData] = useState(false);
-      const prevData = searchParams.get("data");
+  const prevData = searchParams.get("data");
   useEffect(() => {
     const term = searchParams.get("data");
     const width = parseInt(searchParams.get("width"));
@@ -111,9 +116,33 @@ const ShelvingConfigurator = () => {
       );
       setData(true);
     }
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const { rawData, structuredPricing } = await getPriceProductById(
+          "15386352714077"
+        );
+        dispatch(setAPIData(structuredPricing));
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (!priceData) {
+      fetchData();
+    }
   }, []);
   return (
     <>
+      {isLoading && (
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-md z-50 flex items-center justify-center">
+          {/* <div className=" bg-white p-5 rounded-lg flex items-center gap-3"> */}
+          <div className=" p-5 rounded-lg flex items-center gap-3">
+            <div className="w-8 h-8 border-4 border-[#EB6200] border-t-transparent rounded-full animate-spin"></div>
+            {/* <span className="text-lg font-inter">Loading...</span> */}
+          </div>
+        </div>
+      )}
       {data && (
         <div className="configurator-main-container py-5 flex px-[25px] pl-[99px] max-dex-sm:p-5 max-tab-xl:flex-col">
           <div className="configurator-right-section flex-1">

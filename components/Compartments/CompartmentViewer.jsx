@@ -36,6 +36,7 @@ const CompartmentViewer = ({
           (_, i) => i + 1
         ).map((index) => (
           <CompartmentsButton
+            key={shelfkey  + index}
             shelfkey={shelfkey}
             index={index}
             selectedSection={selectedSection === sectionKey}

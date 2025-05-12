@@ -1,11 +1,16 @@
-export default function checkObjDiffernce(obj1, obj2, path = '') {
+export default function checkObjDiffernce(obj1, obj2, path = "") {
   let changes = {};
 
-  const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
+  const isObject = (val) =>
+    val && typeof val === "object" && !Array.isArray(val);
 
-  const keys = new Set([...Object.keys(obj1 || {}), ...Object.keys(obj2 || {})]);
+  const keys = new Set([
+    ...Object.keys(obj1 || {}),
+    ...Object.keys(obj2 || {}),
+  ]);
 
   for (let key of keys) {
+    if (key === "activeTab") continue;
     const fullPath = path ? `${path}.${key}` : key;
     const val1 = obj1?.[key];
     const val2 = obj2?.[key];
@@ -21,4 +26,13 @@ export default function checkObjDiffernce(obj1, obj2, path = '') {
   }
 
   return changes;
+}
+
+export function isObjNotEmpty(obj) {
+  for (var prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+      return true;
+    }
+  }
+  return false;
 }
