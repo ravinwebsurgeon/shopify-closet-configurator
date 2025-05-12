@@ -162,7 +162,7 @@ const ConfigurationTab = () => {
     <>
       <div className="flex flex-col max-w-[425px] max-tab-xl:max-w-full">
         <div className="configuration-options max-w-[425px] w-full border border-[#E5E5E5] rounded-[10px] overflow-hidden max-tab-xl:max-w-full">
-          <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-520px)] overflow-auto max-tab-sm:p-4">
+          <div className="config-content px-[25px] py-[42px] h-[calc(100dvh-529px)] overflow-auto max-tab-sm:p-4">
             <h2 className="text-black font-inter text-base mb-[21px] leading-[150%] tracking-[-2%] font-semibold">
               {selectedTab.label}
             </h2>
