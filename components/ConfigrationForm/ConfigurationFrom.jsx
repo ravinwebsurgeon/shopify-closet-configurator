@@ -174,7 +174,7 @@ const ConfigurationFrom = () => {
             shelfCount: formData.shelfCount,
           },
         },
-        "*"
+        "https://www.bedrijfsinrichtingnederland.nl"
       );
       console.log(`/configurator?width=${formData.width}&height=${formData.height}&depth=${formData.depth}&shelfCount=${formData.shelfCount}`)
       router.push(
