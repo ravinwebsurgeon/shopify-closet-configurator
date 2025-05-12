@@ -1,8 +1,13 @@
 import ShelvingConfigurator from "../../components/ShelvingConfigurator/ShelvingConfigurator";
-import React from "react";
+import React, { Suspense } from "react";
 
 const page = () => {
-  return <ShelvingConfigurator />;
+  return (
+    <Suspense>
+      {" "}
+      <ShelvingConfigurator />
+    </Suspense>
+  );
 };
 
 export default page;
