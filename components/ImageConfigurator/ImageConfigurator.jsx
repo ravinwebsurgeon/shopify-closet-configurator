@@ -516,20 +516,23 @@ const ImageConfigurator = () => {
             <span className="font-inter font-medium text-[12px] whitespace-nowrap">
               Selecteer sectie:
             </span>
-            <div ref={selectSectionDivRef} className="selectSectionDiv flex gap-1 w-[440px] max-dex-md:max-w-[220px] max-dex-sm:max-w-[90vw] flex-1 max-dex-md:w-full overflow-x-auto scrollbar-hidden">
-            {sectionKeys.map((item, index) => (
-              <button
-                onClick={(e) => handleSectionClick(e, item)}
-                key={item}
-                className={` flex-shrink-0 ${
-                  item == selectedSection
-                    ? "_selected border-[#0665C5] !bg-[#0665C5] !text-[#fff]"
-                    : "border-[rgba(0,0,0,0)]"
-                } bg-[rgba(0,0,0,0.1)] border font-inter cursor-pointer font-medium text-[12px] leading-none text-black rounded-[5px] w-[30px] h-[30px] flex justify-center items-center`}
-              >
-                {index + 1}
-              </button>
-            ))}
+            <div
+              ref={selectSectionDivRef}
+              className="selectSectionDiv flex gap-1 w-[440px] max-dex-md:max-w-[220px] max-dex-sm:max-w-[90vw] flex-1 max-dex-md:w-full overflow-x-auto scrollbar-hidden"
+            >
+              {sectionKeys.map((item, index) => (
+                <button
+                  onClick={(e) => handleSectionClick(e, item)}
+                  key={item}
+                  className={` flex-shrink-0 ${
+                    item == selectedSection
+                      ? "_selected border-[#0665C5] !bg-[#0665C5] !text-[#fff]"
+                      : "border-[rgba(0,0,0,0)]"
+                  } bg-[rgba(0,0,0,0.1)] border font-inter cursor-pointer font-medium text-[12px] leading-none text-black rounded-[5px] w-[30px] h-[30px] flex justify-center items-center`}
+                >
+                  {index + 1}
+                </button>
+              ))}
             </div>
           </div>
           <div
@@ -586,12 +589,13 @@ const ImageConfigurator = () => {
             className="demo-config w-[800px] overflow-hidden max-dex-xl:w-full max-dex-xl:flex-1"
             id="shelf-capture-area"
           >
-            <div className="main-wrapper__ relative "
+            <div
+              className="main-wrapper__ relative "
               style={{
-              transform: `scale(${scale})`,
-              transformOrigin: 'center center',
-              transition: 'transform 0.3s ease-in-out'
-            }}
+                transform: `scale(${scale})`,
+                transformOrigin: "center center",
+                transition: "transform 0.3s ease-in-out",
+              }}
             >
               {/* <SectionDimensionsIndicator /> */}
               <div
@@ -642,7 +646,8 @@ const ImageConfigurator = () => {
                           style={{
                             zIndex: index,
                             opacity: selectedSection === sectionKey ? 1 : 0.5,
-                            transition: "opacity 0.3s ease-in-out",
+                            transition:
+                              "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
                           }}
                           key={index}
                         >
@@ -738,7 +743,7 @@ const ImageConfigurator = () => {
                             style={{
                               zIndex: index,
                               opacity: selectedSection === sectionKey ? 1 : 0.5,
-                              transition: "opacity 0.3s ease-in-out",
+                              transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
                             }}
                           >
                             {/* {selectedSection === sectionKey &&
@@ -960,7 +965,7 @@ const ImageConfigurator = () => {
                               selectedSection === sectionKey
                                 ? 1
                                 : 0.5,
-                            transition: "opacity 0.3s ease-in-out",
+                            transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
                           }}
                         >
                           {sections[sectionKey].sideWall.right.isRight && (
@@ -985,19 +990,15 @@ const ImageConfigurator = () => {
                               prevSection?.key &&
                               sections[prevSection.key]?.sideWall.right.isRight
                             ) && <EditingSides />} */}
-                            {prevSection.key == sectionKey &&
-                              prevSection?.key &&
-                              editingSides &&
-                              !sections[prevSection.key]?.sideWall.right.isRight &&
-                              <EditingSides />
-                            }
-                            {
-                              selectedSection === sectionKey &&
-                              editingSides &&
-                              !sections[selectedSection]?.sideWall.right.isRight &&
-                              <EditingSides />
-                            }
-
+                          {prevSection.key == sectionKey &&
+                            prevSection?.key &&
+                            editingSides &&
+                            !sections[prevSection.key]?.sideWall.right
+                              .isRight && <EditingSides />}
+                          {selectedSection === sectionKey &&
+                            editingSides &&
+                            !sections[selectedSection]?.sideWall.right
+                              .isRight && <EditingSides />}
 
                           {/* {selectedSection == sectionKey &&
                             editingSides &&

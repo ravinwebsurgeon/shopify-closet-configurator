@@ -28,6 +28,7 @@ import TopCapsComponent from "../ConfigurationTabSubComponents/TopCapsComponent/
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 import checkObjDiffernce from "../../utils/deep";
+import { createProduct } from "../../services/productService";
 
 const ConfigurationTab = ({ prevData }) => {
   const [loading, setLoading] = useState(false);
