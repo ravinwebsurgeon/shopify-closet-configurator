@@ -99,6 +99,7 @@ const ConfigurationTab = ({ prevData }) => {
           { action: "addToCart", productData: response?.data?.product,  },
           "https://www.bedrijfsinrichtingnederland.nl"
         );
+             setLoading(false);
         }, 1500);
         // toast.success("product successfully added to cart", {
         //   position: "top-center",
@@ -116,8 +117,9 @@ const ConfigurationTab = ({ prevData }) => {
         hideProgressBar: true,
         className: "!font-inter !text-[13px] ",
       });
+           setLoading(false);
     } finally {
-      setLoading(false);
+ 
     }
   };
 
