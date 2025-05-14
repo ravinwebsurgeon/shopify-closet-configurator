@@ -94,16 +94,18 @@ const ConfigurationTab = ({ prevData }) => {
       // );
       const response = await createProduct(productData);
       if (response?.status == 200) {
+        setTimeout(() => {       
         window.parent.postMessage(
-          { action: "addToCart", productData: response?.data?.product },
+          { action: "addToCart", productData: response?.data?.product,  },
           "https://www.bedrijfsinrichtingnederland.nl"
         );
-        toast.success("product successfully added to cart", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          className: "!font-inter !text-[13px] ",
-        });
+        }, 1500);
+        // toast.success("product successfully added to cart", {
+        //   position: "top-center",
+        //   autoClose: 2000,
+        //   hideProgressBar: true,
+        //   className: "!font-inter !text-[13px] ",
+        // });
       }
       // saveAs(imageData,'shelf-design.png')
     } catch (error) {
