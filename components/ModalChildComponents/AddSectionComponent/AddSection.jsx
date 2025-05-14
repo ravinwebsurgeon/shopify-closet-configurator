@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
 import "./AddSection.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,20 +10,26 @@ import {
 } from "../../../slices/shelfDetailSlice";
 
 import AddSectionDimensions from "./AddSectionDimensions";
-import { setWoodSection, updateWoodSectionDimensions } from "../../../slices/WoodShelfDetailSlice";
+import {
+  setWoodSection,
+  updateWoodSectionDimensions,
+} from "../../../slices/WoodShelfDetailSlice";
 
-const AddSection = ({ children, onClose ,translate,setTranslate }) => {
-  const metalRacks = useSelector((state)=>state.shelfDetail.racks);
-  const woodRacks = useSelector((state)=>state.woodShelfDetail.racks);
+const AddSection = ({ children, onClose, translate, setTranslate }) => {
+  const metalRacks = useSelector((state) => state.shelfDetail.racks);
+  const woodRacks = useSelector((state) => state.woodShelfDetail.racks);
   const material = metalRacks?.execution?.material;
-  const sections = material == "metal"? metalRacks?.sections : woodRacks?.sections;
-  const dimension =  material == "metal" ? metalRacks : woodRacks;
+  const sections =
+    material == "metal" ? metalRacks?.sections : woodRacks?.sections;
+  const dimension = material == "metal" ? metalRacks : woodRacks;
   const dispatch = useDispatch();
   const initialShelfCount = 3;
   const [shelfCount, setShelfCount] = useState(initialShelfCount);
-  
+  const selectedSection = useSelector(
+    (state) => state.shelfDetail.racks.selectedSection
+  );
   const heightArr = [
-    {90:"52"},
+    { 90: "52" },
     { 100: "57" },
     { 120: "67" },
     { 150: "82" },
@@ -43,7 +49,15 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
     depth: material == "metal" ? 20 : 30,
   });
   useEffect(() => {
-    setDimensions((prev) => ({ ...prev, depth: dimension?.depth }));
+    const dim = dimension?.sections[selectedSection];
+    const getShelfs = Object.keys(dim.shelves).filter(item => item.includes('shelves_'));    
+    setShelfCount(getShelfs.length);
+    setDimensions((prev) => ({
+      ...prev,
+      width: dim?.width,
+      height: dim?.height,
+      depth: dimension?.depth,
+    }));
   }, []);
   const handleAddShelfCount = (e) => {
     e.preventDefault();
@@ -64,9 +78,9 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
     const sectionsCount = Object.keys(sections);
     const lastSectionKey = sectionsCount[sectionsCount.length - 1];
     const lastSection = sections[lastSectionKey];
-    
+
     if (dimensions.height > lastSection.height) {
-      if(material == "metal"){
+      if (material == "metal") {
         dispatch(
           updateSectionDimensions({
             sectionId: lastSectionKey,
@@ -74,7 +88,7 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
             value: dimensions.height,
           })
         );
-      }else{
+      } else {
         dispatch(
           updateWoodSectionDimensions({
             sectionId: lastSectionKey,
@@ -85,27 +99,31 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
       }
     }
 
-    if(material == "metal"){
-      dispatch(setSection({
-        racksCount,
-          currShelfHeight: dimensions.height,
-          shelfDepth,
-          positions
-      }))
-    }else{
-      dispatch(setWoodSection({
-        racksCount,
+    if (material == "metal") {
+      dispatch(
+        setSection({
+          racksCount,
           currShelfHeight: dimensions.height,
           shelfDepth,
           positions,
-          fromSelect:false
-      }))
+        })
+      );
+    } else {
+      dispatch(
+        setWoodSection({
+          racksCount,
+          currShelfHeight: dimensions.height,
+          shelfDepth,
+          positions,
+          fromSelect: false,
+        })
+      );
     }
     const totalSections = sectionsCount.length + 1;
-    const centerOffset = 50; 
+    const centerOffset = 50;
     const sectionWidth = 100 / totalSections;
-    const newTranslate = centerOffset - (totalSections * sectionWidth);
-    
+    const newTranslate = centerOffset - totalSections * sectionWidth;
+
     setTranslate(newTranslate);
     onClose();
   };
@@ -132,11 +150,12 @@ const AddSection = ({ children, onClose ,translate,setTranslate }) => {
       <AddSectionDimensions
         dimensions={dimensions}
         setDimensions={setDimensions}
-        material = {material}
+        material={material}
       />
       <div className="dimension-note font-inter !text-[12px] !border-[#0665C5] !text-[#fff] !bg-[#0665C5]">
-        De diepte die hierboven is aangegeven geldt voor de gehele kast. 
-        Het is mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen van de afmetingen.
+        De diepte die hierboven is aangegeven geldt voor de gehele kast. Het is
+        mogelijk dat er onderdelen verwijderd worden als gevolg van het wijzigen
+        van de afmetingen.
       </div>
       <div className="counter-button-div">
         <span className="add-shevles-label !font-inter">Legborden</span>

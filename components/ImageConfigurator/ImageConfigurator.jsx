@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 //
 import { useDispatch, useSelector } from "react-redux";
@@ -49,8 +49,6 @@ import { setCurrSelectedWoodSection } from "../../slices/WoodShelfDetailSlice";
 import DimensionVisualizer from "../DimensionVisualizerComponent/DimensionVisualizer";
 
 const ImageConfigurator = () => {
-  
-
   const dispatch = useDispatch();
   const [positionArr, setPositionArr] = useState([]);
   const [backWallSelectedSection, setBackWallSelectedSection] = useState("");
@@ -75,7 +73,7 @@ const ImageConfigurator = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const [translate, setTranslate] = useState(30);
+  const [translate, setTranslate] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -101,11 +99,11 @@ const ImageConfigurator = () => {
   const [selectedSection, setSelectedSection] = useState("");
 
   const sectionz =
-  executionValues?.material == "metal"
-    ? metalRacks.sections
-    : woodRacks.sections;
+    executionValues?.material == "metal"
+      ? metalRacks.sections
+      : woodRacks.sections;
 
-  const sectionKeyz = Object.keys(sectionz)
+  const sectionKeyz = Object.keys(sectionz);
 
   const prevSectionKeysLength = useRef(sectionKeyz.length);
 
@@ -124,7 +122,7 @@ const ImageConfigurator = () => {
   // Get the current sections height
   // const currentSectionHeight = sectionz[selectedSection]?.height || 200;
 
-   const scale = calculateScale();
+  const scale = calculateScale();
 
   useEffect(() => {
     setSelectedSection(currentSelectedSection);
@@ -168,10 +166,14 @@ const ImageConfigurator = () => {
       }
 
       //  for scrolling section button into view
-      const sectionButtons = document.querySelector('.selectSectionDiv');
+      const sectionButtons = document.querySelector(".selectSectionDiv");
       const targetButton = sectionButtons.children[newIndex];
       if (targetButton) {
-        targetButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        targetButton.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
       }
     }
   };
@@ -188,12 +190,16 @@ const ImageConfigurator = () => {
         dispatch(setCurrSelectedWoodSection(newSectionKey));
       }
 
-       //  for scrolling section button into view
-       const sectionButtons = document.querySelector('.selectSectionDiv');
-       const targetButton = sectionButtons.children[newIndex];
-       if (targetButton) {
-         targetButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-       }
+      //  for scrolling section button into view
+      const sectionButtons = document.querySelector(".selectSectionDiv");
+      const targetButton = sectionButtons.children[newIndex];
+      if (targetButton) {
+        targetButton.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
     }
   };
 
@@ -221,10 +227,10 @@ const ImageConfigurator = () => {
     { 350: "182" },
   ];
 
-  const handleDeleteConfirmation = () =>{
+  const handleDeleteConfirmation = () => {
     dispatch(openDeleteModal(true));
     dispatch(setOpenModal(true));
-  }
+  };
 
   const handleSectionDelete = () => {
     const activeIndex = sectionKeys.indexOf(currentSelectedSection);
@@ -240,25 +246,29 @@ const ImageConfigurator = () => {
       nextSection
     ) {
       const rightSideWall = selectedSection.sideWall.right;
-       if(prevSectionId && nextSectionId){
-        if(sections[prevSectionId].height == 100  ||
+      if (prevSectionId && nextSectionId) {
+        if (
+          sections[prevSectionId].height == 100 ||
           sections[prevSectionId].height == 150 ||
           sections[prevSectionId].height == 200 ||
-          sections[prevSectionId].height == 250){
-          dispatch(updateSideWall({
-            sectionId:prevSectionId,
-            side:"right",
-            type: rightSideWall.type,
-            height:sections[prevSectionId].height
-          }))
+          sections[prevSectionId].height == 250
+        ) {
+          dispatch(
+            updateSideWall({
+              sectionId: prevSectionId,
+              side: "right",
+              type: rightSideWall.type,
+              height: sections[prevSectionId].height,
+            })
+          );
         }
-
-      }else{
-        if(sections[nextSectionId].height == 100  ||
+      } else {
+        if (
+          sections[nextSectionId].height == 100 ||
           sections[nextSectionId].height == 150 ||
           sections[nextSectionId].height == 200 ||
           sections[nextSectionId].height == 250
-         ){
+        ) {
           dispatch(
             updateSideWall({
               sectionId: nextSectionId,
@@ -266,57 +276,61 @@ const ImageConfigurator = () => {
               ...rightSideWall,
             })
           );
-         }
+        }
       }
-
-    }
-    else if(prevSectionId){
+    } else if (prevSectionId) {
       const rightSideWall = sections[prevSectionId].sideWall.right;
-      if(rightSideWall.isRight){
-        if(sections[prevSectionId].height == 100  ||
+      if (rightSideWall.isRight) {
+        if (
+          sections[prevSectionId].height == 100 ||
           sections[prevSectionId].height == 150 ||
           sections[prevSectionId].height == 200 ||
           sections[prevSectionId].height == 250
-         ){
-          dispatch(updateSideWall({ 
-            sectionId:prevSectionId,
-            side:"right",
-            type:rightSideWall.type,
-            height:sections[prevSectionId].height,
-          }))
-        }else{
-          dispatch(deleteSideWall({
-            sectionId:prevSectionId,
-            side:"right"
-          }))
+        ) {
+          dispatch(
+            updateSideWall({
+              sectionId: prevSectionId,
+              side: "right",
+              type: rightSideWall.type,
+              height: sections[prevSectionId].height,
+            })
+          );
+        } else {
+          dispatch(
+            deleteSideWall({
+              sectionId: prevSectionId,
+              side: "right",
+            })
+          );
         }
       }
     }
     dispatch(deleteSection(currentSelectedSection));
 
-    if(prevSectionId){
+    if (prevSectionId) {
+      if (sections[prevSectionId].height < selectedSection.standHeight) {
+        const nextSectionExists = nextSectionId && sections[nextSectionId];
 
-        if(sections[prevSectionId].height < selectedSection.standHeight){
-
-          const nextSectionExists = nextSectionId && sections[nextSectionId];
-
-          const newHeight = nextSectionExists && sections[nextSectionId].height > selectedSection.height
+        const newHeight =
+          nextSectionExists &&
+          sections[nextSectionId].height > selectedSection.height
             ? sections[nextSectionId].height
             : sections[prevSectionId].height;
 
-          dispatch(updateSectionDimensions({
+        dispatch(
+          updateSectionDimensions({
             sectionId: prevSectionId,
             dimension: "standHeight",
-            value: newHeight
-          }))
-        }
+            value: newHeight,
+          })
+        );
+      }
     }
     dispatch(
       setCurrSelectedSection(prevSectionId ? prevSectionId : nextSectionId)
     );
 
     dispatch(openDeleteModal(false));
-
   };
 
   const handleSidewallLeftBtnClick = (e, sectionkey) => {
@@ -420,7 +434,13 @@ const ImageConfigurator = () => {
     const centerOffset = 50;
     const sectionWidth = 100 / totalSections;
     const newTranslate = centerOffset - indexData * sectionWidth;
-    setTranslate(newTranslate);
+    
+    if (indexData == 0) {
+      console.log(indexData)
+      setTranslate(0);
+    } else {
+      setTranslate(newTranslate);
+    }
 
     const index = sectionItems.findIndex((item) => item.key === sectionKey);
 
@@ -497,12 +517,11 @@ const ImageConfigurator = () => {
       if (isNewSection) {
         selectSectionDivRef.current.scrollTo({
           left: selectSectionDivRef.current.scrollWidth,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       }
       prevSectionKeysLength.current = sectionKeyz.length;
     }
-
   }, [sectionKeyz.length]);
 
   return (
@@ -600,7 +619,7 @@ const ImageConfigurator = () => {
               {/* <SectionDimensionsIndicator /> */}
               <div
                 className="Visual_container__tG7BQ Carousel_visual__FfW0p transition-all duration-500 ease-in-out"
-                style={{ transform: `translateX(${translate}%)` }}
+                style={{ transform: `translateX(${translate}%)`, left: translate == 50 ? "-50%" : '0px' }}
               >
                 {/* <div
                   className={`arrows-dimensionsIndicator-left relative flex items-center justify-center translate-x-[0px]   !p-0 !m-0  Section_width
@@ -743,7 +762,8 @@ const ImageConfigurator = () => {
                             style={{
                               zIndex: index,
                               opacity: selectedSection === sectionKey ? 1 : 0.5,
-                              transition: "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
+                              transition:
+                                "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
                             }}
                           >
                             {/* {selectedSection === sectionKey &&
@@ -965,7 +985,8 @@ const ImageConfigurator = () => {
                               selectedSection === sectionKey
                                 ? 1
                                 : 0.5,
-                            transition: "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
+                            transition:
+                              "opacity 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
                           }}
                         >
                           {sections[sectionKey].sideWall.right.isRight && (

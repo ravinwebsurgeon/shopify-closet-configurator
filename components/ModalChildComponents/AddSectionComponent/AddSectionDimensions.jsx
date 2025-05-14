@@ -3,9 +3,14 @@ import React from "react";
 const AddSectionDimensions = ({ dimensions, setDimensions, material }) => {
   // Predefined values for each dimension
   const dimensionOptions = {
-    width: material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
-    height:  material == "metal" ? [100, 120, 150, 200, 220, 250, 300] : [90, 150, 180, 210, 240, 300],
-    depth: material == "metal" ? [20, 30, 40, 50, 60, 70, 80] : [30, 40, 50, 60],
+    width:
+      material == "metal" ? [55, 70, 85, 100, 115, 130] : [60, 75, 100, 120],
+    height:
+      material == "metal"
+        ? [100, 120, 150, 180, 200, 220, 250, 300, 350]
+        : [90, 150, 180, 210, 240, 300],
+    depth:
+      material == "metal" ? [20, 30, 40, 50, 60, 70, 80] : [30, 40, 50, 60],
   };
 
   // const dimensionOptions = useMemo(() => ({
@@ -29,7 +34,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions, material }) => {
     <div className="dimensions-content flex flex-col gap-4">
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-        Breedte
+          Breedte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.width} cm
           </span>
@@ -59,7 +64,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions, material }) => {
 
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-        Hoogte
+          Hoogte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.height} cm
           </span>
@@ -89,7 +94,7 @@ const AddSectionDimensions = ({ dimensions, setDimensions, material }) => {
 
       <div className="dimension-row">
         <label className="font-inter text-xs w-[130px] h-[31px] bg-[#F8F8F8] rounded-[5px] tracking-normal  text-black font-normal leading-none justify-center flex items-center  gap-3">
-        Diepte
+          Diepte
           <span className="font-inter text-xs tracking-normal  text-black font-semibold leading-none ">
             {dimensions.depth} cm
           </span>

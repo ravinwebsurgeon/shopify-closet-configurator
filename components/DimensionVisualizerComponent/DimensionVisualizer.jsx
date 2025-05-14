@@ -12,7 +12,7 @@ const DimensionVisualizer = ({ height, width, depth }) => {
       id="exclude-this"
       className=" absolute bottom-[58px] max-tab-xl:left-1/2 max-tab-xl:-translate-x-1/2 max-tab-xl:w-full max-tab-xl:px-5"
     >
-      <div className=" dimension-visualizer  bottom-[58px]  border border-[#E5E5E5] h-[68px]  flex  max-tab-xl:gap-2 max-tab-xl:flex-wrap max-tab-xl:border-0 max-tab-xl:justify-center">
+      <div className=" dimension-visualizer bg-white  bottom-[58px]  border border-[#E5E5E5] h-[68px]  flex  max-tab-xl:gap-2 max-tab-xl:flex-wrap max-tab-xl:border-0 max-tab-xl:justify-center">
         <div className="w-[151px] border-r border-[#E5E5E5] h-[68px] flex items-center justify-center max-tab-xl:flex-1 max-tab-xl:border-1  max-tab-xl:border-[#E5E5E5]">
           <div className="flex items-center gap-[10px]">
             <div className="h-[38px] w-[38px] bg-[#F5F5F5] rounded flex items-center justify-center">
